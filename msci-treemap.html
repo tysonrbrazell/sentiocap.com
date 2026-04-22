@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SentioCap — MSCI Expense Treemap</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', -apple-system, sans-serif; background: #0a0e1a; color: #e0e4ec; overflow-x: hidden; }
+  
+  .header { background: linear-gradient(135deg, #0f1628 0%, #1a2340 100%); padding: 20px 32px; border-bottom: 1px solid #1e2a4a; display: flex; justify-content: space-between; align-items: center; }
+  .header h1 { font-size: 20px; font-weight: 600; color: #fff; }
+  .header h1 span { color: #4a9eff; }
+  .header .meta { font-size: 12px; color: #6b7a9e; }
+  
+  .breadcrumb { padding: 12px 32px; background: #0f1628; border-bottom: 1px solid #1a2340; font-size: 13px; color: #6b7a9e; display: flex; align-items: center; gap: 8px; }
+  .breadcrumb .crumb { cursor: pointer; color: #4a9eff; }
+  .breadcrumb .crumb:hover { text-decoration: underline; }
+  .breadcrumb .sep { color: #3d4a6b; }
+  .breadcrumb .current { color: #fff; font-weight: 500; }
+  
+  .controls { padding: 12px 32px; display: flex; gap: 12px; align-items: center; }
+  .controls button { padding: 6px 14px; border-radius: 6px; border: 1px solid #2d3a5c; background: #111827; color: #8b95ad; font-size: 12px; cursor: pointer; transition: all 0.2s; }
+  .controls button:hover { border-color: #4a9eff; color: #4a9eff; }
+  .controls button.active { background: #4a9eff; color: #fff; border-color: #4a9eff; }
+  
+  .treemap-container { padding: 16px 32px; }
+  
+  #treemap { width: 100%; display: grid; gap: 3px; min-height: 600px; }
+  
+  .tm-cell { border-radius: 8px; padding: 12px; cursor: pointer; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; transition: all 0.2s; }
+  .tm-cell:hover { filter: brightness(1.15); transform: scale(1.005); z-index: 2; box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
+  
+  .tm-name { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.95); line-height: 1.3; }
+  .tm-amount { font-size: 20px; font-weight: 700; color: #fff; margin-top: 4px; }
+  .tm-pct { font-size: 11px; color: rgba(255,255,255,0.6); }
+  .tm-signal { position: absolute; top: 10px; right: 10px; width: 10px; height: 10px; border-radius: 50%; }
+  .tm-signal.g { background: #34d399; box-shadow: 0 0 8px rgba(52,211,153,0.5); }
+  .tm-signal.y { background: #fbbf24; box-shadow: 0 0 8px rgba(251,191,36,0.5); }
+  .tm-signal.r { background: #f87171; box-shadow: 0 0 8px rgba(248,113,113,0.5); }
+  
+  .tm-sub { font-size: 10px; color: rgba(255,255,255,0.5); margin-top: 4px; }
+  .tm-peer { font-size: 10px; color: rgba(255,255,255,0.4); margin-top: 2px; }
+  
+  /* Detail panel */
+  .detail-panel { position: fixed; right: -420px; top: 0; width: 420px; height: 100vh; background: #111827; border-left: 1px solid #1e2a4a; padding: 24px; overflow-y: auto; transition: right 0.3s ease; z-index: 100; }
+  .detail-panel.open { right: 0; }
+  .detail-close { position: absolute; top: 16px; right: 16px; cursor: pointer; color: #6b7a9e; font-size: 20px; }
+  .detail-close:hover { color: #fff; }
+  .detail-panel h2 { font-size: 18px; font-weight: 600; color: #fff; margin-bottom: 4px; }
+  .detail-panel .detail-amount { font-size: 32px; font-weight: 700; margin: 8px 0; }
+  .detail-panel .detail-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #1a2340; font-size: 13px; }
+  .detail-panel .detail-label { color: #6b7a9e; }
+  .detail-panel .detail-value { color: #e0e4ec; font-weight: 500; }
+  .detail-bar { height: 6px; background: #1a2340; border-radius: 3px; margin: 12px 0; overflow: hidden; }
+  .detail-bar-fill { height: 100%; border-radius: 3px; }
+  
+  .overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 99; display: none; }
+  .overlay.open { display: block; }
+  
+  .legend { padding: 12px 32px; display: flex; gap: 20px; flex-wrap: wrap; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: #6b7a9e; }
+  .legend-swatch { width: 14px; height: 14px; border-radius: 3px; }
+  
+  .footer { text-align: center; padding: 20px; font-size: 11px; color: #3d4a6b; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <h1><span>SentioCap</span> — Expense Treemap</h1>
+    <div class="meta">MSCI Inc (NYSE: MSCI) • FY2025 • Total Operating Expenses: $1,421M</div>
+  </div>
+  <div style="text-align:right;">
+    <div style="font-size:12px;color:#6b7a9e;">RTB/CTB Split</div>
+    <div style="font-size:16px;"><span style="color:#4a6db5;">89% RTB</span> / <span style="color:#34d399;">11% CTB</span></div>
+  </div>
+</div>
+
+<div class="breadcrumb" id="breadcrumb">
+  <span class="current">All Expenses ($1,421M)</span>
+</div>
+
+<div class="controls">
+  <button class="active" onclick="showView('l1')">L1: RTB / CTB</button>
+  <button onclick="showView('l2')">L2: Investment Category</button>
+  <button onclick="showView('l3')">L3: Functional Domain</button>
+  <button onclick="showView('l2ctb')">CTB Deep Dive</button>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-swatch" style="background:#3b5998;"></div> RTB-OPS (Operations)</div>
+  <div class="legend-item"><div class="legend-swatch" style="background:#2d4a8a;"></div> RTB-MNT (Maintenance)</div>
+  <div class="legend-item"><div class="legend-swatch" style="background:#1e3a7a;"></div> RTB-CMP (Compliance)</div>
+  <div class="legend-item"><div class="legend-swatch" style="background:#4a6db5;"></div> RTB-SUP (Support)</div>
+  <div class="legend-item"><div class="legend-swatch" style="background:#059669;"></div> CTB-GRW (Growth)</div>
+  <div class="legend-item"><div class="legend-swatch" style="background:#7c3aed;"></div> CTB-TRN (Transform)</div>
+  <div class="legend-item"><div class="legend-swatch" style="background:#d97706;"></div> CTB-EFF (Efficiency)</div>
+  <div class="legend-item"><div class="legend-swatch" style="background:#dc2626;"></div> CTB-INN (Innovation)</div>
+</div>
+
+<div class="treemap-container">
+  <div id="treemap"></div>
+</div>
+
+<div class="overlay" id="overlay" onclick="closeDetail()"></div>
+<div class="detail-panel" id="detailPanel">
+  <div class="detail-close" onclick="closeDetail()">✕</div>
+  <div id="detailContent"></div>
+</div>
+
+<div class="footer">
+  SentioCap Expense Intelligence • MSCI FY2025 • Investment Intent Taxonomy v1.0 • Click any cell to drill down
+</div>
+
+<script>
+const data = {
+  l1: [
+    { name: 'Run the Business (RTB)', amount: 1261, pct: 88.7, color: '#3b5998', signal: 'g', peer: '87%', sub: 'Operations + Maintenance + Compliance + Support', children: 'l2rtb' },
+    { name: 'Change the Business (CTB)', amount: 160, pct: 11.3, color: '#059669', signal: 'y', peer: '13%', sub: 'Growth + Transform + Efficiency + Innovation', children: 'l2ctb' },
+  ],
+  l2: [
+    { name: 'RTB-OPS\nOperations', amount: 580, pct: 40.8, color: '#3b5998', signal: 'g', peer: '$600M', sub: 'Index calc, data delivery, client support' },
+    { name: 'RTB-SUP\nSupport', amount: 426, pct: 30.0, color: '#4a6db5', signal: 'g', peer: '15% ratio', sub: 'Corporate overhead, HR, finance, facilities' },
+    { name: 'RTB-MNT\nMaintenance', amount: 165, pct: 11.6, color: '#2d4a8a', signal: 'y', peer: '$180M', sub: 'App maintenance, infra refresh, legacy' },
+    { name: 'RTB-CMP\nCompliance', amount: 90, pct: 6.3, color: '#1e3a7a', signal: 'g', peer: '3-5%', sub: 'Regulatory, audit, EU BMR, legal' },
+    { name: 'CTB-GRW\nGrowth', amount: 70, pct: 4.9, color: '#059669', signal: 'g', peer: '$90M', sub: 'Wealth/insurance expansion, new segments' },
+    { name: 'CTB-TRN\nTransform', amount: 40, pct: 2.8, color: '#7c3aed', signal: 'y', peer: '$50M', sub: 'Burgiss integration, new business models' },
+    { name: 'CTB-EFF\nEfficiency', amount: 40, pct: 2.8, color: '#d97706', signal: 'g', peer: '$45M', sub: 'Cloud migration, automation, process improvement' },
+    { name: 'CTB-INN\nInnovation', amount: 10, pct: 0.7, color: '#dc2626', signal: 'r', peer: '$20M+', sub: 'AI/ML R&D, exploratory, pre-commercial' },
+  ],
+  l2ctb: [
+    { name: 'CTB-GRW\nGrowth', amount: 70, pct: 43.8, color: '#059669', signal: 'g', peer: '45% of CTB', sub: 'Wealth segment: $25M\nInsurance: $15M\nEMEA expansion: $12M\nNew index products: $18M', detail: { roi: '1.8x', payback: '14 months', milestone: '78%', revenue_lift: '+$127M new ARR' } },
+    { name: 'CTB-TRN\nTransform', amount: 40, pct: 25.0, color: '#7c3aed', signal: 'y', peer: '25% of CTB', sub: 'Burgiss integration: $25M\nClimate platform: $10M\nNew data models: $5M', detail: { roi: 'TBD (in progress)', payback: '24 months', milestone: '62%', revenue_lift: 'Projected $80M by FY2027' } },
+    { name: 'CTB-EFF\nEfficiency', amount: 40, pct: 25.0, color: '#d97706', signal: 'g', peer: '23% of CTB', sub: 'Cloud migration: $18M\nProcess automation: $12M\nData pipeline: $10M', detail: { roi: '2.4x', payback: '11 months', milestone: '85%', revenue_lift: '$35M RTB savings achieved' } },
+    { name: 'CTB-INN\nInnovation', amount: 10, pct: 6.3, color: '#dc2626', signal: 'r', peer: '10% of CTB', sub: 'GenAI research: $4M\nNew data products: $3M\nExploratory: $3M', detail: { roi: 'Pre-revenue', payback: 'N/A', milestone: '2 concepts in pipeline', revenue_lift: 'None yet — pipeline thin' } },
+  ],
+  l3: [
+    { name: 'PPL\nPeople', amount: 475, pct: 33.4, color: '#6366f1', signal: 'g', peer: '$400K rev/emp', sub: '6,268 employees, 71% in EM locations' },
+    { name: 'TECH\nTechnology', amount: 355, pct: 25.0, color: '#0891b2', signal: 'y', peer: '10-15% of rev', sub: 'Infrastructure, cloud, apps, AI, security' },
+    { name: 'PRD\nProduct', amount: 165, pct: 11.6, color: '#059669', signal: 'g', peer: '5-15% of rev', sub: 'R&D, engineering, product management' },
+    { name: 'COM\nCommercial', amount: 135, pct: 9.5, color: '#d97706', signal: 'g', peer: 'CAC < 1:3 LTV', sub: 'Sales, marketing, client management' },
+    { name: 'DAT\nData & Info', amount: 115, pct: 8.1, color: '#7c3aed', signal: 'y', peer: '1-5% of rev', sub: 'Market data feeds, ESG sources, research' },
+    { name: 'FIN\nFinance & Legal', amount: 70, pct: 4.9, color: '#be123c', signal: 'g', peer: '0.5-1.5% of rev', sub: 'Accounting, legal, audit, treasury, tax' },
+    { name: 'CRP\nCorporate', amount: 60, pct: 4.2, color: '#475569', signal: 'g', peer: '2-5% of rev', sub: 'Executive, strategy, IR, communications' },
+    { name: 'FAC\nFacilities', amount: 46, pct: 3.2, color: '#78716c', signal: 'g', peer: '$10K/emp', sub: 'Global offices, utilities, equipment' },
+  ]
+};
+
+function renderTreemap(items, containerId) {
+  const container = document.getElementById(containerId || 'treemap');
+  container.innerHTML = '';
+  
+  const total = items.reduce((s, i) => s + i.amount, 0);
+  
+  // Calculate layout using squarified treemap algorithm (simplified)
+  // For now, use CSS grid with proportional columns
+  const sorted = [...items].sort((a, b) => b.amount - a.amount);
+  
+  // Determine grid layout based on number of items
+  let gridTemplate;
+  if (sorted.length <= 2) {
+    const r1 = sorted[0].amount / total;
+    gridTemplate = `grid-template-columns: ${r1 * 100}% ${(1-r1) * 100}%; grid-template-rows: 1fr;`;
+    container.style.cssText = gridTemplate + ' min-height: 500px;';
+  } else if (sorted.length <= 4) {
+    container.style.cssText = 'display: grid; grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(2, 1fr); gap: 3px; min-height: 500px;';
+    // Make first item span based on its proportion
+    if (sorted[0].amount > total * 0.4) {
+      container.style.cssText = 'display: grid; grid-template-columns: 60% 40%; grid-template-rows: 60% 40%; gap: 3px; min-height: 500px;';
+    }
+  } else {
+    // Complex layout for 5+ items
+    // Top row: largest 2-3 items, bottom row: smaller items
+    const topItems = sorted.slice(0, 3);
+    const bottomItems = sorted.slice(3);
+    const topTotal = topItems.reduce((s, i) => s + i.amount, 0);
+    const bottomTotal = bottomItems.reduce((s, i) => s + i.amount, 0);
+    const topPct = topTotal / total;
+    
+    container.style.cssText = `display: grid; grid-template-rows: ${topPct * 100}% ${(1-topPct) * 100}%; gap: 3px; min-height: 600px;`;
+    
+    // Create top row
+    const topRow = document.createElement('div');
+    topRow.style.cssText = `display: grid; grid-template-columns: ${topItems.map(i => (i.amount/topTotal*100).toFixed(1)+'%').join(' ')}; gap: 3px;`;
+    topItems.forEach(item => topRow.appendChild(createCell(item, total)));
+    
+    // Create bottom row
+    const bottomRow = document.createElement('div');
+    if (bottomItems.length > 0) {
+      bottomRow.style.cssText = `display: grid; grid-template-columns: ${bottomItems.map(i => (i.amount/bottomTotal*100).toFixed(1)+'%').join(' ')}; gap: 3px;`;
+      bottomItems.forEach(item => bottomRow.appendChild(createCell(item, total)));
+    }
+    
+    container.appendChild(topRow);
+    if (bottomItems.length > 0) container.appendChild(bottomRow);
+    return;
+  }
+  
+  sorted.forEach(item => container.appendChild(createCell(item, total)));
+}
+
+function createCell(item, total) {
+  const cell = document.createElement('div');
+  cell.className = 'tm-cell';
+  cell.style.background = `linear-gradient(135deg, ${item.color}, ${adjustColor(item.color, -20)})`;
+  
+  const isSmall = item.amount / total < 0.05;
+  
+  cell.innerHTML = `
+    <div>
+      <div class="tm-signal ${item.signal}"></div>
+      <div class="tm-name" style="font-size:${isSmall ? '11px' : '14px'}">${item.name.replace('\n', '<br>')}</div>
+      <div class="tm-amount" style="font-size:${isSmall ? '16px' : '22px'}">$${item.amount}M</div>
+      <div class="tm-pct">${item.pct}% of total</div>
+    </div>
+    <div>
+      <div class="tm-sub">${item.sub.split('\n')[0]}</div>
+      <div class="tm-peer">Peer: ${item.peer}</div>
+    </div>
+  `;
+  
+  cell.onclick = () => openDetail(item);
+  return cell;
+}
+
+function adjustColor(hex, amount) {
+  const num = parseInt(hex.replace('#', ''), 16);
+  const r = Math.max(0, Math.min(255, (num >> 16) + amount));
+  const g = Math.max(0, Math.min(255, ((num >> 8) & 0x00FF) + amount));
+  const b = Math.max(0, Math.min(255, (num & 0x0000FF) + amount));
+  return `#${(r << 16 | g << 8 | b).toString(16).padStart(6, '0')}`;
+}
+
+function showView(view) {
+  document.querySelectorAll('.controls button').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  
+  const viewData = data[view];
+  renderTreemap(viewData);
+  
+  const labels = {
+    l1: 'All Expenses ($1,421M)',
+    l2: 'L2: Investment Categories ($1,421M)',
+    l3: 'L3: Functional Domains ($1,421M)',
+    l2ctb: 'CTB Portfolio Deep Dive ($160M)'
+  };
+  document.getElementById('breadcrumb').innerHTML = `<span class="current">${labels[view]}</span>`;
+}
+
+function openDetail(item) {
+  const panel = document.getElementById('detailPanel');
+  const overlay = document.getElementById('overlay');
+  
+  const signalLabel = { g: '🟢 Better than expected', y: '🟡 Inline', r: '🔴 Below expectations' };
+  const signalColor = { g: '#34d399', y: '#fbbf24', r: '#f87171' };
+  
+  let detailHtml = `
+    <h2>${item.name.replace('\n', ' — ')}</h2>
+    <div class="detail-amount" style="color:${item.color};">$${item.amount}M</div>
+    <div style="font-size:13px;color:${signalColor[item.signal]};margin-bottom:16px;">${signalLabel[item.signal]}</div>
+    
+    <div class="detail-bar">
+      <div class="detail-bar-fill" style="width:${item.pct}%;background:${item.color};"></div>
+    </div>
+    <div style="font-size:11px;color:#6b7a9e;margin-bottom:20px;">${item.pct}% of total operating expenses</div>
+    
+    <div class="detail-row">
+      <span class="detail-label">Amount</span>
+      <span class="detail-value">$${item.amount}M</span>
+    </div>
+    <div class="detail-row">
+      <span class="detail-label">% of Total</span>
+      <span class="detail-value">${item.pct}%</span>
+    </div>
+    <div class="detail-row">
+      <span class="detail-label">Peer Benchmark</span>
+      <span class="detail-value">${item.peer}</span>
+    </div>
+    <div class="detail-row">
+      <span class="detail-label">Performance</span>
+      <span class="detail-value" style="color:${signalColor[item.signal]};">${signalLabel[item.signal]}</span>
+    </div>
+    
+    <div style="margin-top:16px;">
+      <div style="font-size:12px;font-weight:600;color:#fff;margin-bottom:8px;">Components</div>
+      <div style="font-size:12px;color:#8b95ad;line-height:1.8;white-space:pre-line;">${item.sub}</div>
+    </div>
+  `;
+  
+  if (item.detail) {
+    detailHtml += `
+      <div style="margin-top:20px;padding:14px;background:#0f1628;border-radius:8px;">
+        <div style="font-size:12px;font-weight:600;color:#fff;margin-bottom:10px;">Investment Performance</div>
+        <div class="detail-row">
+          <span class="detail-label">ROI</span>
+          <span class="detail-value">${item.detail.roi}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Payback Period</span>
+          <span class="detail-value">${item.detail.payback}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Milestone Delivery</span>
+          <span class="detail-value">${item.detail.milestone}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Revenue Impact</span>
+          <span class="detail-value">${item.detail.revenue_lift}</span>
+        </div>
+      </div>
+    `;
+  }
+  
+  document.getElementById('detailContent').innerHTML = detailHtml;
+  panel.classList.add('open');
+  overlay.classList.add('open');
+}
+
+function closeDetail() {
+  document.getElementById('detailPanel').classList.remove('open');
+  document.getElementById('overlay').classList.remove('open');
+}
+
+// Initial render
+renderTreemap(data.l1);
+</script>
+
+</body>
+</html>
