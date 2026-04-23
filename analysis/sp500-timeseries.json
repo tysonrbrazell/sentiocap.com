@@ -1,0 +1,122 @@
+{
+  "2015": {
+    "n_companies": 158,
+    "total_revenue": 2.284,
+    "total_ctb_proxy": 0.29,
+    "total_rd": 0.084,
+    "total_capex": 0.205,
+    "aggregate_ctb_pct": 12.68,
+    "median_ctb_pct": 10.33,
+    "mean_ctb_pct": 18.07
+  },
+  "2016": {
+    "n_companies": 298,
+    "total_revenue": 4.401,
+    "total_ctb_proxy": 0.503,
+    "total_rd": 0.188,
+    "total_capex": 0.313,
+    "aggregate_ctb_pct": 11.43,
+    "median_ctb_pct": 8.17,
+    "mean_ctb_pct": 15.24
+  },
+  "2017": {
+    "n_companies": 347,
+    "total_revenue": 4.469,
+    "total_ctb_proxy": 0.559,
+    "total_rd": 0.21,
+    "total_capex": 0.347,
+    "aggregate_ctb_pct": 12.51,
+    "median_ctb_pct": 12.49,
+    "mean_ctb_pct": 19.35
+  },
+  "2018": {
+    "n_companies": 356,
+    "total_revenue": 5.22,
+    "total_ctb_proxy": 0.642,
+    "total_rd": 0.23,
+    "total_capex": 0.41,
+    "aggregate_ctb_pct": 12.31,
+    "median_ctb_pct": 13.63,
+    "mean_ctb_pct": 20.13
+  },
+  "2019": {
+    "n_companies": 361,
+    "total_revenue": 5.107,
+    "total_ctb_proxy": 0.699,
+    "total_rd": 0.269,
+    "total_capex": 0.429,
+    "aggregate_ctb_pct": 13.69,
+    "median_ctb_pct": 15.47,
+    "mean_ctb_pct": 21.74
+  },
+  "2020": {
+    "n_companies": 350,
+    "total_revenue": 5.442,
+    "total_ctb_proxy": 0.684,
+    "total_rd": 0.288,
+    "total_capex": 0.394,
+    "aggregate_ctb_pct": 12.57,
+    "median_ctb_pct": 13.04,
+    "mean_ctb_pct": 19.29
+  },
+  "2021": {
+    "n_companies": 368,
+    "total_revenue": 10.124,
+    "total_ctb_proxy": 0.795,
+    "total_rd": 0.337,
+    "total_capex": 0.456,
+    "aggregate_ctb_pct": 7.86,
+    "median_ctb_pct": 6.36,
+    "mean_ctb_pct": 11.59
+  },
+  "2022": {
+    "n_companies": 379,
+    "total_revenue": 11.565,
+    "total_ctb_proxy": 0.963,
+    "total_rd": 0.397,
+    "total_capex": 0.564,
+    "aggregate_ctb_pct": 8.32,
+    "median_ctb_pct": 5.89,
+    "mean_ctb_pct": 11.21
+  },
+  "2023": {
+    "n_companies": 376,
+    "total_revenue": 11.752,
+    "total_ctb_proxy": 1.057,
+    "total_rd": 0.448,
+    "total_capex": 0.608,
+    "aggregate_ctb_pct": 8.99,
+    "median_ctb_pct": 6.49,
+    "mean_ctb_pct": 12.69
+  },
+  "2024": {
+    "n_companies": 372,
+    "total_revenue": 12.657,
+    "total_ctb_proxy": 1.155,
+    "total_rd": 0.466,
+    "total_capex": 0.687,
+    "aggregate_ctb_pct": 9.12,
+    "median_ctb_pct": 6.89,
+    "mean_ctb_pct": 12.32
+  },
+  "2025": {
+    "n_companies": 371,
+    "total_revenue": 13.529,
+    "total_ctb_proxy": 1.393,
+    "total_rd": 0.525,
+    "total_capex": 0.867,
+    "aggregate_ctb_pct": 10.3,
+    "median_ctb_pct": 6.25,
+    "mean_ctb_pct": 11.3
+  },
+  "2026": {
+    "n_companies": 22,
+    "total_revenue": 1.484,
+    "total_ctb_proxy": 0.074,
+    "total_rd": 0.034,
+    "total_capex": 0.041,
+    "aggregate_ctb_pct": 5.01,
+    "median_ctb_pct": 3.6,
+    "mean_ctb_pct": 8.58
+  }
+}

@@ -1,0 +1,73 @@
+Getting sector mapping from Wikipedia...
+  Got 0 sector mappings
+  Applied to 0/4834 records
+
+Pulling share prices for 489 tickers...
+  [50/489] Pulled: 50, Failed: 0
+  [100/489] Pulled: 100, Failed: 0
+  [150/489] Pulled: 150, Failed: 0
+  [200/489] Pulled: 200, Failed: 0
+  [250/489] Pulled: 250, Failed: 0
+  [300/489] Pulled: 300, Failed: 0
+  [350/489] Pulled: 350, Failed: 0
+  [400/489] Pulled: 400, Failed: 0
+  [450/489] Pulled: 450, Failed: 0
+  Total prices: 489 tickers
+
+Calculating correlations...
+
+=== CTB QUINTILE ANALYSIS: Does Higher CTB = Better Returns? ===
+
+--- 2019 Cohort (3-year forward returns to 2022) ---
+Quintile           N   Avg CTB%  Avg 3yr Ret  Med 3yr Ret
+----------------------------------------------------------
+Lowest CTB        68      2.2%       +40.1%       +30.4%
+Low CTB           68      6.9%       +30.3%       +20.9%
+Mid CTB           68     14.7%       +22.4%       +18.9%
+High CTB          68     25.0%       +32.2%       +26.0%
+Highest CTB       68     47.0%       +34.8%       +26.4%
+
+--- 2020 Cohort (3-year forward returns to 2023) ---
+Quintile           N   Avg CTB%  Avg 3yr Ret  Med 3yr Ret
+----------------------------------------------------------
+Lowest CTB        66      1.7%       +48.2%       +37.7%
+Low CTB           66      5.7%       +42.8%       +33.1%
+Mid CTB           66     12.3%       +36.4%       +19.3%
+High CTB          66     20.9%       +37.9%       +26.7%
+Highest CTB       70     42.2%       +31.4%       +14.2%
+
+--- 2021 Cohort (3-year forward returns to 2024) ---
+Quintile           N   Avg CTB%  Avg 3yr Ret  Med 3yr Ret
+----------------------------------------------------------
+Lowest CTB        72      1.1%       +29.2%       +22.9%
+Low CTB           72      3.5%       +22.3%        +3.3%
+Mid CTB           72      6.3%       +38.6%       +16.8%
+High CTB          72     12.7%       +19.0%        +2.2%
+Highest CTB       75     31.4%       +28.5%        +2.8%
+
+--- 2022 Cohort (3-year forward returns to 2025) ---
+Quintile           N   Avg CTB%  Avg 3yr Ret  Med 3yr Ret
+----------------------------------------------------------
+Lowest CTB        75      1.3%       +56.9%       +41.4%
+Low CTB           75      3.4%      +168.0%       +40.0%
+Mid CTB           75      6.1%       +74.1%       +33.3%
+High CTB          75     13.2%      +170.1%       +48.7%
+Highest CTB       75     32.1%      +155.9%       +37.3%
+
+
+=== SECTOR CTB vs 3-YEAR RETURNS (2022 cohort) ===
+
+Sector                       N   Avg CTB%  Avg 3yr Ret  Med 3yr Ret
+--------------------------------------------------------------------
+Comm Services                7     21.3%      +176.6%      +217.9%
+Consumer Disc               17      4.6%       +63.7%       +37.5%
+Consumer Staples            13      7.9%       +10.9%        -5.4%
+Energy                       9      5.3%       +12.1%        +9.1%
+Financials                  14      4.7%       +68.5%       +62.7%
+Healthcare                  27     12.2%       +22.3%       +14.1%
+Industrials                 19      8.7%       +56.8%       +17.2%
+Materials                    6     14.5%       +44.4%       +40.0%
+Technology                  35     18.3%      +152.2%       +70.2%
+Utilities                    5     29.9%        +4.0%        +4.2%
+
+All outputs saved to /data/.openclaw/workspace/sentiocap/analysis/

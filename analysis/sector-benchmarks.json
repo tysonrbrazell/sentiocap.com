@@ -1,0 +1,1241 @@
+{
+  "Comm Services": {
+    "2015": {
+      "n_companies": 7,
+      "ctb_median": 40.94,
+      "ctb_mean": 40.51,
+      "ctb_p25": 29.65,
+      "ctb_p75": 45.63,
+      "rd_median": 16.38,
+      "margin_median": 20.8
+    },
+    "2016": {
+      "n_companies": 7,
+      "ctb_median": 35.34,
+      "ctb_mean": 33.42,
+      "ctb_p25": 26.76,
+      "ctb_p75": 43.45,
+      "rd_median": 15.45,
+      "margin_median": 20.28
+    },
+    "2017": {
+      "n_companies": 8,
+      "ctb_median": 35.64,
+      "ctb_mean": 36.2,
+      "ctb_p25": 26.89,
+      "ctb_p75": 48.68,
+      "rd_median": 15.0,
+      "margin_median": 23.61
+    },
+    "2018": {
+      "n_companies": 7,
+      "ctb_median": 34.03,
+      "ctb_mean": 36.76,
+      "ctb_p25": 33.25,
+      "ctb_p75": 43.32,
+      "rd_median": 15.65,
+      "margin_median": 20.12
+    },
+    "2019": {
+      "n_companies": 7,
+      "ctb_median": 35.05,
+      "ctb_mean": 35.61,
+      "ctb_p25": 30.62,
+      "ctb_p75": 40.6,
+      "rd_median": 16.07,
+      "margin_median": 21.15
+    },
+    "2020": {
+      "n_companies": 7,
+      "ctb_median": 33.13,
+      "ctb_mean": 34.78,
+      "ctb_p25": 27.31,
+      "ctb_p75": 39.1,
+      "rd_median": 15.11,
+      "margin_median": 22.59
+    },
+    "2021": {
+      "n_companies": 7,
+      "ctb_median": 15.38,
+      "ctb_mean": 16.91,
+      "ctb_p25": 7.88,
+      "ctb_p75": 21.81,
+      "rd_median": 7.66,
+      "margin_median": 20.86
+    },
+    "2022": {
+      "n_companies": 7,
+      "ctb_median": 17.56,
+      "ctb_mean": 21.34,
+      "ctb_p25": 8.75,
+      "ctb_p75": 25.1,
+      "rd_median": 8.58,
+      "margin_median": 17.82
+    },
+    "2023": {
+      "n_companies": 7,
+      "ctb_median": 12.48,
+      "ctb_mean": 19.46,
+      "ctb_p25": 8.97,
+      "ctb_p75": 25.27,
+      "rd_median": 7.93,
+      "margin_median": 20.62
+    },
+    "2024": {
+      "n_companies": 7,
+      "ctb_median": 10.86,
+      "ctb_mean": 20.4,
+      "ctb_p25": 8.63,
+      "ctb_p75": 29.1,
+      "rd_median": 7.5,
+      "margin_median": 26.71
+    },
+    "2025": {
+      "n_companies": 7,
+      "ctb_median": 11.27,
+      "ctb_mean": 25.32,
+      "ctb_p25": 9.03,
+      "ctb_p75": 37.87,
+      "rd_median": 7.51,
+      "margin_median": 29.49
+    }
+  },
+  "Consumer Disc": {
+    "2015": {
+      "n_companies": 9,
+      "ctb_median": 10.98,
+      "ctb_mean": 12.61,
+      "ctb_p25": 8.23,
+      "ctb_p75": 16.65,
+      "rd_median": 0.0,
+      "margin_median": 22.34
+    },
+    "2016": {
+      "n_companies": 14,
+      "ctb_median": 5.54,
+      "ctb_mean": 14.84,
+      "ctb_p25": 3.65,
+      "ctb_p75": 19.81,
+      "rd_median": 0.0,
+      "margin_median": 8.08
+    },
+    "2017": {
+      "n_companies": 16,
+      "ctb_median": 8.95,
+      "ctb_mean": 12.01,
+      "ctb_p25": 3.22,
+      "ctb_p75": 21.39,
+      "rd_median": 0.0,
+      "margin_median": 18.38
+    },
+    "2018": {
+      "n_companies": 17,
+      "ctb_median": 10.51,
+      "ctb_mean": 13.83,
+      "ctb_p25": 2.82,
+      "ctb_p75": 19.75,
+      "rd_median": 0.0,
+      "margin_median": 15.31
+    },
+    "2019": {
+      "n_companies": 17,
+      "ctb_median": 11.02,
+      "ctb_mean": 14.05,
+      "ctb_p25": 3.16,
+      "ctb_p75": 23.18,
+      "rd_median": 0.0,
+      "margin_median": 17.19
+    },
+    "2020": {
+      "n_companies": 17,
+      "ctb_median": 6.22,
+      "ctb_mean": 10.49,
+      "ctb_p25": 2.9,
+      "ctb_p75": 14.8,
+      "rd_median": 0.0,
+      "margin_median": 9.0
+    },
+    "2021": {
+      "n_companies": 17,
+      "ctb_median": 4.25,
+      "ctb_mean": 5.15,
+      "ctb_p25": 1.56,
+      "ctb_p75": 5.91,
+      "rd_median": 0.0,
+      "margin_median": 16.77
+    },
+    "2022": {
+      "n_companies": 17,
+      "ctb_median": 4.08,
+      "ctb_mean": 4.58,
+      "ctb_p25": 1.62,
+      "ctb_p75": 5.71,
+      "rd_median": 0.0,
+      "margin_median": 16.76
+    },
+    "2023": {
+      "n_companies": 17,
+      "ctb_median": 4.03,
+      "ctb_mean": 5.5,
+      "ctb_p25": 1.88,
+      "ctb_p75": 6.38,
+      "rd_median": 0.0,
+      "margin_median": 16.32
+    },
+    "2024": {
+      "n_companies": 17,
+      "ctb_median": 3.74,
+      "ctb_mean": 4.68,
+      "ctb_p25": 1.81,
+      "ctb_p75": 5.8,
+      "rd_median": 0.0,
+      "margin_median": 16.94
+    },
+    "2025": {
+      "n_companies": 16,
+      "ctb_median": 5.02,
+      "ctb_mean": 4.87,
+      "ctb_p25": 1.2,
+      "ctb_p75": 6.57,
+      "rd_median": 0.0,
+      "margin_median": 16.23
+    },
+    "2026": {
+      "n_companies": 2,
+      "ctb_median": 3.6,
+      "ctb_mean": 3.08,
+      "ctb_p25": 2.56,
+      "ctb_p75": 3.6,
+      "rd_median": 0.0,
+      "margin_median": 11.9
+    }
+  },
+  "Consumer Staples": {
+    "2015": {
+      "n_companies": 4,
+      "ctb_median": 10.37,
+      "ctb_mean": 12.82,
+      "ctb_p25": 8.79,
+      "ctb_p75": 26.11,
+      "rd_median": 1.71,
+      "margin_median": 23.12
+    },
+    "2016": {
+      "n_companies": 9,
+      "ctb_median": 5.8,
+      "ctb_mean": 7.44,
+      "ctb_p25": 4.26,
+      "ctb_p75": 9.43,
+      "rd_median": 0.79,
+      "margin_median": 20.68
+    },
+    "2017": {
+      "n_companies": 13,
+      "ctb_median": 7.21,
+      "ctb_mean": 14.23,
+      "ctb_p25": 4.83,
+      "ctb_p75": 21.5,
+      "rd_median": 1.68,
+      "margin_median": 22.53
+    },
+    "2018": {
+      "n_companies": 13,
+      "ctb_median": 8.05,
+      "ctb_mean": 15.53,
+      "ctb_p25": 4.51,
+      "ctb_p75": 21.51,
+      "rd_median": 3.48,
+      "margin_median": 26.68
+    },
+    "2019": {
+      "n_companies": 13,
+      "ctb_median": 8.08,
+      "ctb_mean": 13.31,
+      "ctb_p25": 4.45,
+      "ctb_p75": 17.18,
+      "rd_median": 2.8,
+      "margin_median": 27.06
+    },
+    "2020": {
+      "n_companies": 13,
+      "ctb_median": 7.56,
+      "ctb_mean": 11.88,
+      "ctb_p25": 3.57,
+      "ctb_p75": 16.17,
+      "rd_median": 1.44,
+      "margin_median": 27.25
+    },
+    "2021": {
+      "n_companies": 13,
+      "ctb_median": 4.35,
+      "ctb_mean": 7.42,
+      "ctb_p25": 1.83,
+      "ctb_p75": 5.97,
+      "rd_median": 0.95,
+      "margin_median": 22.78
+    },
+    "2022": {
+      "n_companies": 13,
+      "ctb_median": 3.98,
+      "ctb_mean": 7.89,
+      "ctb_p25": 1.71,
+      "ctb_p75": 5.65,
+      "rd_median": 0.89,
+      "margin_median": 21.7
+    },
+    "2023": {
+      "n_companies": 13,
+      "ctb_median": 4.05,
+      "ctb_mean": 8.34,
+      "ctb_p25": 1.77,
+      "ctb_p75": 6.17,
+      "rd_median": 0.9,
+      "margin_median": 22.11
+    },
+    "2024": {
+      "n_companies": 13,
+      "ctb_median": 4.9,
+      "ctb_mean": 9.5,
+      "ctb_p25": 1.85,
+      "ctb_p75": 6.33,
+      "rd_median": 0.89,
+      "margin_median": 22.07
+    },
+    "2025": {
+      "n_companies": 13,
+      "ctb_median": 4.41,
+      "ctb_mean": 9.18,
+      "ctb_p25": 2.0,
+      "ctb_p75": 6.97,
+      "rd_median": 0.89,
+      "margin_median": 16.4
+    },
+    "2026": {
+      "n_companies": 2,
+      "ctb_median": 45.57,
+      "ctb_mean": 24.66,
+      "ctb_p25": 3.74,
+      "ctb_p75": 45.57,
+      "rd_median": 0.0,
+      "margin_median": 141.72
+    }
+  },
+  "Energy": {
+    "2015": {
+      "n_companies": 7,
+      "ctb_median": 11.46,
+      "ctb_mean": 15.05,
+      "ctb_p25": 0.72,
+      "ctb_p75": 27.05,
+      "rd_median": 0.42,
+      "margin_median": 16.99
+    },
+    "2016": {
+      "n_companies": 8,
+      "ctb_median": 16.86,
+      "ctb_mean": 14.21,
+      "ctb_p25": 8.58,
+      "ctb_p75": 26.93,
+      "rd_median": 0.42,
+      "margin_median": 11.77
+    },
+    "2017": {
+      "n_companies": 8,
+      "ctb_median": 12.98,
+      "ctb_mean": 13.97,
+      "ctb_p25": 6.74,
+      "ctb_p75": 28.77,
+      "rd_median": 0.31,
+      "margin_median": 12.88
+    },
+    "2018": {
+      "n_companies": 9,
+      "ctb_median": 7.13,
+      "ctb_mean": 11.79,
+      "ctb_p25": 0.27,
+      "ctb_p75": 20.53,
+      "rd_median": 0.19,
+      "margin_median": 12.76
+    },
+    "2019": {
+      "n_companies": 9,
+      "ctb_median": 9.65,
+      "ctb_mean": 11.85,
+      "ctb_p25": 0.34,
+      "ctb_p75": 17.19,
+      "rd_median": 0.19,
+      "margin_median": 23.42
+    },
+    "2020": {
+      "n_companies": 9,
+      "ctb_median": 10.08,
+      "ctb_mean": 8.76,
+      "ctb_p25": 0.46,
+      "ctb_p75": 14.59,
+      "rd_median": 0.29,
+      "margin_median": 13.33
+    },
+    "2021": {
+      "n_companies": 9,
+      "ctb_median": 4.52,
+      "ctb_mean": 4.66,
+      "ctb_p25": 0.16,
+      "ctb_p75": 7.71,
+      "rd_median": 0.04,
+      "margin_median": 17.56
+    },
+    "2022": {
+      "n_companies": 9,
+      "ctb_median": 4.65,
+      "ctb_mean": 5.29,
+      "ctb_p25": 0.11,
+      "ctb_p75": 8.44,
+      "rd_median": 0.02,
+      "margin_median": 17.84
+    },
+    "2023": {
+      "n_companies": 9,
+      "ctb_median": 6.62,
+      "ctb_mean": 8.53,
+      "ctb_p25": 0.16,
+      "ctb_p75": 15.11,
+      "rd_median": 0.02,
+      "margin_median": 27.8
+    },
+    "2024": {
+      "n_companies": 9,
+      "ctb_median": 7.24,
+      "ctb_mean": 9.13,
+      "ctb_p25": 0.17,
+      "ctb_p75": 17.41,
+      "rd_median": 0.01,
+      "margin_median": 26.43
+    },
+    "2025": {
+      "n_companies": 8,
+      "ctb_median": 8.9,
+      "ctb_mean": 12.39,
+      "ctb_p25": 2.63,
+      "ctb_p75": 29.76,
+      "rd_median": 0.13,
+      "margin_median": 27.89
+    }
+  },
+  "Financials": {
+    "2015": {
+      "n_companies": 11,
+      "ctb_median": 13.64,
+      "ctb_mean": 12.64,
+      "ctb_p25": 4.06,
+      "ctb_p75": 17.33,
+      "rd_median": 0.0,
+      "margin_median": 38.47
+    },
+    "2016": {
+      "n_companies": 12,
+      "ctb_median": 5.35,
+      "ctb_mean": 8.67,
+      "ctb_p25": 3.05,
+      "ctb_p75": 16.57,
+      "rd_median": 0.0,
+      "margin_median": 10.95
+    },
+    "2017": {
+      "n_companies": 13,
+      "ctb_median": 9.1,
+      "ctb_mean": 15.23,
+      "ctb_p25": 3.77,
+      "ctb_p75": 19.2,
+      "rd_median": 0.0,
+      "margin_median": 39.94
+    },
+    "2018": {
+      "n_companies": 13,
+      "ctb_median": 8.66,
+      "ctb_mean": 14.32,
+      "ctb_p25": 3.11,
+      "ctb_p75": 19.15,
+      "rd_median": 0.0,
+      "margin_median": 28.59
+    },
+    "2019": {
+      "n_companies": 13,
+      "ctb_median": 7.8,
+      "ctb_mean": 11.78,
+      "ctb_p25": 3.1,
+      "ctb_p75": 19.89,
+      "rd_median": 0.0,
+      "margin_median": 18.16
+    },
+    "2020": {
+      "n_companies": 13,
+      "ctb_median": 6.73,
+      "ctb_mean": 13.42,
+      "ctb_p25": 1.92,
+      "ctb_p75": 17.59,
+      "rd_median": 0.0,
+      "margin_median": 34.22
+    },
+    "2021": {
+      "n_companies": 13,
+      "ctb_median": 2.71,
+      "ctb_mean": 6.66,
+      "ctb_p25": 1.95,
+      "ctb_p75": 5.59,
+      "rd_median": 0.0,
+      "margin_median": 37.62
+    },
+    "2022": {
+      "n_companies": 14,
+      "ctb_median": 4.68,
+      "ctb_mean": 4.75,
+      "ctb_p25": 1.99,
+      "ctb_p75": 5.42,
+      "rd_median": 0.0,
+      "margin_median": 37.75
+    },
+    "2023": {
+      "n_companies": 14,
+      "ctb_median": 3.72,
+      "ctb_mean": 4.46,
+      "ctb_p25": 1.88,
+      "ctb_p75": 5.33,
+      "rd_median": 0.0,
+      "margin_median": 37.3
+    },
+    "2024": {
+      "n_companies": 14,
+      "ctb_median": 3.45,
+      "ctb_mean": 4.29,
+      "ctb_p25": 1.53,
+      "ctb_p75": 5.11,
+      "rd_median": 0.0,
+      "margin_median": 40.56
+    },
+    "2025": {
+      "n_companies": 14,
+      "ctb_median": 2.95,
+      "ctb_mean": 4.33,
+      "ctb_p25": 1.53,
+      "ctb_p75": 5.87,
+      "rd_median": 0.0,
+      "margin_median": 43.42
+    }
+  },
+  "Healthcare": {
+    "2015": {
+      "n_companies": 10,
+      "ctb_median": 10.6,
+      "ctb_mean": 24.54,
+      "ctb_p25": 3.06,
+      "ctb_p75": 23.97,
+      "rd_median": 0.0,
+      "margin_median": 17.57
+    },
+    "2016": {
+      "n_companies": 25,
+      "ctb_median": 9.27,
+      "ctb_mean": 16.37,
+      "ctb_p25": 4.09,
+      "ctb_p75": 20.86,
+      "rd_median": 5.7,
+      "margin_median": 19.21
+    },
+    "2017": {
+      "n_companies": 26,
+      "ctb_median": 16.24,
+      "ctb_mean": 23.81,
+      "ctb_p25": 3.72,
+      "ctb_p75": 36.84,
+      "rd_median": 6.16,
+      "margin_median": 33.83
+    },
+    "2018": {
+      "n_companies": 27,
+      "ctb_median": 21.85,
+      "ctb_mean": 27.82,
+      "ctb_p25": 4.32,
+      "ctb_p75": 42.52,
+      "rd_median": 7.88,
+      "margin_median": 36.27
+    },
+    "2019": {
+      "n_companies": 27,
+      "ctb_median": 24.86,
+      "ctb_mean": 28.73,
+      "ctb_p25": 4.29,
+      "ctb_p75": 44.24,
+      "rd_median": 7.82,
+      "margin_median": 39.02
+    },
+    "2020": {
+      "n_companies": 25,
+      "ctb_median": 9.6,
+      "ctb_mean": 21.18,
+      "ctb_p25": 3.21,
+      "ctb_p75": 32.27,
+      "rd_median": 3.67,
+      "margin_median": 24.19
+    },
+    "2021": {
+      "n_companies": 27,
+      "ctb_median": 8.73,
+      "ctb_mean": 12.87,
+      "ctb_p25": 2.35,
+      "ctb_p75": 23.49,
+      "rd_median": 3.59,
+      "margin_median": 25.71
+    },
+    "2022": {
+      "n_companies": 27,
+      "ctb_median": 8.27,
+      "ctb_mean": 12.2,
+      "ctb_p25": 2.36,
+      "ctb_p75": 23.02,
+      "rd_median": 0.0,
+      "margin_median": 25.35
+    },
+    "2023": {
+      "n_companies": 26,
+      "ctb_median": 8.57,
+      "ctb_mean": 16.03,
+      "ctb_p25": 2.16,
+      "ctb_p75": 23.35,
+      "rd_median": 2.26,
+      "margin_median": 20.87
+    },
+    "2024": {
+      "n_companies": 26,
+      "ctb_median": 7.05,
+      "ctb_mean": 13.13,
+      "ctb_p25": 1.82,
+      "ctb_p75": 13.16,
+      "rd_median": 2.07,
+      "margin_median": 16.27
+    },
+    "2025": {
+      "n_companies": 26,
+      "ctb_median": 6.56,
+      "ctb_mean": 10.19,
+      "ctb_p25": 1.98,
+      "ctb_p75": 12.41,
+      "rd_median": 0.12,
+      "margin_median": 20.84
+    }
+  },
+  "Industrials": {
+    "2015": {
+      "n_companies": 8,
+      "ctb_median": 24.52,
+      "ctb_mean": 36.19,
+      "ctb_p25": 14.82,
+      "ctb_p75": 89.29,
+      "rd_median": 0.0,
+      "margin_median": 15.47
+    },
+    "2016": {
+      "n_companies": 17,
+      "ctb_median": 9.9,
+      "ctb_mean": 16.43,
+      "ctb_p25": 4.81,
+      "ctb_p75": 21.66,
+      "rd_median": 2.97,
+      "margin_median": 12.14
+    },
+    "2017": {
+      "n_companies": 18,
+      "ctb_median": 21.38,
+      "ctb_mean": 24.26,
+      "ctb_p25": 5.41,
+      "ctb_p75": 30.88,
+      "rd_median": 3.38,
+      "margin_median": 24.3
+    },
+    "2018": {
+      "n_companies": 18,
+      "ctb_median": 25.39,
+      "ctb_mean": 24.85,
+      "ctb_p25": 8.64,
+      "ctb_p75": 31.66,
+      "rd_median": 3.23,
+      "margin_median": 22.0
+    },
+    "2019": {
+      "n_companies": 18,
+      "ctb_median": 25.22,
+      "ctb_mean": 24.59,
+      "ctb_p25": 6.6,
+      "ctb_p75": 31.02,
+      "rd_median": 3.9,
+      "margin_median": 19.21
+    },
+    "2020": {
+      "n_companies": 18,
+      "ctb_median": 21.74,
+      "ctb_mean": 22.07,
+      "ctb_p25": 10.42,
+      "ctb_p75": 25.32,
+      "rd_median": 7.63,
+      "margin_median": 15.99
+    },
+    "2021": {
+      "n_companies": 18,
+      "ctb_median": 7.56,
+      "ctb_mean": 10.76,
+      "ctb_p25": 5.18,
+      "ctb_p75": 13.19,
+      "rd_median": 3.31,
+      "margin_median": 16.54
+    },
+    "2022": {
+      "n_companies": 19,
+      "ctb_median": 6.33,
+      "ctb_mean": 8.72,
+      "ctb_p25": 4.84,
+      "ctb_p75": 14.23,
+      "rd_median": 3.06,
+      "margin_median": 17.08
+    },
+    "2023": {
+      "n_companies": 18,
+      "ctb_median": 6.51,
+      "ctb_mean": 8.79,
+      "ctb_p25": 5.52,
+      "ctb_p75": 10.69,
+      "rd_median": 3.25,
+      "margin_median": 19.33
+    },
+    "2024": {
+      "n_companies": 18,
+      "ctb_median": 7.65,
+      "ctb_mean": 10.4,
+      "ctb_p25": 4.98,
+      "ctb_p75": 14.24,
+      "rd_median": 3.25,
+      "margin_median": 19.62
+    },
+    "2025": {
+      "n_companies": 18,
+      "ctb_median": 7.33,
+      "ctb_mean": 9.79,
+      "ctb_p25": 4.16,
+      "ctb_p75": 15.47,
+      "rd_median": 3.17,
+      "margin_median": 18.55
+    }
+  },
+  "Materials": {
+    "2015": {
+      "n_companies": 2,
+      "ctb_median": 2.07,
+      "ctb_mean": 1.29,
+      "ctb_p25": 0.51,
+      "ctb_p75": 2.07,
+      "rd_median": 2.07,
+      "margin_median": 17.31
+    },
+    "2016": {
+      "n_companies": 6,
+      "ctb_median": 7.57,
+      "ctb_mean": 13.36,
+      "ctb_p25": 2.0,
+      "ctb_p75": 14.78,
+      "rd_median": 2.0,
+      "margin_median": 18.25
+    },
+    "2017": {
+      "n_companies": 7,
+      "ctb_median": 7.39,
+      "ctb_mean": 20.25,
+      "ctb_p25": 2.21,
+      "ctb_p75": 47.54,
+      "rd_median": 3.15,
+      "margin_median": 20.78
+    },
+    "2018": {
+      "n_companies": 7,
+      "ctb_median": 19.61,
+      "ctb_mean": 23.57,
+      "ctb_p25": 3.92,
+      "ctb_p75": 34.41,
+      "rd_median": 2.9,
+      "margin_median": 20.46
+    },
+    "2019": {
+      "n_companies": 6,
+      "ctb_median": 28.79,
+      "ctb_mean": 35.46,
+      "ctb_p25": 5.06,
+      "ctb_p75": 54.6,
+      "rd_median": 4.46,
+      "margin_median": 15.97
+    },
+    "2020": {
+      "n_companies": 5,
+      "ctb_median": 13.04,
+      "ctb_mean": 14.1,
+      "ctb_p25": 5.08,
+      "ctb_p75": 21.99,
+      "rd_median": 1.06,
+      "margin_median": 13.57
+    },
+    "2021": {
+      "n_companies": 6,
+      "ctb_median": 15.65,
+      "ctb_mean": 13.54,
+      "ctb_p25": 4.43,
+      "ctb_p75": 24.64,
+      "rd_median": 1.26,
+      "margin_median": 16.19
+    },
+    "2022": {
+      "n_companies": 6,
+      "ctb_median": 22.33,
+      "ctb_mean": 14.46,
+      "ctb_p25": 4.12,
+      "ctb_p75": 23.86,
+      "rd_median": 1.92,
+      "margin_median": 16.09
+    },
+    "2023": {
+      "n_companies": 6,
+      "ctb_median": 24.55,
+      "ctb_mean": 17.9,
+      "ctb_p25": 2.9,
+      "ctb_p75": 28.74,
+      "rd_median": 1.69,
+      "margin_median": 19.8
+    },
+    "2024": {
+      "n_companies": 6,
+      "ctb_median": 30.0,
+      "ctb_mean": 26.5,
+      "ctb_p25": 12.02,
+      "ctb_p75": 44.84,
+      "rd_median": 1.05,
+      "margin_median": 26.16
+    },
+    "2025": {
+      "n_companies": 6,
+      "ctb_median": 11.4,
+      "ctb_mean": 17.58,
+      "ctb_p25": 7.77,
+      "ctb_p75": 15.91,
+      "rd_median": 0.8,
+      "margin_median": 17.02
+    }
+  },
+  "Other": {
+    "2015": {
+      "n_companies": 86,
+      "ctb_median": 6.91,
+      "ctb_mean": 14.63,
+      "ctb_p25": 3.41,
+      "ctb_p75": 18.28,
+      "rd_median": 0.0,
+      "margin_median": 13.12
+    },
+    "2016": {
+      "n_companies": 173,
+      "ctb_median": 6.36,
+      "ctb_mean": 13.09,
+      "ctb_p25": 3.09,
+      "ctb_p75": 16.49,
+      "rd_median": 0.0,
+      "margin_median": 9.61
+    },
+    "2017": {
+      "n_companies": 202,
+      "ctb_median": 10.35,
+      "ctb_mean": 16.36,
+      "ctb_p25": 3.91,
+      "ctb_p75": 21.12,
+      "rd_median": 0.0,
+      "margin_median": 16.98
+    },
+    "2018": {
+      "n_companies": 210,
+      "ctb_median": 11.53,
+      "ctb_mean": 17.03,
+      "ctb_p25": 4.21,
+      "ctb_p75": 23.02,
+      "rd_median": 0.0,
+      "margin_median": 14.68
+    },
+    "2019": {
+      "n_companies": 212,
+      "ctb_median": 13.18,
+      "ctb_mean": 18.64,
+      "ctb_p25": 5.64,
+      "ctb_p75": 24.65,
+      "rd_median": 0.0,
+      "margin_median": 16.19
+    },
+    "2020": {
+      "n_companies": 204,
+      "ctb_median": 11.01,
+      "ctb_mean": 17.02,
+      "ctb_p25": 4.07,
+      "ctb_p75": 22.94,
+      "rd_median": 0.0,
+      "margin_median": 14.71
+    },
+    "2021": {
+      "n_companies": 217,
+      "ctb_median": 5.32,
+      "ctb_mean": 10.57,
+      "ctb_p25": 2.92,
+      "ctb_p75": 12.81,
+      "rd_median": 0.0,
+      "margin_median": 16.15
+    },
+    "2022": {
+      "n_companies": 226,
+      "ctb_median": 5.37,
+      "ctb_mean": 10.68,
+      "ctb_p25": 2.75,
+      "ctb_p75": 12.73,
+      "rd_median": 0.0,
+      "margin_median": 14.45
+    },
+    "2023": {
+      "n_companies": 227,
+      "ctb_median": 5.76,
+      "ctb_mean": 11.72,
+      "ctb_p25": 2.87,
+      "ctb_p75": 14.59,
+      "rd_median": 0.0,
+      "margin_median": 15.45
+    },
+    "2024": {
+      "n_companies": 223,
+      "ctb_median": 5.91,
+      "ctb_mean": 11.37,
+      "ctb_p25": 2.65,
+      "ctb_p75": 13.33,
+      "rd_median": 0.0,
+      "margin_median": 15.57
+    },
+    "2025": {
+      "n_companies": 224,
+      "ctb_median": 5.23,
+      "ctb_mean": 10.24,
+      "ctb_p25": 2.5,
+      "ctb_p75": 12.31,
+      "rd_median": 0.0,
+      "margin_median": 16.69
+    },
+    "2026": {
+      "n_companies": 14,
+      "ctb_median": 3.51,
+      "ctb_mean": 5.74,
+      "ctb_p25": 1.59,
+      "ctb_p75": 4.0,
+      "rd_median": 0.18,
+      "margin_median": 12.28
+    }
+  },
+  "Real Estate": {
+    "2016": {
+      "n_companies": 1,
+      "ctb_median": 11.8,
+      "ctb_mean": 11.8,
+      "ctb_p25": 11.8,
+      "ctb_p75": 11.8,
+      "rd_median": 0.0,
+      "margin_median": 8.46
+    },
+    "2017": {
+      "n_companies": 1,
+      "ctb_median": 47.15,
+      "ctb_mean": 47.15,
+      "ctb_p25": 47.15,
+      "ctb_p75": 47.15,
+      "rd_median": 0.0,
+      "margin_median": 19.3
+    },
+    "2018": {
+      "n_companies": 1,
+      "ctb_median": 42.84,
+      "ctb_mean": 42.84,
+      "ctb_p25": 42.84,
+      "ctb_p75": 42.84,
+      "rd_median": 0.0,
+      "margin_median": 18.24
+    },
+    "2019": {
+      "n_companies": 1,
+      "ctb_median": 51.53,
+      "ctb_mean": 51.53,
+      "ctb_p25": 51.53,
+      "ctb_p75": 51.53,
+      "rd_median": 0.0,
+      "margin_median": 34.38
+    },
+    "2020": {
+      "n_companies": 1,
+      "ctb_median": 12.83,
+      "ctb_mean": 12.83,
+      "ctb_p25": 12.83,
+      "ctb_p75": 12.83,
+      "rd_median": 0.0,
+      "margin_median": 35.91
+    },
+    "2021": {
+      "n_companies": 1,
+      "ctb_median": 14.71,
+      "ctb_mean": 14.71,
+      "ctb_p25": 14.71,
+      "ctb_p75": 14.71,
+      "rd_median": 0.0,
+      "margin_median": 33.47
+    },
+    "2022": {
+      "n_companies": 1,
+      "ctb_median": 19.42,
+      "ctb_mean": 19.42,
+      "ctb_p25": 19.42,
+      "ctb_p75": 19.42,
+      "rd_median": 0.0,
+      "margin_median": 28.39
+    },
+    "2023": {
+      "n_companies": 1,
+      "ctb_median": 73.21,
+      "ctb_mean": 73.21,
+      "ctb_p25": 73.21,
+      "ctb_p75": 73.21,
+      "rd_median": 0.0,
+      "margin_median": 24.95
+    },
+    "2024": {
+      "n_companies": 1,
+      "ctb_median": 62.41,
+      "ctb_mean": 62.41,
+      "ctb_p25": 62.41,
+      "ctb_p75": 62.41,
+      "rd_median": 0.0,
+      "margin_median": 42.4
+    },
+    "2025": {
+      "n_companies": 1,
+      "ctb_median": 15.79,
+      "ctb_mean": 15.79,
+      "ctb_p25": 15.79,
+      "ctb_p75": 15.79,
+      "rd_median": 0.0,
+      "margin_median": 45.52
+    }
+  },
+  "Technology": {
+    "2015": {
+      "n_companies": 11,
+      "ctb_median": 15.12,
+      "ctb_mean": 26.65,
+      "ctb_p25": 6.43,
+      "ctb_p75": 32.23,
+      "rd_median": 6.43,
+      "margin_median": 7.62
+    },
+    "2016": {
+      "n_companies": 22,
+      "ctb_median": 16.56,
+      "ctb_mean": 27.2,
+      "ctb_p25": 7.9,
+      "ctb_p75": 37.57,
+      "rd_median": 12.82,
+      "margin_median": 12.89
+    },
+    "2017": {
+      "n_companies": 32,
+      "ctb_median": 24.78,
+      "ctb_mean": 30.43,
+      "ctb_p25": 11.14,
+      "ctb_p75": 54.85,
+      "rd_median": 18.72,
+      "margin_median": 16.67
+    },
+    "2018": {
+      "n_companies": 31,
+      "ctb_median": 24.89,
+      "ctb_mean": 33.22,
+      "ctb_p25": 11.02,
+      "ctb_p75": 54.82,
+      "rd_median": 18.07,
+      "margin_median": 18.53
+    },
+    "2019": {
+      "n_companies": 34,
+      "ctb_median": 28.77,
+      "ctb_mean": 38.67,
+      "ctb_p25": 18.78,
+      "ctb_p75": 56.89,
+      "rd_median": 19.19,
+      "margin_median": 16.36
+    },
+    "2020": {
+      "n_companies": 34,
+      "ctb_median": 26.0,
+      "ctb_mean": 37.92,
+      "ctb_p25": 16.75,
+      "ctb_p75": 58.56,
+      "rd_median": 22.66,
+      "margin_median": 18.12
+    },
+    "2021": {
+      "n_companies": 35,
+      "ctb_median": 19.14,
+      "ctb_mean": 21.09,
+      "ctb_p25": 10.7,
+      "ctb_p75": 23.53,
+      "rd_median": 13.15,
+      "margin_median": 23.35
+    },
+    "2022": {
+      "n_companies": 35,
+      "ctb_median": 18.93,
+      "ctb_mean": 18.3,
+      "ctb_p25": 11.34,
+      "ctb_p75": 23.11,
+      "rd_median": 12.36,
+      "margin_median": 27.09
+    },
+    "2023": {
+      "n_companies": 35,
+      "ctb_median": 19.01,
+      "ctb_mean": 21.99,
+      "ctb_p25": 12.96,
+      "ctb_p75": 26.1,
+      "rd_median": 12.83,
+      "margin_median": 23.94
+    },
+    "2024": {
+      "n_companies": 35,
+      "ctb_median": 18.11,
+      "ctb_mean": 20.19,
+      "ctb_p25": 12.76,
+      "ctb_p75": 24.37,
+      "rd_median": 14.07,
+      "margin_median": 22.64
+    },
+    "2025": {
+      "n_companies": 35,
+      "ctb_median": 18.16,
+      "ctb_mean": 19.8,
+      "ctb_p25": 11.36,
+      "ctb_p75": 24.87,
+      "rd_median": 12.79,
+      "margin_median": 24.83
+    },
+    "2026": {
+      "n_companies": 4,
+      "ctb_median": 15.86,
+      "ctb_mean": 13.23,
+      "ctb_p25": 8.57,
+      "ctb_p75": 23.4,
+      "rd_median": 14.43,
+      "margin_median": 21.9
+    }
+  },
+  "Utilities": {
+    "2015": {
+      "n_companies": 3,
+      "ctb_median": 4.1,
+      "ctb_mean": 24.25,
+      "ctb_p25": 0.15,
+      "ctb_p75": 68.51,
+      "rd_median": 0.0,
+      "margin_median": 19.33
+    },
+    "2016": {
+      "n_companies": 4,
+      "ctb_median": 51.84,
+      "ctb_mean": 42.69,
+      "ctb_p25": 43.55,
+      "ctb_p75": 72.53,
+      "rd_median": 0.0,
+      "margin_median": 18.43
+    },
+    "2017": {
+      "n_companies": 3,
+      "ctb_median": 90.46,
+      "ctb_mean": 71.99,
+      "ctb_p25": 30.17,
+      "ctb_p75": 95.35,
+      "rd_median": 0.0,
+      "margin_median": 19.81
+    },
+    "2018": {
+      "n_companies": 3,
+      "ctb_median": 42.74,
+      "ctb_mean": 55.99,
+      "ctb_p25": 39.06,
+      "ctb_p75": 86.18,
+      "rd_median": 0.0,
+      "margin_median": 8.01
+    },
+    "2019": {
+      "n_companies": 4,
+      "ctb_median": 36.23,
+      "ctb_mean": 44.48,
+      "ctb_p25": 29.43,
+      "ctb_p75": 86.88,
+      "rd_median": 0.0,
+      "margin_median": 11.53
+    },
+    "2020": {
+      "n_companies": 4,
+      "ctb_median": 36.92,
+      "ctb_mean": 37.95,
+      "ctb_p25": 33.55,
+      "ctb_p75": 48.3,
+      "rd_median": 0.0,
+      "margin_median": 22.33
+    },
+    "2021": {
+      "n_companies": 5,
+      "ctb_median": 32.19,
+      "ctb_mean": 33.44,
+      "ctb_p25": 29.17,
+      "ctb_p75": 32.82,
+      "rd_median": 0.0,
+      "margin_median": 20.21
+    },
+    "2022": {
+      "n_companies": 5,
+      "ctb_median": 28.1,
+      "ctb_mean": 29.86,
+      "ctb_p25": 28.01,
+      "ctb_p75": 28.67,
+      "rd_median": 0.0,
+      "margin_median": 17.89
+    },
+    "2023": {
+      "n_companies": 3,
+      "ctb_median": 36.02,
+      "ctb_mean": 35.51,
+      "ctb_p25": 34.1,
+      "ctb_p75": 36.41,
+      "rd_median": 0.0,
+      "margin_median": 20.14
+    },
+    "2024": {
+      "n_companies": 3,
+      "ctb_median": 33.51,
+      "ctb_mean": 33.99,
+      "ctb_p25": 30.82,
+      "ctb_p75": 37.65,
+      "rd_median": 0.0,
+      "margin_median": 20.24
+    },
+    "2025": {
+      "n_companies": 3,
+      "ctb_median": 35.16,
+      "ctb_mean": 36.32,
+      "ctb_p25": 30.7,
+      "ctb_p75": 43.1,
+      "rd_median": 0.0,
+      "margin_median": 22.06
+    }
+  }
+}
