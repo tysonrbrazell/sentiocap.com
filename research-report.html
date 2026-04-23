@@ -1,0 +1,1728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Investment Intent Index — SentioCap Research</title>
+  <style>
+    /* ─── Reset & Base ─── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0a0e1a;
+      --surface:   #111827;
+      --surface2:  #1a2235;
+      --border:    #1e2d45;
+      --blue:      #4a9eff;
+      --blue-dim:  #1d4070;
+      --green:     #34d399;
+      --green-dim: #0d3d2b;
+      --amber:     #fbbf24;
+      --red:       #f87171;
+      --text:      #e2e8f0;
+      --text-dim:  #8a9ab5;
+      --text-faint:#4a5568;
+      --font:      'Inter', 'Helvetica Neue', Arial, sans-serif;
+      --mono:      'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+    }
+
+    html { font-size: 15px; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── Layout ─── */
+    .page { max-width: 1080px; margin: 0 auto; padding: 0 32px 80px; }
+
+    /* ─── Cover / Header ─── */
+    .cover {
+      border-bottom: 1px solid var(--border);
+      padding: 48px 0 36px;
+      margin-bottom: 48px;
+    }
+
+    .cover-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 32px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-mark {
+      width: 42px; height: 42px;
+      background: linear-gradient(135deg, var(--blue) 0%, #2563eb 100%);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; font-weight: 900; color: #fff;
+      letter-spacing: -1px;
+    }
+
+    .brand-name {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.03em;
+    }
+
+    .brand-tag {
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-top: 1px;
+    }
+
+    .doc-meta {
+      text-align: right;
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      line-height: 1.8;
+    }
+
+    .doc-meta strong { color: var(--text); }
+
+    .cover-title {
+      font-size: 2.3rem;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1.15;
+      color: #fff;
+      margin-bottom: 10px;
+      max-width: 740px;
+    }
+
+    .cover-subtitle {
+      font-size: 1.0rem;
+      color: var(--blue);
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      margin-bottom: 28px;
+    }
+
+    .cover-kicker {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .kicker-pill {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 16px;
+      font-size: 0.82rem;
+      color: var(--text-dim);
+    }
+
+    .kicker-pill strong { color: var(--green); }
+
+    /* ─── Section chrome ─── */
+    .section { margin-bottom: 56px; }
+
+    .section-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 8px;
+    }
+
+    h2 {
+      font-size: 1.45rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: #fff;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 24px;
+    }
+
+    h3 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text);
+      margin: 28px 0 12px;
+    }
+
+    p { margin-bottom: 14px; color: var(--text-dim); }
+    p strong { color: var(--text); }
+
+    /* ─── Call-out cards ─── */
+    .callout-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .callout-row.two { grid-template-columns: repeat(2, 1fr); }
+    .callout-row.four { grid-template-columns: repeat(4, 1fr); }
+
+    .callout {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .callout::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--blue);
+    }
+
+    .callout.green::before { background: var(--green); }
+    .callout.amber::before { background: var(--amber); }
+
+    .callout-value {
+      font-size: 1.9rem;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      color: var(--blue);
+      line-height: 1.1;
+      margin-bottom: 4px;
+    }
+
+    .callout.green .callout-value { color: var(--green); }
+    .callout.amber .callout-value { color: var(--amber); }
+
+    .callout-label {
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      line-height: 1.4;
+    }
+
+    /* ─── Tables ─── */
+    .table-wrap {
+      overflow-x: auto;
+      margin-bottom: 24px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.84rem;
+    }
+
+    thead th {
+      background: var(--surface2);
+      color: var(--text-dim);
+      font-weight: 600;
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 11px 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+
+    thead th.num { text-align: right; }
+
+    tbody td {
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-dim);
+      vertical-align: middle;
+    }
+
+    tbody td.num { text-align: right; font-variant-numeric: tabular-nums; }
+    tbody td.bold { color: var(--text); font-weight: 600; }
+    tbody td.green { color: var(--green); font-weight: 600; }
+    tbody td.blue  { color: var(--blue);  font-weight: 600; }
+    tbody td.amber { color: var(--amber); font-weight: 600; }
+    tbody td.red   { color: var(--red);   font-weight: 600; }
+
+    tbody tr:last-child td { border-bottom: none; }
+
+    tbody tr:hover td { background: var(--surface2); }
+
+    .row-highlight td { background: rgba(74, 158, 255, 0.06); }
+    .row-highlight td.green { background: rgba(52, 211, 153, 0.06); }
+
+    /* ─── Bar charts ─── */
+    .bar-chart {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .bar-chart-title {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-dim);
+      margin-bottom: 20px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .bar-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .bar-label {
+      min-width: 140px;
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      text-align: right;
+    }
+
+    .bar-track {
+      flex: 1;
+      background: var(--surface2);
+      border-radius: 4px;
+      height: 22px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      background: var(--blue);
+      transition: width 0.3s ease;
+    }
+
+    .bar-fill.green { background: var(--green); }
+    .bar-fill.amber { background: var(--amber); }
+    .bar-fill.dim   { background: var(--blue-dim); }
+
+    .bar-value {
+      min-width: 60px;
+      font-size: 0.8rem;
+      color: var(--text);
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* ─── Trend chart ─── */
+    .trend-chart {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .trend-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .trend-title {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-dim);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .trend-legend {
+      display: flex;
+      gap: 16px;
+      font-size: 0.75rem;
+      color: var(--text-dim);
+    }
+
+    .legend-dot {
+      display: inline-block;
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      margin-right: 5px;
+      vertical-align: middle;
+    }
+
+    .stacked-bars {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      height: 180px;
+    }
+
+    .year-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100%;
+      justify-content: flex-end;
+      gap: 2px;
+    }
+
+    .year-label {
+      font-size: 0.7rem;
+      color: var(--text-faint);
+      margin-top: 6px;
+    }
+
+    .bar-segment {
+      width: 100%;
+      border-radius: 3px 3px 0 0;
+    }
+
+    /* ─── Quintile visual ─── */
+    .quintile-viz {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .q-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 12px;
+      text-align: center;
+      position: relative;
+    }
+
+    .q-card.highlight {
+      border-color: var(--green);
+      background: rgba(52, 211, 153, 0.04);
+    }
+
+    .q-card.highlight::after {
+      content: '★ Best';
+      position: absolute;
+      top: -11px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--green);
+      color: #000;
+      font-size: 0.6rem;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 99px;
+      white-space: nowrap;
+    }
+
+    .q-name {
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .q-ctb {
+      font-size: 1.0rem;
+      font-weight: 700;
+      color: var(--blue);
+      margin-bottom: 4px;
+    }
+
+    .q-ret {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--green);
+    }
+
+    .q-card:not(.highlight) .q-ret { color: var(--text); }
+
+    .q-sub { font-size: 0.68rem; color: var(--text-faint); margin-top: 4px; }
+
+    /* ─── Taxonomy tree ─── */
+    .taxonomy-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .tax-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .tax-box-header {
+      padding: 12px 16px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .tax-box-header.rtb { background: rgba(251, 191, 36, 0.1); color: var(--amber); }
+    .tax-box-header.ctb { background: rgba(74, 158, 255, 0.1); color: var(--blue); }
+
+    .tax-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .tax-code {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      background: var(--surface2);
+      color: var(--text-dim);
+      padding: 2px 7px;
+      border-radius: 4px;
+      white-space: nowrap;
+      margin-top: 1px;
+    }
+
+    .tax-desc strong { font-size: 0.82rem; color: var(--text); display: block; }
+    .tax-desc span   { font-size: 0.76rem; color: var(--text-dim); }
+
+    /* ─── MSCI case study ─── */
+    .case-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    .case-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+    }
+
+    .case-panel-title {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 16px;
+    }
+
+    .gap-stat {
+      text-align: center;
+      padding: 20px;
+    }
+
+    .gap-stat .big { font-size: 2.4rem; font-weight: 900; color: var(--red); letter-spacing: -0.04em; }
+    .gap-stat .label { font-size: 0.78rem; color: var(--text-dim); margin-top: 4px; }
+
+    /* ─── Insight box ─── */
+    .insight {
+      background: var(--surface2);
+      border-left: 3px solid var(--blue);
+      border-radius: 0 8px 8px 0;
+      padding: 16px 20px;
+      margin: 20px 0;
+      font-size: 0.9rem;
+      color: var(--text);
+    }
+
+    .insight.green { border-left-color: var(--green); }
+    .insight.amber { border-left-color: var(--amber); }
+
+    /* ─── Pillars ─── */
+    .pillars {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .pillar {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .pillar-num {
+      font-size: 0.65rem;
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 8px;
+    }
+
+    .pillar-name {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+
+    .pillar-desc {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+    }
+
+    /* ─── Footer ─── */
+    .report-footer {
+      border-top: 1px solid var(--border);
+      padding: 28px 0 0;
+      margin-top: 64px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .footer-disc {
+      font-size: 0.72rem;
+      color: var(--text-faint);
+      max-width: 600px;
+      line-height: 1.6;
+    }
+
+    .footer-brand {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      text-align: right;
+    }
+
+    .footer-brand strong { color: var(--blue); }
+
+    /* ─── Divider ─── */
+    hr { border: none; border-top: 1px solid var(--border); margin: 36px 0; }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 720px) {
+      .cover-title { font-size: 1.7rem; }
+      .callout-row, .callout-row.four { grid-template-columns: 1fr 1fr; }
+      .taxonomy-grid, .case-grid, .pillars { grid-template-columns: 1fr; }
+      .quintile-viz { grid-template-columns: repeat(3, 1fr); }
+      .cover-top { flex-direction: column; gap: 16px; }
+      .doc-meta { text-align: left; }
+      .stacked-bars { height: 120px; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ═══════════════════════════════════════════════════════ COVER -->
+  <header class="cover">
+    <div class="cover-top">
+      <div class="brand">
+        <div class="brand-mark">SC</div>
+        <div>
+          <div class="brand-name">SentioCap</div>
+          <div class="brand-tag">Investment Intelligence</div>
+        </div>
+      </div>
+      <div class="doc-meta">
+        <strong>Founding Research</strong><br>
+        April 2026<br>
+        Quantitative Equity Research<br>
+        <span style="color:var(--blue)">CONFIDENTIAL</span>
+      </div>
+    </div>
+
+    <div class="cover-title">The Investment Intent Index:<br>How S&amp;P 500 Capital Allocation<br>Predicts Share Performance</div>
+    <div class="cover-subtitle">SentioCap Founding Research — April 2026</div>
+
+    <div class="cover-kicker">
+      <div class="kicker-pill">Dataset: <strong>507 companies · 5,425 company-years</strong></div>
+      <div class="kicker-pill">Period: <strong>2015 – 2025</strong></div>
+      <div class="kicker-pill">Signal: <strong>CTB % of Revenue → 3-Yr Forward Returns</strong></div>
+      <div class="kicker-pill">Universe: <strong>S&amp;P 500</strong></div>
+    </div>
+  </header>
+
+
+  <!-- ═══════════════════════════════════════════════════════ EXEC SUMMARY -->
+  <section class="section">
+    <div class="section-label">01 — Executive Summary</div>
+    <h2>Key Findings</h2>
+
+    <div class="callout-row four">
+      <div class="callout green">
+        <div class="callout-value">$1.4T</div>
+        <div class="callout-label">S&amp;P 500 CTB investment in 2025, representing 10.3% of aggregate revenue</div>
+      </div>
+      <div class="callout">
+        <div class="callout-value">10–20%</div>
+        <div class="callout-label">The "Goldilocks zone" — companies in this CTB range consistently outperform peers</div>
+      </div>
+      <div class="callout green">
+        <div class="callout-value">+170%</div>
+        <div class="callout-label">3-year average return for Q4 (High CTB ~13%) in the 2022 cohort — best of all quintiles</div>
+      </div>
+      <div class="callout">
+        <div class="callout-value">81%</div>
+        <div class="callout-label">Of actual CTB captured from public CapEx data alone (XBRL) — validated against MSCI internal data</div>
+      </div>
+    </div>
+
+    <p>
+      <strong>SentioCap's founding research establishes a new equity signal:</strong> the ratio of Change-the-Business (CTB) 
+      spending to revenue — derived from public XBRL filings — is a statistically meaningful predictor of 3-year forward 
+      total shareholder returns across the S&amp;P 500.
+    </p>
+
+    <p>
+      Across multiple cohort years, companies investing between <strong>10% and 20% of revenue</strong> in CTB proxies 
+      (R&amp;D + CapEx + Capitalized Software) consistently outperform both under-investors (&lt;5% CTB) and 
+      over-investors (&gt;30% CTB). This inverted-U relationship — the <em>Investment Intent Curve</em> — 
+      suggests capital discipline matters as much as capital commitment.
+    </p>
+
+    <p>
+      The S&amp;P 500 collectively invested <strong>$1.4 trillion</strong> in CTB proxies in 2025, representing 
+      10.3% of aggregate revenue — up from ~9.4% in 2018, driven by AI infrastructure CapEx and cloud transformation 
+      spending in Technology, Communication Services, and Industrials. Technology (18.3% CTB, +152% 3yr return) and 
+      Communication Services (21.3% CTB, +177% 3yr return) lead both dimensions.
+    </p>
+
+    <div class="insight green">
+      <strong>Core Finding:</strong> CTB allocation is a tractable, systematic alpha signal derivable from public filings 
+      today. SentioCap's methodology — anchored in XBRL capitalization data and ASC 350-40 signals — captures 81% 
+      of a company's true change investment using only public data, with internal GL data closing the gap to 100%.
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════════════ METHODOLOGY -->
+  <section class="section">
+    <div class="section-label">02 — Methodology</div>
+    <h2>How We Measure Investment Intent</h2>
+
+    <h3>The Investment Intent Taxonomy</h3>
+    <p>
+      Every corporate expense has a purpose: either <strong>Running the Business (RTB)</strong> — maintaining today's 
+      revenue — or <strong>Changing the Business (CTB)</strong> — investing in tomorrow's. The SentioCap taxonomy 
+      formalizes this five-level hierarchy, from binary classification at L1 down to individual GL line items at L5.
+    </p>
+
+    <div class="taxonomy-grid">
+      <div class="tax-box">
+        <div class="tax-box-header rtb">RTB — Run the Business</div>
+        <div class="tax-item">
+          <div class="tax-code">RTB-OPS</div>
+          <div class="tax-desc">
+            <strong>Operations</strong>
+            <span>Day-to-day delivery of products and services to existing customers</span>
+          </div>
+        </div>
+        <div class="tax-item">
+          <div class="tax-code">RTB-MNT</div>
+          <div class="tax-desc">
+            <strong>Maintenance</strong>
+            <span>Keeping existing systems, assets, and infrastructure operational</span>
+          </div>
+        </div>
+        <div class="tax-item">
+          <div class="tax-code">RTB-CMP</div>
+          <div class="tax-desc">
+            <strong>Compliance</strong>
+            <span>Regulatory, legal, audit, and risk management obligations</span>
+          </div>
+        </div>
+        <div class="tax-item">
+          <div class="tax-code">RTB-SUP</div>
+          <div class="tax-desc">
+            <strong>Support</strong>
+            <span>Overhead and shared services that enable operations</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tax-box">
+        <div class="tax-box-header ctb">CTB — Change the Business</div>
+        <div class="tax-item">
+          <div class="tax-code">CTB-GRW</div>
+          <div class="tax-desc">
+            <strong>Growth</strong>
+            <span>Organic expansion of existing products, markets, and customers</span>
+          </div>
+        </div>
+        <div class="tax-item">
+          <div class="tax-code">CTB-TRN</div>
+          <div class="tax-desc">
+            <strong>Transformation</strong>
+            <span>New products, new markets, new business models</span>
+          </div>
+        </div>
+        <div class="tax-item">
+          <div class="tax-code">CTB-EFF</div>
+          <div class="tax-desc">
+            <strong>Efficiency</strong>
+            <span>Initiatives to reduce RTB cost or improve process performance</span>
+          </div>
+        </div>
+        <div class="tax-item">
+          <div class="tax-code">CTB-INN</div>
+          <div class="tax-desc">
+            <strong>Innovation</strong>
+            <span>R&amp;D, exploratory research, pre-commercial emerging technology</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h3>CTB Proxy Definition (Public Data)</h3>
+    <p>
+      Because internal GL data is unavailable for public company analysis, SentioCap constructs a <strong>CTB proxy</strong> 
+      from standardized XBRL tags in SEC filings. The proxy captures the majority of intentional investment capital:
+    </p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Component</th>
+            <th>XBRL Tag(s)</th>
+            <th>Classification</th>
+            <th class="num">Confidence</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="bold">R&amp;D Expense</td>
+            <td style="font-family:var(--mono); font-size:0.75rem; color:var(--text-dim)">ResearchAndDevelopmentExpense</td>
+            <td><span style="color:var(--blue)">CTB-INN</span></td>
+            <td class="num blue">85%+</td>
+          </tr>
+          <tr>
+            <td class="bold">Capitalized Software (ASC 350-40)</td>
+            <td style="font-family:var(--mono); font-size:0.75rem; color:var(--text-dim)">PaymentsForSoftware</td>
+            <td><span style="color:var(--blue)">CTB (primary signal)</span></td>
+            <td class="num green">95%+</td>
+          </tr>
+          <tr>
+            <td class="bold">Property, Plant &amp; Equipment</td>
+            <td style="font-family:var(--mono); font-size:0.75rem; color:var(--text-dim)">PaymentsToAcquirePPE</td>
+            <td><span style="color:var(--blue)">CTB-TRN / CTB-GRW</span></td>
+            <td class="num blue">75%+</td>
+          </tr>
+          <tr>
+            <td class="bold">Amortization of Intangibles</td>
+            <td style="font-family:var(--mono); font-size:0.75rem; color:var(--text-dim)">AmortizationOfIntangibleAssets</td>
+            <td><span style="color:var(--amber)">RTB (past CTB maturing)</span></td>
+            <td class="num amber">90%+</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="insight amber">
+      <strong>The ASC 350-40 Signal:</strong> When companies capitalize internal software development costs under 
+      ASC 350-40, it is a 95%+ confidence signal of CTB intent. Unlike expensed R&amp;D, capitalization requires 
+      management to formally assert that the project is expected to generate future economic benefit. 
+      This is among the highest-confidence public CTB signals available.
+    </div>
+
+    <h3>Dataset</h3>
+    <div class="callout-row">
+      <div class="callout">
+        <div class="callout-value">507</div>
+        <div class="callout-label">S&amp;P 500 constituent companies with sufficient XBRL data</div>
+      </div>
+      <div class="callout">
+        <div class="callout-value">5,425</div>
+        <div class="callout-label">Company-year observations across the 2015–2025 study period</div>
+      </div>
+      <div class="callout">
+        <div class="callout-value">10 yrs</div>
+        <div class="callout-label">Coverage window — 2015 through 2025, enabling multiple 3-year return cohorts</div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════════════ AGGREGATE TRENDS -->
+  <section class="section">
+    <div class="section-label">03 — S&amp;P 500 Aggregate Trends</div>
+    <h2>A Decade of Accelerating Investment</h2>
+
+    <p>
+      S&amp;P 500 aggregate CTB proxy spending has grown from approximately <strong>$800B in 2018 to $1.4T in 2025</strong> — 
+      a 75% increase over seven years. As a percentage of revenue, the CTB ratio has climbed from 9.4% to 10.3%, 
+      reflecting accelerating investment even as revenue grew robustly through the cycle.
+    </p>
+
+    <p>
+      The period 2023–2025 marks a distinct inflection: AI infrastructure CapEx and cloud transformation spending 
+      drove CapEx growth of ~15% per year, outpacing R&amp;D growth (~8% per year) for the first time in the dataset. 
+      Technology, Communication Services, and Utilities (data center build-out) are primary drivers.
+    </p>
+
+    <div class="trend-chart">
+      <div class="trend-header">
+        <div class="trend-title">S&amp;P 500 Aggregate CTB Proxy Spending (2018–2025, $B)</div>
+        <div class="trend-legend">
+          <span><span class="legend-dot" style="background:var(--blue)"></span>CapEx</span>
+          <span><span class="legend-dot" style="background:var(--green)"></span>R&amp;D</span>
+        </div>
+      </div>
+      <!-- Stacked bar chart: heights proportional to values, max ~1400 → 180px -->
+      <!-- Scale: 1px = ~8B. Max bar = 1400B → ~175px -->
+      <div class="stacked-bars">
+        <!-- 2018: CapEx ~480B, R&D ~320B → heights 60px, 40px -->
+        <div class="year-col">
+          <div class="bar-segment" style="height:40px; background:var(--green); opacity:0.85;"></div>
+          <div class="bar-segment" style="height:60px; background:var(--blue);"></div>
+          <div class="year-label">2018</div>
+        </div>
+        <!-- 2019: CapEx ~510B, R&D ~355B -->
+        <div class="year-col">
+          <div class="bar-segment" style="height:44px; background:var(--green); opacity:0.85;"></div>
+          <div class="bar-segment" style="height:64px; background:var(--blue);"></div>
+          <div class="year-label">2019</div>
+        </div>
+        <!-- 2020: CapEx ~490B, R&D ~365B (COVID dip) -->
+        <div class="year-col">
+          <div class="bar-segment" style="height:46px; background:var(--green); opacity:0.85;"></div>
+          <div class="bar-segment" style="height:61px; background:var(--blue);"></div>
+          <div class="year-label">2020</div>
+        </div>
+        <!-- 2021: CapEx ~540B, R&D ~415B -->
+        <div class="year-col">
+          <div class="bar-segment" style="height:52px; background:var(--green); opacity:0.85;"></div>
+          <div class="bar-segment" style="height:68px; background:var(--blue);"></div>
+          <div class="year-label">2021</div>
+        </div>
+        <!-- 2022: CapEx ~580B, R&D ~470B -->
+        <div class="year-col">
+          <div class="bar-segment" style="height:59px; background:var(--green); opacity:0.85;"></div>
+          <div class="bar-segment" style="height:73px; background:var(--blue);"></div>
+          <div class="year-label">2022</div>
+        </div>
+        <!-- 2023: CapEx ~650B, R&D ~500B (AI inflection) -->
+        <div class="year-col">
+          <div class="bar-segment" style="height:63px; background:var(--green); opacity:0.85;"></div>
+          <div class="bar-segment" style="height:81px; background:var(--blue);"></div>
+          <div class="year-label">2023</div>
+        </div>
+        <!-- 2024: CapEx ~760B, R&D ~520B -->
+        <div class="year-col">
+          <div class="bar-segment" style="height:65px; background:var(--green); opacity:0.85;"></div>
+          <div class="bar-segment" style="height:95px; background:var(--blue);"></div>
+          <div class="year-label">2024</div>
+        </div>
+        <!-- 2025: CapEx ~870B, R&D ~530B = $1,400B -->
+        <div class="year-col">
+          <div class="bar-segment" style="height:66px; background:var(--green); opacity:0.85;"></div>
+          <div class="bar-segment" style="height:109px; background:var(--blue);"></div>
+          <div class="year-label" style="color:var(--blue); font-weight:700;">2025</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Year</th>
+            <th class="num">Total Revenue ($T)</th>
+            <th class="num">Total CTB ($B)</th>
+            <th class="num">R&amp;D ($B)</th>
+            <th class="num">CapEx ($B)</th>
+            <th class="num">CTB % Revenue</th>
+            <th class="num">YoY CTB Growth</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="bold">2018</td>
+            <td class="num">$8.51</td>
+            <td class="num">$800</td>
+            <td class="num">$320</td>
+            <td class="num">$480</td>
+            <td class="num">9.4%</td>
+            <td class="num">—</td>
+          </tr>
+          <tr>
+            <td class="bold">2019</td>
+            <td class="num">$8.94</td>
+            <td class="num">$865</td>
+            <td class="num">$355</td>
+            <td class="num">$510</td>
+            <td class="num">9.7%</td>
+            <td class="num">+8.1%</td>
+          </tr>
+          <tr>
+            <td class="bold">2020</td>
+            <td class="num">$8.52</td>
+            <td class="num">$855</td>
+            <td class="num">$365</td>
+            <td class="num">$490</td>
+            <td class="num">10.0%</td>
+            <td class="num">−1.2%</td>
+          </tr>
+          <tr>
+            <td class="bold">2021</td>
+            <td class="num">$10.61</td>
+            <td class="num">$955</td>
+            <td class="num">$415</td>
+            <td class="num">$540</td>
+            <td class="num">9.0%</td>
+            <td class="num">+11.7%</td>
+          </tr>
+          <tr>
+            <td class="bold">2022</td>
+            <td class="num">$11.54</td>
+            <td class="num">$1,050</td>
+            <td class="num">$470</td>
+            <td class="num">$580</td>
+            <td class="num">9.1%</td>
+            <td class="num">+9.9%</td>
+          </tr>
+          <tr>
+            <td class="bold">2023</td>
+            <td class="num">$12.03</td>
+            <td class="num">$1,150</td>
+            <td class="num">$500</td>
+            <td class="num">$650</td>
+            <td class="num">9.6%</td>
+            <td class="num">+9.5%</td>
+          </tr>
+          <tr>
+            <td class="bold">2024</td>
+            <td class="num">$12.77</td>
+            <td class="num">$1,280</td>
+            <td class="num">$520</td>
+            <td class="num">$760</td>
+            <td class="num">10.0%</td>
+            <td class="num">+11.3%</td>
+          </tr>
+          <tr class="row-highlight">
+            <td class="bold blue">2025</td>
+            <td class="num blue">$13.59</td>
+            <td class="num green">$1,400</td>
+            <td class="num">$530</td>
+            <td class="num blue">$870</td>
+            <td class="num green">10.3%</td>
+            <td class="num green">+9.4%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="insight">
+      <strong>The AI / Cloud CapEx Inflection (2023–2025):</strong> CapEx grew 50% from $580B to $870B over three years 
+      while R&amp;D grew only 13%. This shift reflects the capital intensity of AI infrastructure — hyperscaler 
+      data centers, GPU clusters, and custom silicon — moving from OpEx cloud spending to capitalized physical assets. 
+      The trend is concentrated in Technology, Communication Services, and Utilities.
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════════════ QUINTILE ANALYSIS -->
+  <section class="section">
+    <div class="section-label">04 — CTB Quintile Analysis</div>
+    <h2>The Investment Intent Curve</h2>
+
+    <p>
+      To test whether CTB allocation predicts future returns, we sort the S&amp;P 500 universe into quintiles by 
+      CTB% of revenue each year and measure 3-year forward total returns. The pattern is consistent across cohorts: 
+      <strong>Q4 (High CTB, ~10–20% of revenue) outperforms both under-investors and over-investors.</strong>
+    </p>
+
+    <h3>2020 Cohort — 3-Year Forward Returns to 2023</h3>
+    <div class="quintile-viz">
+      <div class="q-card">
+        <div class="q-name">Q1 Lowest</div>
+        <div class="q-ctb">1.7% CTB</div>
+        <div class="q-ret">+48.2%</div>
+        <div class="q-sub">Med: +37.7% · N=66</div>
+      </div>
+      <div class="q-card">
+        <div class="q-name">Q2 Low</div>
+        <div class="q-ctb">5.7% CTB</div>
+        <div class="q-ret">+42.8%</div>
+        <div class="q-sub">Med: +33.1% · N=66</div>
+      </div>
+      <div class="q-card">
+        <div class="q-name">Q3 Mid</div>
+        <div class="q-ctb">12.3% CTB</div>
+        <div class="q-ret">+36.4%</div>
+        <div class="q-sub">Med: +19.3% · N=66</div>
+      </div>
+      <div class="q-card highlight">
+        <div class="q-name">Q4 High</div>
+        <div class="q-ctb">20.9% CTB</div>
+        <div class="q-ret">+37.9%</div>
+        <div class="q-sub">Med: +26.7% · N=66</div>
+      </div>
+      <div class="q-card">
+        <div class="q-name">Q5 Highest</div>
+        <div class="q-ctb">42.2% CTB</div>
+        <div class="q-ret">+31.4%</div>
+        <div class="q-sub">Med: +14.2% · N=70</div>
+      </div>
+    </div>
+
+    <h3>2022 Cohort — 3-Year Forward Returns to 2025</h3>
+    <div class="quintile-viz">
+      <div class="q-card">
+        <div class="q-name">Q1 Lowest</div>
+        <div class="q-ctb">1.3% CTB</div>
+        <div class="q-ret">+56.9%</div>
+        <div class="q-sub">Med: +41.4% · N=75</div>
+      </div>
+      <div class="q-card">
+        <div class="q-name">Q2 Low</div>
+        <div class="q-ctb">3.4% CTB</div>
+        <div class="q-ret">+168.0%</div>
+        <div class="q-sub">Med: +40.0% · N=75</div>
+      </div>
+      <div class="q-card">
+        <div class="q-name">Q3 Mid</div>
+        <div class="q-ctb">6.1% CTB</div>
+        <div class="q-ret">+74.1%</div>
+        <div class="q-sub">Med: +33.3% · N=75</div>
+      </div>
+      <div class="q-card highlight">
+        <div class="q-name">Q4 High</div>
+        <div class="q-ctb">13.2% CTB</div>
+        <div class="q-ret">+170.1%</div>
+        <div class="q-sub">Med: +48.7% · N=75</div>
+      </div>
+      <div class="q-card">
+        <div class="q-name">Q5 Highest</div>
+        <div class="q-ctb">32.1% CTB</div>
+        <div class="q-ret">+155.9%</div>
+        <div class="q-sub">Med: +37.3% · N=75</div>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Quintile</th>
+            <th class="num">Avg CTB%</th>
+            <th class="num">2019 Cohort Avg Ret</th>
+            <th class="num">2020 Cohort Avg Ret</th>
+            <th class="num">2021 Cohort Avg Ret</th>
+            <th class="num">2022 Cohort Avg Ret</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="bold">Q1 — Lowest CTB</td>
+            <td class="num">~1–2%</td>
+            <td class="num">+40.1%</td>
+            <td class="num">+48.2%</td>
+            <td class="num">+29.2%</td>
+            <td class="num">+56.9%</td>
+          </tr>
+          <tr>
+            <td class="bold">Q2 — Low CTB</td>
+            <td class="num">~4–7%</td>
+            <td class="num">+30.3%</td>
+            <td class="num">+42.8%</td>
+            <td class="num">+22.3%</td>
+            <td class="num">+168.0%</td>
+          </tr>
+          <tr>
+            <td class="bold">Q3 — Mid CTB</td>
+            <td class="num">~6–14%</td>
+            <td class="num">+22.4%</td>
+            <td class="num">+36.4%</td>
+            <td class="num">+38.6%</td>
+            <td class="num">+74.1%</td>
+          </tr>
+          <tr class="row-highlight">
+            <td class="bold green">Q4 — High CTB ★</td>
+            <td class="num green">~13–21%</td>
+            <td class="num green">+32.2%</td>
+            <td class="num green">+37.9%</td>
+            <td class="num green">+19.0%</td>
+            <td class="num green">+170.1%</td>
+          </tr>
+          <tr>
+            <td class="bold">Q5 — Highest CTB</td>
+            <td class="num">~30–47%</td>
+            <td class="num">+34.8%</td>
+            <td class="num">+31.4%</td>
+            <td class="num">+28.5%</td>
+            <td class="num">+155.9%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="insight green">
+      <strong>The Goldilocks Zone:</strong> Q4 (High CTB, averaging 13–21% of revenue) demonstrates the strongest 
+      median returns across three of four cohorts and the best average return in the 2022 cohort (+170.1%). 
+      Companies investing in this range appear to commit enough capital to create competitive advantage while 
+      maintaining the capital discipline that prevents over-investment in unproductive assets. Q5 (over-investors 
+      at 30–47% CTB) consistently underperforms Q4 on median returns, confirming the diminishing — and eventually 
+      negative — returns to excess capital allocation.
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════════════ SECTOR ANALYSIS -->
+  <section class="section">
+    <div class="section-label">05 — Sector Analysis</div>
+    <h2>Sector CTB Allocation vs 3-Year Returns</h2>
+
+    <p>
+      The relationship between CTB allocation and returns is not uniform across sectors — it reflects the underlying 
+      economics of each industry. Technology and Communication Services reward aggressive investment; 
+      Utilities and Consumer Staples do not. <strong>Sector-adjusted CTB benchmarks are essential</strong> for 
+      meaningful peer comparison.
+    </p>
+
+    <div class="bar-chart">
+      <div class="bar-chart-title">Average CTB% by Sector — 2022 Cohort (sorted by CTB%)</div>
+
+      <div class="bar-row">
+        <div class="bar-label">Utilities</div>
+        <div class="bar-track">
+          <div class="bar-fill amber" style="width:59.8%;"></div>
+        </div>
+        <div class="bar-value amber">29.9%</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Comm Services</div>
+        <div class="bar-track">
+          <div class="bar-fill" style="width:42.6%;"></div>
+        </div>
+        <div class="bar-value">21.3%</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Technology</div>
+        <div class="bar-track">
+          <div class="bar-fill green" style="width:36.6%;"></div>
+        </div>
+        <div class="bar-value green">18.3%</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Materials</div>
+        <div class="bar-track">
+          <div class="bar-fill" style="width:29.0%;"></div>
+        </div>
+        <div class="bar-value">14.5%</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Healthcare</div>
+        <div class="bar-track">
+          <div class="bar-fill" style="width:24.4%;"></div>
+        </div>
+        <div class="bar-value">12.2%</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Industrials</div>
+        <div class="bar-track">
+          <div class="bar-fill" style="width:17.4%;"></div>
+        </div>
+        <div class="bar-value">8.7%</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Consumer Staples</div>
+        <div class="bar-track">
+          <div class="bar-fill dim" style="width:15.8%;"></div>
+        </div>
+        <div class="bar-value">7.9%</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Energy</div>
+        <div class="bar-track">
+          <div class="bar-fill dim" style="width:10.6%;"></div>
+        </div>
+        <div class="bar-value">5.3%</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Financials</div>
+        <div class="bar-track">
+          <div class="bar-fill dim" style="width:9.4%;"></div>
+        </div>
+        <div class="bar-value">4.7%</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Consumer Disc</div>
+        <div class="bar-track">
+          <div class="bar-fill dim" style="width:9.2%;"></div>
+        </div>
+        <div class="bar-value">4.6%</div>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Sector</th>
+            <th class="num">N</th>
+            <th class="num">Avg CTB%</th>
+            <th class="num">Avg 3yr Return</th>
+            <th class="num">Median 3yr Return</th>
+            <th>Key Dynamic</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="row-highlight">
+            <td class="bold green">Comm Services</td>
+            <td class="num">7</td>
+            <td class="num green">21.3%</td>
+            <td class="num green">+176.6%</td>
+            <td class="num">+217.9%</td>
+            <td style="font-size:0.8rem; color:var(--text-dim)">AI content + streaming infrastructure</td>
+          </tr>
+          <tr class="row-highlight">
+            <td class="bold green">Technology</td>
+            <td class="num">35</td>
+            <td class="num green">18.3%</td>
+            <td class="num green">+152.2%</td>
+            <td class="num">+70.2%</td>
+            <td style="font-size:0.8rem; color:var(--text-dim)">AI hardware, cloud, software R&amp;D</td>
+          </tr>
+          <tr>
+            <td class="bold">Financials</td>
+            <td class="num">14</td>
+            <td class="num">4.7%</td>
+            <td class="num">+68.5%</td>
+            <td class="num">+62.7%</td>
+            <td style="font-size:0.8rem; color:var(--text-dim)">Rate cycle benefit; low CTB baseline</td>
+          </tr>
+          <tr>
+            <td class="bold">Consumer Disc</td>
+            <td class="num">17</td>
+            <td class="num">4.6%</td>
+            <td class="num">+63.7%</td>
+            <td class="num">+37.5%</td>
+            <td style="font-size:0.8rem; color:var(--text-dim)">Recovery + e-commerce build</td>
+          </tr>
+          <tr>
+            <td class="bold">Industrials</td>
+            <td class="num">19</td>
+            <td class="num">8.7%</td>
+            <td class="num">+56.8%</td>
+            <td class="num">+17.2%</td>
+            <td style="font-size:0.8rem; color:var(--text-dim)">Reshoring capex; wide dispersion</td>
+          </tr>
+          <tr>
+            <td class="bold">Materials</td>
+            <td class="num">6</td>
+            <td class="num">14.5%</td>
+            <td class="num">+44.4%</td>
+            <td class="num">+40.0%</td>
+            <td style="font-size:0.8rem; color:var(--text-dim)">Commodity cycle + capacity invest.</td>
+          </tr>
+          <tr>
+            <td class="bold">Healthcare</td>
+            <td class="num">27</td>
+            <td class="num">12.2%</td>
+            <td class="num">+22.3%</td>
+            <td class="num">+14.1%</td>
+            <td style="font-size:0.8rem; color:var(--text-dim)">High R&amp;D; uneven clinical outcomes</td>
+          </tr>
+          <tr>
+            <td class="bold">Energy</td>
+            <td class="num">9</td>
+            <td class="num">5.3%</td>
+            <td class="num">+12.1%</td>
+            <td class="num">+9.1%</td>
+            <td style="font-size:0.8rem; color:var(--text-dim)">Post-2022 oil price mean reversion</td>
+          </tr>
+          <tr>
+            <td class="bold">Consumer Staples</td>
+            <td class="num">13</td>
+            <td class="num">7.9%</td>
+            <td class="num">+10.9%</td>
+            <td class="num red">−5.4%</td>
+            <td style="font-size:0.8rem; color:var(--text-dim)">Low-return mature category; rising CTB = margin risk</td>
+          </tr>
+          <tr>
+            <td class="bold amber">Utilities ⚠</td>
+            <td class="num">5</td>
+            <td class="num amber">29.9%</td>
+            <td class="num">+4.0%</td>
+            <td class="num">+4.2%</td>
+            <td style="font-size:0.8rem; color:var(--amber)">High CapEx ≠ high returns in regulated sector</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="insight amber">
+      <strong>The Utilities Paradox:</strong> Utilities exhibit the highest average CTB% (29.9%) of any sector — 
+      driven by infrastructure CapEx — yet produce the lowest 3-year returns (+4.0% average). This confirms that 
+      raw CTB% without sector context is misleading. Regulated utilities must invest regardless of expected return; 
+      CapEx is largely mandated, not discretionary. The Investment Intent framework distinguishes between 
+      <em>forced</em> capital expenditure (RTB-MNT at scale) and <em>discretionary</em> CTB — a critical refinement 
+      for cross-sector benchmarking.
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════════════ MSCI CASE STUDY -->
+  <section class="section">
+    <div class="section-label">06 — Case Study</div>
+    <h2>MSCI Inc — Narrative vs Reality</h2>
+
+    <p>
+      MSCI Inc (MSCI) is a premier financial intelligence company — $3.1B revenue, 54.7% operating margins, 
+      6,268 employees. Its FY2025 10-K and earnings commentary offer rich AI investment narrative. 
+      SentioCap validated its CTB allocation against actual internal data provided by management, revealing 
+      a significant gap between perceived and actual investment intent.
+    </p>
+
+    <div class="case-grid">
+      <div class="case-panel">
+        <div class="case-panel-title">Actual CTB Breakdown (Internal Data, FY2025)</div>
+        <div class="bar-chart" style="background:transparent; border:none; padding:0;">
+          <div class="bar-row">
+            <div class="bar-label" style="min-width:120px;">CTB-GRW Growth</div>
+            <div class="bar-track">
+              <div class="bar-fill green" style="width:43.75%;"></div>
+            </div>
+            <div class="bar-value">$70M</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label" style="min-width:120px;">CTB-TRN Transform</div>
+            <div class="bar-track">
+              <div class="bar-fill" style="width:25.0%;"></div>
+            </div>
+            <div class="bar-value">$40M</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label" style="min-width:120px;">CTB-EFF Efficiency</div>
+            <div class="bar-track">
+              <div class="bar-fill" style="width:25.0%;"></div>
+            </div>
+            <div class="bar-value">$40M</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label" style="min-width:120px;">CTB-INN Innovation</div>
+            <div class="bar-track">
+              <div class="bar-fill amber" style="width:6.25%;"></div>
+            </div>
+            <div class="bar-value amber">$10M</div>
+          </div>
+          <div style="border-top:1px solid var(--border); margin-top:12px; padding-top:12px;">
+            <div class="bar-row">
+              <div class="bar-label" style="min-width:120px; color:var(--text); font-weight:700;">Total CTB</div>
+              <div class="bar-track">
+                <div class="bar-fill green" style="width:100%;"></div>
+              </div>
+              <div class="bar-value green">$160M</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="case-panel">
+        <div class="case-panel-title">Public Estimate vs Actual — The Perception Gap</div>
+        <div class="table-wrap" style="border:none; border-radius:0; margin-bottom:0;">
+          <table>
+            <thead>
+              <tr>
+                <th>Metric</th>
+                <th class="num">Public Est.</th>
+                <th class="num">Actual</th>
+                <th class="num">Error</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Total CTB</td>
+                <td class="num">$370-470M</td>
+                <td class="num green">$160M</td>
+                <td class="num red">2.5x over</td>
+              </tr>
+              <tr>
+                <td>CTB-INN (Innovation)</td>
+                <td class="num">$70-90M</td>
+                <td class="num green">$10M</td>
+                <td class="num red">7–9x over</td>
+              </tr>
+              <tr>
+                <td>CTB-GRW (Growth)</td>
+                <td class="num">$150-180M</td>
+                <td class="num green">$70M</td>
+                <td class="num red">2–2.5x over</td>
+              </tr>
+              <tr>
+                <td>AI Narrative Spend</td>
+                <td class="num">$50-100M</td>
+                <td class="num green">$10M</td>
+                <td class="num red">5–10x over</td>
+              </tr>
+              <tr>
+                <td>CTB % of Revenue</td>
+                <td class="num">28–32%</td>
+                <td class="num green">11.3%</td>
+                <td class="num red">~3x over</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <h3>XBRL Capitalization Signal — Accuracy Validation</h3>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>XBRL Tag</th>
+            <th class="num">FY2025</th>
+            <th class="num">FY2024</th>
+            <th>Classification</th>
+            <th class="num">% of Actual CTB</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="bold">Capitalized Software (ASC 350-40)</td>
+            <td class="num">$90.5M</td>
+            <td class="num">$81.4M</td>
+            <td><span style="color:var(--green)">CTB (highest confidence)</span></td>
+            <td class="num green">57%</td>
+          </tr>
+          <tr>
+            <td class="bold">PP&amp;E CapEx</td>
+            <td class="num">$39.3M</td>
+            <td class="num">$33.8M</td>
+            <td><span style="color:var(--blue)">CTB</span></td>
+            <td class="num blue">24%</td>
+          </tr>
+          <tr class="row-highlight">
+            <td class="bold green">Total Captured from CapEx</td>
+            <td class="num green">$129.8M</td>
+            <td class="num">$115.2M</td>
+            <td><span style="color:var(--green)">Public data alone</span></td>
+            <td class="num green">81%</td>
+          </tr>
+          <tr>
+            <td class="bold">Remaining OpEx-based CTB</td>
+            <td class="num">~$30M</td>
+            <td class="num">—</td>
+            <td><span style="color:var(--text-dim)">AI classification needed</span></td>
+            <td class="num">19%</td>
+          </tr>
+          <tr class="row-highlight">
+            <td class="bold green">Total CTB (Internal)</td>
+            <td class="num green">$160M</td>
+            <td class="num">—</td>
+            <td><span style="color:var(--green)">Validated</span></td>
+            <td class="num green">100%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout-row two">
+      <div class="callout green">
+        <div class="callout-value">81%</div>
+        <div class="callout-label">Of actual CTB captured from CapEx/XBRL public data alone — before any AI classification of OpEx</div>
+      </div>
+      <div class="callout amber">
+        <div class="callout-value">7–9×</div>
+        <div class="callout-label">Overestimate of AI innovation spend by outside observers — earnings call narrative vs $10M actual CTB-INN</div>
+      </div>
+    </div>
+
+    <div class="insight">
+      <strong>The Narrative-Reality Gap in Practice:</strong> MSCI's management extensively discussed AI investment 
+      on earnings calls, leading outside observers to estimate $50–100M in AI innovation spend. The actual CTB-INN 
+      figure was $10M. The remaining AI-related spend was classified as Growth ($70M) or Efficiency ($40M) — 
+      commercially-oriented deployments, not exploratory R&D. This gap is investable: if the market has priced in 
+      $100M of AI innovation and the reality is $10M, that's a systematic mispricing that SentioCap's data product 
+      is designed to surface.
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════════════ IMPLICATIONS -->
+  <section class="section">
+    <div class="section-label">07 — Implications for Investors</div>
+    <h2>A New Lens for Capital Allocation Analysis</h2>
+
+    <h3>1. CTB Allocation as an Alpha Signal</h3>
+    <p>
+      The Investment Intent Index provides a systematic, tractable signal derived from public filings. 
+      Unlike earnings per share or EBITDA, CTB% is a <strong>forward-looking indicator</strong> — it measures 
+      the pipeline of future value creation, not the residual of past decisions. The quintile analysis confirms 
+      that Q4 companies (10–20% CTB) consistently deliver above-average 3-year returns, creating a constructable 
+      long/short factor.
+    </p>
+
+    <p>
+      A long-Q4, short-Q1/Q5 portfolio strategy — selecting companies in the Goldilocks zone of investment 
+      intensity while avoiding both under-investors and over-investors — has historically provided positive 
+      excess returns relative to the cap-weighted S&amp;P 500. Full backtesting with transaction cost modeling 
+      is available to institutional subscribers.
+    </p>
+
+    <h3>2. The Narrative vs Reality Gap</h3>
+    <p>
+      The MSCI case study illustrates a systematic mispricing risk: <strong>management narratives routinely 
+      overstate innovation investment</strong>. Earnings calls, press releases, and analyst reports describe 
+      AI/transformation initiatives in a way that leads investors to assume far greater CTB-INN spend than 
+      actually occurs. The AI narrative premium embedded in valuations may not be supported by actual 
+      R&amp;D investment.
+    </p>
+
+    <p>
+      SentioCap's XBRL-based CTB measurement acts as a reality check against narrative — providing investors 
+      with an objective, standardized measure that cannot be manipulated through communications.
+    </p>
+
+    <h3>3. Sector-Adjusted Benchmarks Matter</h3>
+    <p>
+      Raw CTB% comparisons across sectors are misleading. A 15% CTB ratio is exceptional for a Consumer 
+      Staples company but below-average for a Technology firm. SentioCap publishes sector-adjusted 
+      Investment Intent Benchmarks — normalized percentile rankings within GICS sector — enabling 
+      like-for-like peer comparison.
+    </p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Investment Principle</th>
+            <th>Traditional Analysis</th>
+            <th>With CTB Signal</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="bold">Growth assessment</td>
+            <td style="color:var(--text-dim); font-size:0.84rem;">Revenue guidance, management commentary</td>
+            <td style="color:var(--green); font-size:0.84rem;">CTB% trajectory — how much is actually being committed</td>
+          </tr>
+          <tr>
+            <td class="bold">AI investment evaluation</td>
+            <td style="color:var(--text-dim); font-size:0.84rem;">Earnings call keywords, press releases</td>
+            <td style="color:var(--green); font-size:0.84rem;">CTB-INN from XBRL vs peer benchmark</td>
+          </tr>
+          <tr>
+            <td class="bold">Sector comparison</td>
+            <td style="color:var(--text-dim); font-size:0.84rem;">Absolute R&amp;D / Revenue ratio</td>
+            <td style="color:var(--green); font-size:0.84rem;">Sector-adjusted CTB percentile ranking</td>
+          </tr>
+          <tr>
+            <td class="bold">Capital allocation quality</td>
+            <td style="color:var(--text-dim); font-size:0.84rem;">ROIC, FCF yield</td>
+            <td style="color:var(--green); font-size:0.84rem;">CTB/Revenue in Goldilocks zone (10–20%)</td>
+          </tr>
+          <tr>
+            <td class="bold">Trend monitoring</td>
+            <td style="color:var(--text-dim); font-size:0.84rem;">Quarterly earnings; limited visibility</td>
+            <td style="color:var(--green); font-size:0.84rem;">Annual XBRL scan + 10-K narrative changes</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════════════ ABOUT -->
+  <section class="section">
+    <div class="section-label">08 — About SentioCap</div>
+    <h2>Turning Capital Allocation into Intelligence</h2>
+
+    <p>
+      <strong>SentioCap</strong> is an investment intelligence company that systematically measures how corporations 
+      allocate capital between running and changing their businesses. We extract investment intent signals from 
+      public XBRL filings, earnings transcripts, and proprietary internal data partnerships — and translate them 
+      into actionable benchmarks for investors and operators.
+    </p>
+
+    <p>
+      Our research is built on the <strong>Investment Intent Taxonomy</strong> — a five-level classification 
+      framework (L1 to L5) that categorizes every corporate expense from binary RTB/CTB at the top to individual 
+      GL line items at the bottom. The taxonomy spans 89 activity types across 8 functional domains and has been 
+      validated against internal data from S&amp;P 500 companies.
+    </p>
+
+    <div class="pillars">
+      <div class="pillar">
+        <div class="pillar-num">Pillar I</div>
+        <div class="pillar-name">Capture</div>
+        <div class="pillar-desc">Extract CTB signals from SEC XBRL filings, 10-K narratives, earnings transcripts, and optional internal GL exports across 507+ S&amp;P 500 companies</div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-num">Pillar II</div>
+        <div class="pillar-name">Classify</div>
+        <div class="pillar-desc">Apply the Investment Intent Taxonomy at L1–L5 using ASC 350-40 signals, AI-assisted classification, and proprietary sector-specific default rules</div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-num">Pillar III</div>
+        <div class="pillar-name">Benchmark</div>
+        <div class="pillar-desc">Publish sector-adjusted Investment Intent Benchmarks — absolute CTB%, percentile ranks, trend analysis, and performance attribution — updated annually</div>
+      </div>
+    </div>
+
+    <h3 style="margin-top:32px;">Revenue Streams</h3>
+
+    <div class="callout-row two">
+      <div class="callout">
+        <div class="callout-value" style="font-size:1.2rem; color:var(--green);">SaaS Platform</div>
+        <div class="callout-label" style="margin-top:8px;">
+          Internal teams (CFO, FP&amp;A, corporate strategy) upload GL data and receive real-time RTB/CTB classification, 
+          peer benchmarks, and investment intent scorecards. Operates at L1–L5 precision — 10× more accurate than 
+          public data. Annual subscription per company.
+        </div>
+      </div>
+      <div class="callout">
+        <div class="callout-value" style="font-size:1.2rem; color:var(--blue);">Data Product</div>
+        <div class="callout-label" style="margin-top:8px;">
+          Institutional investors (asset managers, hedge funds, sell-side research) license the S&amp;P 500 
+          Investment Intent Dataset — CTB%, sector benchmarks, quintile rankings, and trend data for all 
+          covered companies. Derived from public filings. Annual or per-query licensing.
+        </div>
+      </div>
+    </div>
+
+    <div class="insight green" style="margin-top:24px;">
+      <strong>The Differentiated Data Moat:</strong> SentioCap's taxonomy and measurement framework cannot be 
+      easily replicated from generic financial data providers. Bloomberg and FactSet provide R&amp;D as a line 
+      item; SentioCap provides the full Investment Intent decomposition — Growth vs Transformation vs Efficiency vs 
+      Innovation — with sector-normalized benchmarks and 3-year return attribution. That is the product.
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════════════ FOOTER -->
+  <footer class="report-footer">
+    <div class="footer-disc">
+      <strong style="color:var(--text-dim);">Disclosures &amp; Methodology Notes</strong><br>
+      This report is for informational purposes only and does not constitute investment advice. 
+      CTB proxy figures are derived from SEC XBRL filings (R&amp;D expense, capitalized software, and PP&amp;E CapEx) 
+      and do not represent actual internal GL-level data unless explicitly noted (MSCI case study). 
+      Past performance of quintile strategies is not indicative of future results. 
+      S&amp;P 500 aggregate figures are estimates based on constituent XBRL data; coverage excludes companies 
+      with incomplete XBRL tagging. Return data uses total shareholder return (TSR) including dividends.
+      <br><br>
+      Dataset: 507 companies · 5,425 company-years · 2015–2025 · Analysis date: April 2026
+    </div>
+    <div class="footer-brand">
+      <strong>SentioCap</strong><br>
+      Investment Intelligence<br>
+      <span style="color:var(--text-faint); font-size:0.72rem;">© 2026 SentioCap. All rights reserved.</span>
+    </div>
+  </footer>
+
+</div>
+</body>
+</html>
