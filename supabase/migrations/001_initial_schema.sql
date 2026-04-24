@@ -1,0 +1,1 @@
+-- Initial schema placeholder. Copy from build-spec/database-schema.sql
