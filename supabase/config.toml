@@ -1,0 +1,5 @@
+project_id = "sentiocap"
+
+[api]
+enabled = true
+port = 54321
