@@ -3,3 +3,12 @@ SentioCap-Admin/
 SentioCap-React/
 sp500-data/
 sp500-sample-data.json
+node_modules/
+frontend/node_modules/
+frontend/.next/
+frontend/tsconfig.tsbuildinfo
+api/__pycache__/
+api/**/__pycache__/
+*.pyc
+.env
+.env.local
