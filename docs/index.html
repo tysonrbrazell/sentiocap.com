@@ -8,180 +8,103 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: #FAFAF8;
-      color: #1A1A1A;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      background: #FAFAF8; color: #1A1A1A;
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
     }
-    .container {
-      max-width: 640px;
-      width: 100%;
-      padding: 2rem;
-    }
-    h1 {
-      font-size: 1.5rem;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-    }
-    p.subtitle {
-      color: #666;
-      font-size: 0.9rem;
-      margin-bottom: 2rem;
+    .container { max-width: 640px; width: 100%; padding: 2rem; }
+    h1 { font-size: 1.5rem; font-weight: 600; margin-bottom: 0.5rem; }
+    p.subtitle { color: #666; font-size: 0.9rem; margin-bottom: 1.5rem; }
+    .auth-section { margin-bottom: 1.5rem; }
+    .auth-section label { font-size: 0.9rem; font-weight: 500; display: block; margin-bottom: 0.5rem; }
+    .auth-section input {
+      width: 100%; padding: 0.6rem 0.75rem; border: 1px solid #ddd; border-radius: 8px;
+      font-size: 0.9rem; font-family: monospace;
     }
     .drop-zone {
-      border: 2px dashed #ccc;
-      border-radius: 12px;
-      padding: 3rem 2rem;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.2s;
-      background: white;
+      border: 2px dashed #ccc; border-radius: 12px; padding: 3rem 2rem;
+      text-align: center; cursor: pointer; transition: all 0.2s; background: white;
     }
-    .drop-zone.dragover {
-      border-color: #4A7C59;
-      background: #f0f7f2;
-    }
-    .drop-zone.uploading {
-      border-color: #EAB308;
-      background: #fffef0;
-    }
-    .drop-zone.done {
-      border-color: #22C55E;
-      background: #f0fdf4;
-    }
-    .drop-icon {
-      font-size: 3rem;
-      margin-bottom: 1rem;
-    }
-    .drop-text {
-      font-size: 1rem;
-      color: #666;
-      margin-bottom: 0.5rem;
-    }
-    .drop-hint {
-      font-size: 0.8rem;
-      color: #999;
-    }
+    .drop-zone.dragover { border-color: #4A7C59; background: #f0f7f2; }
+    .drop-zone.uploading { border-color: #EAB308; background: #fffef0; }
+    .drop-zone.done { border-color: #22C55E; background: #f0fdf4; }
+    .drop-icon { font-size: 3rem; margin-bottom: 1rem; }
+    .drop-text { font-size: 1rem; color: #666; margin-bottom: 0.5rem; }
+    .drop-hint { font-size: 0.8rem; color: #999; }
     input[type="file"] { display: none; }
-    .file-list {
-      margin-top: 1.5rem;
-    }
+    .file-list { margin-top: 1.5rem; }
     .file-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0.75rem 1rem;
-      background: white;
-      border: 1px solid #e5e5e5;
-      border-radius: 8px;
-      margin-bottom: 0.5rem;
-      font-size: 0.9rem;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.75rem 1rem; background: white; border: 1px solid #e5e5e5;
+      border-radius: 8px; margin-bottom: 0.5rem; font-size: 0.9rem;
     }
-    .file-item .name {
-      font-weight: 500;
-      flex: 1;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-    .file-item .size {
-      color: #999;
-      font-size: 0.8rem;
-      margin-left: 1rem;
-    }
-    .file-item .status {
-      margin-left: 1rem;
-      font-size: 0.85rem;
-    }
+    .file-item .name { font-weight: 500; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .file-item .size { color: #999; font-size: 0.8rem; margin-left: 1rem; }
+    .file-item .status { margin-left: 1rem; font-size: 0.85rem; }
     .status-pending { color: #999; }
     .status-uploading { color: #EAB308; }
     .status-done { color: #22C55E; }
     .status-error { color: #EF4444; }
     .upload-btn {
-      margin-top: 1.5rem;
-      width: 100%;
-      padding: 0.75rem;
-      background: #1A1A1A;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-size: 1rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: background 0.2s;
+      margin-top: 1.5rem; width: 100%; padding: 0.75rem; background: #1A1A1A;
+      color: white; border: none; border-radius: 8px; font-size: 1rem;
+      font-weight: 500; cursor: pointer; transition: background 0.2s;
     }
     .upload-btn:hover { background: #333; }
     .upload-btn:disabled { background: #ccc; cursor: not-allowed; }
-    .note {
-      margin-top: 1rem;
-      font-size: 0.8rem;
-      color: #999;
-      text-align: center;
+    .note { margin-top: 1rem; font-size: 0.8rem; color: #999; text-align: center; }
+    .error-msg {
+      margin-top: 1rem; padding: 0.75rem; background: #fef2f2; border: 1px solid #fecaca;
+      border-radius: 8px; color: #dc2626; font-size: 0.85rem; display: none;
     }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>📊 SentioCap Document Upload</h1>
-    <p class="subtitle">Drop your FP&A reports, board decks, or budget books. We'll map them to the SentioCap taxonomy.</p>
+    <p class="subtitle">Drop your FP&A reports, board decks, or budget books. Files upload directly to GitHub.</p>
+
+    <div class="auth-section">
+      <label>Access Key</label>
+      <input type="password" id="authKey" placeholder="Paste the key Tide sent you">
+    </div>
 
     <div class="drop-zone" id="dropZone">
       <div class="drop-icon">📁</div>
       <div class="drop-text">Drag & drop files here, or click to browse</div>
-      <div class="drop-hint">Accepts: .pptx, .pdf, .xlsx, .csv (max 50MB each)</div>
+      <div class="drop-hint">Accepts: .pptx, .pdf, .xlsx, .csv, .doc (max 100MB each)</div>
     </div>
-    <input type="file" id="fileInput" multiple accept=".pptx,.pdf,.xlsx,.csv,.xls,.ppt">
+    <input type="file" id="fileInput" multiple accept=".pptx,.pdf,.xlsx,.csv,.xls,.ppt,.doc,.docx">
 
     <div class="file-list" id="fileList"></div>
+    <div class="error-msg" id="errorMsg"></div>
 
     <button class="upload-btn" id="uploadBtn" disabled>Upload Files</button>
 
-    <p class="note">Files are stored securely in Supabase. Only you and Tide can access them.</p>
+    <p class="note">Files are pushed to a private GitHub repo. Only Tyson and Tide can access them.</p>
   </div>
 
   <script>
-    const SUPABASE_URL = 'https://gimxgwtpkzseaqgjfjrp.supabase.co';
-    const SUPABASE_KEY = 'sb_publishable_-Y1Mt7DaxBPnIqgwq2pCzw_qCQouByI';
-    const BUCKET = 'documents';
+    const GH_REPO = 'tysonrbrazell/sentiocap.com';
+    const GH_API = 'https://api.github.com';
 
     const dropZone = document.getElementById('dropZone');
     const fileInput = document.getElementById('fileInput');
     const fileList = document.getElementById('fileList');
     const uploadBtn = document.getElementById('uploadBtn');
+    const errorMsg = document.getElementById('errorMsg');
+    const authKey = document.getElementById('authKey');
 
     let files = [];
 
-    // Click to browse
     dropZone.addEventListener('click', () => fileInput.click());
-
-    // Drag events
-    dropZone.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      dropZone.classList.add('dragover');
-    });
-    dropZone.addEventListener('dragleave', () => {
-      dropZone.classList.remove('dragover');
-    });
-    dropZone.addEventListener('drop', (e) => {
-      e.preventDefault();
-      dropZone.classList.remove('dragover');
-      addFiles(e.dataTransfer.files);
-    });
-
-    // File input change
-    fileInput.addEventListener('change', () => {
-      addFiles(fileInput.files);
-      fileInput.value = '';
-    });
+    dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+    dropZone.addEventListener('drop', (e) => { e.preventDefault(); dropZone.classList.remove('dragover'); addFiles(e.dataTransfer.files); });
+    fileInput.addEventListener('change', () => { addFiles(fileInput.files); fileInput.value = ''; });
 
     function addFiles(newFiles) {
       for (const f of newFiles) {
-        if (f.size > 50 * 1024 * 1024) {
-          alert(`${f.name} is too large (max 50MB)`);
-          continue;
-        }
+        if (f.size > 100 * 1024 * 1024) { showError(f.name + ' is too large (max 100MB)'); continue; }
         files.push({ file: f, status: 'pending' });
       }
       renderFiles();
@@ -190,43 +113,38 @@
 
     function formatSize(bytes) {
       if (bytes < 1024) return bytes + ' B';
-      if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
-      return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+      if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+      return (bytes / 1048576).toFixed(1) + ' MB';
+    }
+
+    function showError(msg) {
+      errorMsg.textContent = msg; errorMsg.style.display = 'block';
+      setTimeout(() => { errorMsg.style.display = 'none'; }, 5000);
     }
 
     function renderFiles() {
-      fileList.innerHTML = files.map((f, i) => `
-        <div class="file-item">
-          <span class="name">${f.file.name}</span>
-          <span class="size">${formatSize(f.file.size)}</span>
-          <span class="status status-${f.status}">
-            ${f.status === 'pending' ? '⏳ Ready' : ''}
-            ${f.status === 'uploading' ? '⬆️ Uploading...' : ''}
-            ${f.status === 'done' ? '✅ Done' : ''}
-            ${f.status === 'error' ? '❌ Failed' : ''}
-          </span>
-        </div>
-      `).join('');
+      fileList.innerHTML = files.map(f => '<div class="file-item"><span class="name">' + f.file.name +
+        '</span><span class="size">' + formatSize(f.file.size) + '</span><span class="status status-' + f.status + '">' +
+        (f.status === 'pending' ? '⏳ Ready' : f.status === 'uploading' ? '⬆️ Uploading...' :
+         f.status === 'done' ? '✅ Done' : '❌ Failed') + '</span></div>').join('');
     }
 
-    // Upload
+    function readFileAsBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result.split(',')[1]);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
     uploadBtn.addEventListener('click', async () => {
+      const token = authKey.value.trim();
+      if (!token) { showError('Please paste the access key'); return; }
+
       uploadBtn.disabled = true;
       uploadBtn.textContent = 'Uploading...';
       dropZone.classList.add('uploading');
-
-      // First ensure bucket exists (will 409 if exists, that's fine)
-      try {
-        await fetch(`${SUPABASE_URL}/storage/v1/bucket`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${SUPABASE_KEY}`,
-            'apikey': SUPABASE_KEY,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ id: BUCKET, name: BUCKET, public: false })
-        });
-      } catch (e) { /* bucket may already exist */ }
 
       for (let i = 0; i < files.length; i++) {
         if (files[i].status === 'done') continue;
@@ -234,54 +152,42 @@
         renderFiles();
 
         const f = files[i].file;
-        const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-        const path = `uploads/${timestamp}_${f.name}`;
+        const ts = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+        const safeName = f.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+        const path = 'uploads/' + ts + '_' + safeName;
 
         try {
-          const res = await fetch(`${SUPABASE_URL}/storage/v1/object/${BUCKET}/${path}`, {
-            method: 'POST',
+          const b64 = await readFileAsBase64(f);
+          const res = await fetch(GH_API + '/repos/' + GH_REPO + '/contents/' + path, {
+            method: 'PUT',
             headers: {
-              'Authorization': `Bearer ${SUPABASE_KEY}`,
-              'apikey': SUPABASE_KEY,
-              'Content-Type': f.type || 'application/octet-stream',
-              'x-upsert': 'true'
+              'Authorization': 'token ' + token,
+              'Content-Type': 'application/json',
+              'Accept': 'application/vnd.github+json'
             },
-            body: f
+            body: JSON.stringify({ message: 'Upload: ' + f.name + ' (' + formatSize(f.size) + ')', content: b64 })
           });
-
-          if (res.ok) {
-            files[i].status = 'done';
-
-            // Also notify the API
-            try {
-              await fetch('https://sentiocap-api.pairwater.com/api/notify-upload', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ filename: f.name, path: path, size: f.size })
-              });
-            } catch (e) { /* notification is best-effort */ }
-          } else {
-            const err = await res.text();
-            console.error('Upload failed:', err);
+          if (res.ok || res.status === 201) { files[i].status = 'done'; }
+          else {
+            const err = await res.json();
+            showError('Failed: ' + (err.message || 'Unknown error'));
             files[i].status = 'error';
           }
         } catch (e) {
-          console.error('Upload error:', e);
+          showError('Failed: ' + e.message);
           files[i].status = 'error';
         }
         renderFiles();
       }
 
       dropZone.classList.remove('uploading');
-      dropZone.classList.add('done');
-      uploadBtn.textContent = 'Upload Complete ✓';
-
-      // Reset after 3 seconds
-      setTimeout(() => {
-        dropZone.classList.remove('done');
-        uploadBtn.textContent = 'Upload Files';
-        uploadBtn.disabled = files.filter(f => f.status === 'pending').length === 0;
-      }, 3000);
+      if (files.every(f => f.status === 'done')) {
+        dropZone.classList.add('done');
+        uploadBtn.textContent = 'All Files Uploaded ✓';
+      } else {
+        uploadBtn.textContent = 'Retry Failed';
+        uploadBtn.disabled = false;
+      }
     });
   </script>
 </body>
