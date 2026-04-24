@@ -688,6 +688,68 @@ class JobStatus(BaseModel):
     completed_at: Optional[datetime] = None
 
 
+# ---------------------------------------------------------------------------
+# Decisions
+# ---------------------------------------------------------------------------
+
+class DecisionSeverity(str, Enum):
+    critical = "critical"
+    warning = "warning"
+    info = "info"
+
+
+class DecisionStatus(str, Enum):
+    new = "new"
+    acknowledged = "acknowledged"
+    in_progress = "in_progress"
+    resolved = "resolved"
+    dismissed = "dismissed"
+
+
+class DecisionResponse(BaseModel):
+    id: UUID
+    org_id: UUID
+    investment_id: Optional[UUID] = None
+    plan_id: Optional[UUID] = None
+    category: str
+    category_number: int
+    severity: DecisionSeverity
+    trigger_type: Optional[str] = None
+    trigger_data: dict = {}
+    title: str
+    description: str
+    recommended_action: str
+    impact_estimate: Optional[str] = None
+    owner: Optional[str] = None
+    status: DecisionStatus
+    resolved_at: Optional[datetime] = None
+    resolved_by: Optional[UUID] = None
+    resolution_notes: Optional[str] = None
+    investment_name: Optional[str] = None
+    created_at: datetime
+    updated_at: datetime
+
+    model_config = {"from_attributes": True}
+
+
+class DecisionUpdate(BaseModel):
+    status: Optional[str] = None
+    owner: Optional[str] = None
+    resolution_notes: Optional[str] = None
+
+
+class DecisionSummary(BaseModel):
+    total: int = 0
+    active: int = 0
+    by_severity: dict[str, int] = {}
+    by_status: dict[str, int] = {}
+
+
+class DecisionScanResult(BaseModel):
+    new_decisions: int
+    decision_ids: list[str] = []
+
+
 # Update forward refs
 PlanResponse.model_rebuild()
 TreemapNode.model_rebuild()

@@ -23,6 +23,9 @@ import type {
   UserResponse,
   JobStatus,
   UploadPreviewResponse,
+  Decision,
+  DecisionSummary,
+  DecisionScanResult,
 } from './types'
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
@@ -187,5 +190,15 @@ export const api = {
 
   jobs: {
     status: (jobId: string) => get<JobStatus>(`/api/jobs/${jobId}`),
+  },
+
+  decisions: {
+    list: (queryString?: string) =>
+      get<Decision[]>(`/api/decisions${queryString ? '?' + queryString : ''}`),
+    get: (id: string) => get<Decision>(`/api/decisions/${id}`),
+    summary: () => get<DecisionSummary>('/api/decisions/summary'),
+    scan: () => post<DecisionScanResult>('/api/decisions/scan'),
+    update: (id: string, data: { status?: string; owner?: string; resolution_notes?: string }) =>
+      request<Decision>(`/api/decisions/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
   },
 }

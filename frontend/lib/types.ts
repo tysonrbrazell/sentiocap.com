@@ -456,3 +456,46 @@ export interface UploadPreviewResponse {
   preview: UploadPreviewRow[]
   preview_count: number
 }
+
+// ---------------------------------------------------------------------------
+// Decisions
+// ---------------------------------------------------------------------------
+
+export type DecisionSeverity = 'critical' | 'warning' | 'info'
+export type DecisionStatus = 'new' | 'acknowledged' | 'in_progress' | 'resolved' | 'dismissed'
+
+export interface Decision {
+  id: string
+  org_id: string
+  investment_id?: string
+  plan_id?: string
+  category: string
+  category_number: number
+  severity: DecisionSeverity
+  trigger_type?: string
+  trigger_data: Record<string, unknown>
+  title: string
+  description: string
+  recommended_action: string
+  impact_estimate?: string
+  owner?: string
+  status: DecisionStatus
+  resolved_at?: string
+  resolved_by?: string
+  resolution_notes?: string
+  investment_name?: string
+  created_at: string
+  updated_at: string
+}
+
+export interface DecisionSummary {
+  total: number
+  active: number
+  by_severity: Record<string, number>
+  by_status: Record<string, number>
+}
+
+export interface DecisionScanResult {
+  new_decisions: number
+  decision_ids: string[]
+}
