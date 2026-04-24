@@ -56,7 +56,7 @@ CREATE TABLE users (
   name            VARCHAR(255) NOT NULL,
   role            user_role NOT NULL DEFAULT 'analyst',
   password_hash   VARCHAR(255),                    -- NULL if using Supabase Auth
-  supabase_uid    VARCHAR(255) UNIQUE,             -- Supabase Auth user ID
+  supabase_uid    UUID UNIQUE,                     -- Supabase Auth user ID
   last_login_at   TIMESTAMPTZ,
   created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
@@ -399,16 +399,16 @@ ALTER TABLE variances ENABLE ROW LEVEL SECURITY;
 -- (Service role bypasses RLS; use service role in API backend)
 
 CREATE POLICY "org_isolation_organizations" ON organizations
-  FOR ALL USING (id = (SELECT org_id FROM users WHERE supabase_uid = auth.uid()));
+  FOR ALL USING (id IN (SELECT org_id FROM users WHERE supabase_uid = auth.uid()));
 
 CREATE POLICY "org_isolation_plans" ON plans
-  FOR ALL USING (org_id = (SELECT org_id FROM users WHERE supabase_uid = auth.uid()));
+  FOR ALL USING (org_id IN (SELECT org_id FROM users WHERE supabase_uid = auth.uid()));
 
 CREATE POLICY "org_isolation_actuals" ON actuals
-  FOR ALL USING (org_id = (SELECT org_id FROM users WHERE supabase_uid = auth.uid()));
+  FOR ALL USING (org_id IN (SELECT org_id FROM users WHERE supabase_uid = auth.uid()));
 
 CREATE POLICY "org_isolation_investments" ON investments
-  FOR ALL USING (org_id = (SELECT org_id FROM users WHERE supabase_uid = auth.uid()));
+  FOR ALL USING (org_id IN (SELECT org_id FROM users WHERE supabase_uid = auth.uid()));
 
 -- Benchmarks and sp500_data are public (no RLS restriction)
 CREATE POLICY "benchmarks_public_read" ON benchmarks
