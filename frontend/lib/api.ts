@@ -46,6 +46,11 @@ import type {
   EffortRow,
   UnifiedCostView,
   SyncResult,
+  CoAAccount,
+  CoAStructure,
+  CoASummary,
+  CoAListResponse,
+  CoAAnomalyResponse,
 } from './types'
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
@@ -353,5 +358,66 @@ export const api = {
         '/api/matching/auto-match',
         { source_system: sourceSystem, auto_confirm_threshold: threshold ?? 0.85 }
       ),
+  },
+
+  coa: {
+    list: (params?: {
+      is_expense?: boolean
+      classified?: boolean
+      l1?: string
+      l2?: string
+      min_confidence?: number
+      max_confidence?: number
+      page?: number
+      per_page?: number
+    }) => {
+      const qs = new URLSearchParams()
+      if (params?.is_expense !== undefined) qs.set('is_expense', String(params.is_expense))
+      if (params?.classified !== undefined) qs.set('classified', String(params.classified))
+      if (params?.l1) qs.set('l1', params.l1)
+      if (params?.l2) qs.set('l2', params.l2)
+      if (params?.min_confidence !== undefined) qs.set('min_confidence', String(params.min_confidence))
+      if (params?.max_confidence !== undefined) qs.set('max_confidence', String(params.max_confidence))
+      if (params?.page) qs.set('page', String(params.page))
+      if (params?.per_page) qs.set('per_page', String(params.per_page))
+      return get<CoAListResponse>(`/api/coa/?${qs.toString()}`)
+    },
+    structure: () => get<CoAStructure>('/api/coa/structure'),
+    summary: () => get<CoASummary>('/api/coa/summary'),
+    anomalies: () => get<CoAAnomalyResponse>('/api/coa/anomalies'),
+    updateAccount: (accountCode: string, data: {
+      classified_l1?: string
+      classified_l2?: string
+      classified_l3?: string
+      classified_l4?: string
+    }) => request<CoAAccount>(`/api/coa/${encodeURIComponent(accountCode)}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    }),
+    reclassify: () => post<{ message: string; total: number; updated: number }>('/api/coa/reclassify', {}),
+    analyze: (file: File, opts?: {
+      account_code_column?: string
+      account_name_column?: string
+      amount_column?: string
+      period_column?: string
+    }) => {
+      const form = new FormData()
+      form.append('file', file)
+      if (opts?.account_code_column) form.append('account_code_column', opts.account_code_column)
+      if (opts?.account_name_column) form.append('account_name_column', opts.account_name_column)
+      if (opts?.amount_column) form.append('amount_column', opts.amount_column)
+      if (opts?.period_column) form.append('period_column', opts.period_column)
+      const token = getAuthToken()
+      const res = await fetch(`${BASE_URL}/api/coa/analyze`, {
+        method: 'POST',
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+        body: form,
+      })
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ detail: res.statusText }))
+        throw new Error((err as { detail?: string }).detail ?? res.statusText)
+      }
+      return res.json()
+    },
   },
 }

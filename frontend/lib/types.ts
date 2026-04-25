@@ -815,3 +815,83 @@ export interface SyncResult {
   started_at: string | null
   completed_at: string | null
 }
+
+// ---------------------------------------------------------------------------
+// Chart of Accounts (CoA)
+// ---------------------------------------------------------------------------
+
+export interface CoAAccount {
+  id: string
+  account_code: string
+  account_name: string
+  account_name_normalized?: string
+  segment_category?: string
+  segment_cost_center?: string
+  segment_sub?: string
+  segment_location?: string
+  classified_l1?: string
+  classified_l2?: string
+  classified_l3?: string
+  classified_l4?: string
+  classification_confidence: number
+  classification_source: string
+  account_type?: string
+  is_expense: boolean
+  parent_code?: string
+  typical_monthly_amount?: number
+  times_seen: number
+  last_seen_at?: string
+  created_at?: string
+  updated_at?: string
+}
+
+export interface CoAStructure {
+  delimiter: string
+  num_segments: number
+  segment_definitions: Array<{
+    position: number
+    name: string
+    avg_length: number
+    is_numeric: boolean
+    type: string
+    examples: string[]
+  }>
+  expense_range_start?: string
+  expense_range_end?: string
+  revenue_range_start?: string
+  revenue_range_end?: string
+  detected_erp: string
+  detection_confidence: number
+  samples_analyzed: number
+}
+
+export interface CoASummary {
+  detected_erp: string
+  structure: string
+  total_accounts: number
+  expense_accounts: number
+  classified_accounts: number
+  classification_coverage: number
+  top_categories: Array<{ l2: string; amount: number; pct: number }>
+  new_accounts_since_last: number
+  anomalies_detected: number
+}
+
+export interface CoAListResponse {
+  accounts: CoAAccount[]
+  total: number
+  page: number
+  per_page: number
+}
+
+export interface CoAAnomalyResponse {
+  anomalies: Array<{
+    account_code: string
+    account_name: string
+    typical_amount: number
+    times_seen: number
+    last_seen_at?: string
+    classified_l2?: string
+  }>
+  total: number
+}

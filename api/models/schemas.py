@@ -1124,3 +1124,130 @@ class MatchStats(BaseModel):
     by_system: dict = {}
 
     model_config = {"from_attributes": True}
+
+
+# ---------------------------------------------------------------------------
+# Chart of Accounts (CoA)
+# ---------------------------------------------------------------------------
+
+class CoAAccount(BaseModel):
+    """A single GL account in the learned Chart of Accounts."""
+    id: str
+    account_code: str
+    account_name: str
+    account_name_normalized: Optional[str] = None
+
+    # Parsed segments
+    segment_category: Optional[str] = None
+    segment_cost_center: Optional[str] = None
+    segment_sub: Optional[str] = None
+    segment_location: Optional[str] = None
+
+    # Classification
+    classified_l1: Optional[str] = None
+    classified_l2: Optional[str] = None
+    classified_l3: Optional[str] = None
+    classified_l4: Optional[str] = None
+    classification_confidence: float = 0.5
+    classification_source: str = "ai"  # 'ai', 'user', 'propagated', 'glossary', 'known_account', 'network'
+
+    # Metadata
+    account_type: Optional[str] = None
+    is_expense: bool = False
+    parent_code: Optional[str] = None
+    typical_monthly_amount: Optional[float] = None
+    times_seen: int = 1
+    last_seen_at: Optional[datetime] = None
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
+
+    model_config = {"from_attributes": True}
+
+
+class CoAAccountUpdate(BaseModel):
+    """Payload for manually correcting a CoA account classification."""
+    classified_l1: Optional[str] = None
+    classified_l2: Optional[str] = None
+    classified_l3: Optional[str] = None
+    classified_l4: Optional[str] = None
+
+
+class CoAStructure(BaseModel):
+    """The detected account code structure for an org."""
+    delimiter: str = ""
+    num_segments: int = 1
+    segment_definitions: list[dict] = []
+    expense_range_start: Optional[str] = None
+    expense_range_end: Optional[str] = None
+    revenue_range_start: Optional[str] = None
+    revenue_range_end: Optional[str] = None
+    detected_erp: str = "unknown"
+    detection_confidence: float = 0.5
+    samples_analyzed: int = 0
+
+    model_config = {"from_attributes": True}
+
+
+class CoAAnalysis(BaseModel):
+    """Result of analyzing a trial balance upload."""
+    structure: CoAStructure
+    total_accounts: int
+    expense_accounts: int
+    classified_accounts: int
+    new_accounts: int
+    anomalies: list[dict] = []
+    accounts: list[CoAAccount] = []
+    hierarchy: dict = {}
+    column_mapping: dict = {}
+
+
+class CoASummary(BaseModel):
+    """Scout's learned summary of the CoA."""
+    detected_erp: str = "unknown"
+    structure: str = ""
+    total_accounts: int = 0
+    expense_accounts: int = 0
+    classified_accounts: int = 0
+    classification_coverage: float = 0.0
+    top_categories: list[dict] = []
+    new_accounts_since_last: int = 0
+    anomalies_detected: int = 0
+
+
+class CoAListResponse(BaseModel):
+    """Paginated list of CoA accounts."""
+    accounts: list[CoAAccount]
+    total: int
+    page: int = 1
+    per_page: int = 100
+
+
+class CoAAnomalyResponse(BaseModel):
+    """Accounts with unusual amounts."""
+    anomalies: list[dict]
+    total: int
+
+
+class PeriodFormat(BaseModel):
+    """Detected period format for an org."""
+    detected_format: Optional[str] = None
+    fiscal_year_end_month: int = 12
+    fiscal_year_start_month: int = 1
+    example_values: list[str] = []
+
+
+class ColumnMapping(BaseModel):
+    """Auto-detected column mapping from an uploaded file."""
+    column_name: str
+    detected_type: str  # 'account_code', 'account_name', 'amount', 'period', 'department', etc.
+
+
+class UploadAnalysis(BaseModel):
+    """Result of smart column detection on an uploaded file."""
+    headers: list[str]
+    column_mappings: list[ColumnMapping]
+    sample_rows: int
+    suggested_code_col: Optional[str] = None
+    suggested_name_col: Optional[str] = None
+    suggested_amount_col: Optional[str] = None
+    suggested_period_col: Optional[str] = None

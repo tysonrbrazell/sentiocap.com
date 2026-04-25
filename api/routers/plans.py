@@ -27,6 +27,8 @@ from models.schemas import (
 )
 from services.upload import parse_upload_file, map_columns
 from services.classification import classify_single
+from services.coa_learner import CoALearner
+from services.memory import AgentMemory
 
 router = APIRouter(prefix="/plans", tags=["plans"])
 
@@ -298,26 +300,51 @@ async def upload_plan_file(
 
     rows, columns = parse_upload_file(contents, filename, column_map)
 
+    # ---- CoA Integration: check learned accounts for instant classification ----
+    org_id = current_user["org_id"]
+    memory = AgentMemory(org_id=org_id, supabase_client=db)
+    learner = CoALearner(org_id=org_id, supabase_client=db, memory=memory)
+
+    # Load known accounts for this org
+    coa_res = db.table("chart_of_accounts").select("account_code, classified_l1, classified_l2, classified_l3, classified_l4, classification_confidence").eq("org_id", org_id).execute()
+    coa_by_code: dict = {a["account_code"]: a for a in (coa_res.data or [])}
+
     # Classify first 5 rows for preview
     preview = []
+    from models.schemas import ClassificationResult, L1Type
     for i, row in enumerate(rows[:5]):
         suggested = None
+        gl_account = row.get("source_gl_account")
         try:
-            result = classify_single(
-                description=row["source_description"],
-                cost_center=row.get("source_cost_center"),
-                gl_account=row.get("source_gl_account"),
-                amount=str(row.get("annual_total", "")),
-            )
-            from models.schemas import ClassificationResult, L1Type
-            suggested = ClassificationResult(
-                classified_l1=L1Type(result["l1"]),
-                classified_l2=result["l2"],
-                classified_l3=result["l3"],
-                classified_l4=result["l4"],
-                confidence=result["confidence"],
-                reasoning=result.get("reasoning"),
-            )
+            # 1. Try CoA lookup first (instant, no AI)
+            if gl_account and gl_account in coa_by_code:
+                known = coa_by_code[gl_account]
+                if known.get("classified_l1") and known.get("classified_l2"):
+                    suggested = ClassificationResult(
+                        classified_l1=L1Type(known["classified_l1"]),
+                        classified_l2=known["classified_l2"],
+                        classified_l3=known.get("classified_l3", ""),
+                        classified_l4=known.get("classified_l4", ""),
+                        confidence=float(known.get("classification_confidence") or 0.9),
+                        method="known_account",
+                        reasoning="Learned from previous uploads.",
+                    )
+            # 2. Fallback to AI classification
+            if not suggested:
+                result = classify_single(
+                    description=row["source_description"],
+                    cost_center=row.get("source_cost_center"),
+                    gl_account=gl_account,
+                    amount=str(row.get("annual_total", "")),
+                )
+                suggested = ClassificationResult(
+                    classified_l1=L1Type(result["l1"]),
+                    classified_l2=result["l2"],
+                    classified_l3=result["l3"],
+                    classified_l4=result["l4"],
+                    confidence=result["confidence"],
+                    reasoning=result.get("reasoning"),
+                )
         except Exception:
             pass
 
@@ -326,7 +353,7 @@ async def upload_plan_file(
             "row": i + 1,
             "source_description": row["source_description"],
             "source_cost_center": row.get("source_cost_center"),
-            "source_gl_account": row.get("source_gl_account"),
+            "source_gl_account": gl_account,
             "amounts": amounts,
             "annual_total": row.get("annual_total", 0),
             "suggested_classification": suggested,
@@ -335,12 +362,33 @@ async def upload_plan_file(
     # Persist all rows to plan_line_items
     insert_rows = []
     for idx, row in enumerate(rows):
+        gl_account = row.get("source_gl_account")
+        # Pre-classify known GL accounts (skip AI for those we know)
+        pre_l1 = pre_l2 = pre_l3 = pre_l4 = None
+        pre_confidence = None
+        pre_method = None
+        if gl_account and gl_account in coa_by_code:
+            known = coa_by_code[gl_account]
+            if known.get("classified_l1"):
+                pre_l1 = known["classified_l1"]
+                pre_l2 = known.get("classified_l2")
+                pre_l3 = known.get("classified_l3")
+                pre_l4 = known.get("classified_l4")
+                pre_confidence = float(known.get("classification_confidence") or 0.9)
+                pre_method = "rule_based"  # treated as rule-based since it came from learned CoA
+
         insert_rows.append({
             "plan_id": plan_id,
             "source_description": row["source_description"],
             "source_cost_center": row.get("source_cost_center"),
-            "source_gl_account": row.get("source_gl_account"),
+            "source_gl_account": gl_account,
             "source_row_number": idx + 1,
+            "classified_l1": pre_l1,
+            "classified_l2": pre_l2,
+            "classified_l3": pre_l3,
+            "classified_l4": pre_l4,
+            "classification_confidence": pre_confidence,
+            "classification_method": pre_method,
             "jan": row.get("jan", 0), "feb": row.get("feb", 0),
             "mar": row.get("mar", 0), "apr": row.get("apr", 0),
             "may": row.get("may", 0), "jun": row.get("jun", 0),
@@ -352,6 +400,24 @@ async def upload_plan_file(
     # Insert in batches of 100
     for i in range(0, len(insert_rows), 100):
         db.table("plan_line_items").insert(insert_rows[i:i+100]).execute()
+
+    # Background: learn from this upload for accounts we don't yet know
+    import asyncio
+    coa_rows = [
+        {
+            "account_code": row.get("source_gl_account", ""),
+            "account_name": row["source_description"],
+            "amount": row.get("annual_total", 0),
+        }
+        for row in rows
+        if row.get("source_gl_account")
+    ]
+    if coa_rows:
+        try:
+            await learner.analyze_upload(coa_rows)
+        except Exception as e:
+            import logging
+            logging.getLogger(__name__).warning(f"CoA background learning failed: {e}")
 
     upload_id = str(uuid4())
     return UploadPreviewResponse(

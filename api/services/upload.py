@@ -131,20 +131,26 @@ def map_columns(df_columns: list[str]) -> dict[str, Optional[str]]:
     columns_lower = {c.lower(): c for c in df_columns}
     result: dict[str, Optional[str]] = {k: None for k in ["description", "cost_center", "gl_account", "annual"] + MONTH_FIELDS}
 
-    # Description hints
-    for hint in ("description", "desc", "expense", "gl description", "account name", "line item", "name"):
+    # Description hints — extended with GL/account-name aliases used in trial balances
+    for hint in (
+        "description", "desc", "expense", "gl description",
+        "account name", "account description", "line item", "name",
+    ):
         if hint in columns_lower:
             result["description"] = columns_lower[hint]
             break
 
     # Cost center
-    for hint in ("cost center", "costcenter", "cost_center", "cc", "department"):
+    for hint in ("cost center", "costcenter", "cost_center", "cc", "department", "dept", "business unit", "bu"):
         if hint in columns_lower:
             result["cost_center"] = columns_lower[hint]
             break
 
-    # GL account
-    for hint in ("gl account", "glaccount", "gl_account", "account", "account code", "gl code"):
+    # GL account — extended with trial-balance aliases
+    for hint in (
+        "gl account", "glaccount", "gl_account", "account", "account code",
+        "gl code", "acct", "account #", "account no", "acct no",
+    ):
         if hint in columns_lower:
             result["gl_account"] = columns_lower[hint]
             break

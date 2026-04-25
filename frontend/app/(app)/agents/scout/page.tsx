@@ -2,7 +2,7 @@
 
 import { useState, useRef } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { Upload, CheckCircle, Clock, RefreshCw, GitMerge, ArrowRight } from 'lucide-react'
+import { Upload, CheckCircle, Clock, RefreshCw, GitMerge, ArrowRight, BookOpen } from 'lucide-react'
 import Link from 'next/link'
 import { api } from '@/lib/api'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
