@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SentioCap — Public Company Analyzer</title>
+  <meta name="description" content="Free investment allocation analysis for any S&P 500 company. See how they split spending between running the business and changing it." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --brand: #1a1a2e;
+      --accent: #4f46e5;
+      --accent-light: #818cf8;
+      --accent-bg: #eef2ff;
+      --success: #059669;
+      --success-bg: #d1fae5;
+      --warning: #d97706;
+      --warning-bg: #fef3c7;
+      --danger: #dc2626;
+      --danger-bg: #fee2e2;
+      --info: #0284c7;
+      --info-bg: #e0f2fe;
+      --text: #111827;
+      --text-muted: #6b7280;
+      --border: #e5e7eb;
+      --bg: #f9fafb;
+      --white: #ffffff;
+      --radius: 12px;
+      --shadow: 0 1px 3px rgba(0,0,0,.08), 0 4px 12px rgba(0,0,0,.06);
+      --shadow-lg: 0 4px 6px -1px rgba(0,0,0,.07), 0 10px 30px -3px rgba(0,0,0,.1);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ---- HEADER ---- */
+    .site-header {
+      background: var(--brand);
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+    .logo-mark {
+      width: 32px; height: 32px;
+      background: var(--accent);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 16px; color: white;
+    }
+    .logo-text {
+      font-weight: 700; font-size: 18px; color: white;
+      letter-spacing: -0.3px;
+    }
+    .header-tagline {
+      font-size: 13px; color: rgba(255,255,255,.55);
+    }
+
+    /* ---- HERO / SEARCH ---- */
+    .hero {
+      background: linear-gradient(135deg, var(--brand) 0%, #16213e 60%, #0f3460 100%);
+      padding: 56px 24px 48px;
+      text-align: center;
+      color: white;
+    }
+    .hero h1 {
+      font-size: clamp(26px, 4vw, 40px);
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 12px;
+    }
+    .hero p {
+      font-size: 16px;
+      color: rgba(255,255,255,.65);
+      max-width: 540px;
+      margin: 0 auto 32px;
+      line-height: 1.6;
+    }
+
+    .search-wrap {
+      display: flex;
+      max-width: 480px;
+      margin: 0 auto;
+      gap: 0;
+      position: relative;
+    }
+    #ticker-input {
+      flex: 1;
+      padding: 16px 20px;
+      font-size: 18px;
+      font-weight: 600;
+      font-family: inherit;
+      border: 2px solid rgba(255,255,255,.2);
+      border-right: none;
+      border-radius: var(--radius) 0 0 var(--radius);
+      background: rgba(255,255,255,.1);
+      color: white;
+      outline: none;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: border-color .2s;
+    }
+    #ticker-input::placeholder { color: rgba(255,255,255,.4); font-weight: 400; letter-spacing: 0; text-transform: none; font-size: 15px; }
+    #ticker-input:focus { border-color: var(--accent-light); background: rgba(255,255,255,.15); }
+
+    #analyze-btn {
+      padding: 16px 28px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      font-size: 15px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background .2s;
+      white-space: nowrap;
+    }
+    #analyze-btn:hover { background: #4338ca; }
+    #analyze-btn:disabled { background: #6366f1; opacity: .7; cursor: default; }
+
+    .autocomplete-dropdown {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      right: 0;
+      background: white;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+      z-index: 100;
+      max-height: 240px;
+      overflow-y: auto;
+      display: none;
+    }
+    .autocomplete-item {
+      padding: 10px 16px;
+      cursor: pointer;
+      font-size: 14px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      color: var(--text);
+      transition: background .1s;
+    }
+    .autocomplete-item:hover, .autocomplete-item.active { background: var(--accent-bg); }
+    .ac-ticker { font-weight: 700; color: var(--accent); width: 52px; flex-shrink: 0; }
+    .ac-name { color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    .example-tickers {
+      margin-top: 20px;
+      font-size: 13px;
+      color: rgba(255,255,255,.45);
+    }
+    .example-tickers span {
+      cursor: pointer;
+      color: rgba(255,255,255,.65);
+      margin: 0 6px;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      transition: color .15s;
+    }
+    .example-tickers span:hover { color: white; }
+
+    /* ---- LOADING ---- */
+    .loading-wrap {
+      display: none;
+      text-align: center;
+      padding: 60px 24px;
+    }
+    .spinner {
+      width: 44px; height: 44px;
+      border: 4px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 20px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-wrap p { color: var(--text-muted); font-size: 15px; }
+
+    /* ---- ERROR ---- */
+    .error-wrap {
+      display: none;
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 0 24px;
+    }
+    .error-card {
+      background: var(--danger-bg);
+      border: 1px solid #fca5a5;
+      border-radius: var(--radius);
+      padding: 24px;
+    }
+    .error-card h3 { color: var(--danger); margin-bottom: 8px; font-size: 16px; }
+    .error-card p { color: #7f1d1d; font-size: 14px; line-height: 1.6; }
+    .error-suggestions { margin-top: 16px; }
+    .error-suggestions p { font-weight: 600; color: var(--text); margin-bottom: 8px; }
+    .suggestion-pill {
+      display: inline-block;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 13px;
+      font-weight: 600;
+      margin: 4px 4px 4px 0;
+      cursor: pointer;
+      transition: background .15s;
+    }
+    .suggestion-pill:hover { background: var(--accent-bg); color: var(--accent); }
+
+    /* ---- REPORT ---- */
+    #report { display: none; max-width: 900px; margin: 0 auto; padding: 32px 24px 60px; }
+
+    /* Report Header */
+    .report-header {
+      background: white;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 32px;
+      margin-bottom: 24px;
+      display: flex;
+      gap: 32px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .company-info { flex: 1; min-width: 200px; }
+    .company-ticker {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .company-name {
+      font-size: clamp(20px, 3vw, 28px);
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 10px;
+    }
+    .sector-badge {
+      display: inline-block;
+      background: var(--accent-bg);
+      color: var(--accent);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .year-badge {
+      display: inline-block;
+      background: #f3f4f6;
+      color: var(--text-muted);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 12px;
+      font-weight: 500;
+      margin-left: 8px;
+    }
+
+    /* Score gauge */
+    .score-gauge {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+    .gauge-ring {
+      position: relative;
+      width: 120px; height: 120px;
+    }
+    .gauge-ring svg { position: absolute; top: 0; left: 0; transform: rotate(-90deg); }
+    .gauge-ring circle {
+      cx: 60; cy: 60; r: 50;
+      fill: none; stroke-width: 10;
+    }
+    .gauge-bg { stroke: #e5e7eb; }
+    .gauge-fill {
+      stroke-linecap: round;
+      stroke-dasharray: 314 314;
+      transition: stroke-dashoffset 1s ease;
+    }
+    .gauge-center {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+    .gauge-score { font-size: 26px; font-weight: 800; line-height: 1; }
+    .gauge-grade { font-size: 13px; font-weight: 700; color: var(--text-muted); }
+    .gauge-label { font-size: 12px; font-weight: 600; color: var(--text-muted); letter-spacing: .5px; text-transform: uppercase; }
+
+    /* Cards grid */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+
+    .card {
+      background: white;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 24px;
+    }
+    .card-title {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    /* Allocation */
+    .donut-wrap {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .donut-chart { flex-shrink: 0; }
+    .donut-legend { flex: 1; }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+    .legend-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .legend-label { color: var(--text-muted); flex: 1; }
+    .legend-value { font-weight: 700; }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .stat-item {}
+    .stat-label { font-size: 11px; color: var(--text-muted); font-weight: 500; margin-bottom: 2px; }
+    .stat-value { font-size: 16px; font-weight: 700; }
+    .stat-sub { font-size: 11px; color: var(--text-muted); }
+
+    /* Trend */
+    .trend-direction {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 20px;
+      margin-bottom: 12px;
+    }
+    .trend-up { background: var(--success-bg); color: var(--success); }
+    .trend-down { background: var(--danger-bg); color: var(--danger); }
+    .trend-stable { background: #f3f4f6; color: var(--text-muted); }
+
+    /* Peer comparison */
+    .peer-bar-wrap { margin-bottom: 8px; }
+    .peer-bar-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      margin-bottom: 4px;
+    }
+    .peer-name { font-weight: 600; }
+    .peer-name.highlight { color: var(--accent); }
+    .peer-pct { font-weight: 700; }
+    .peer-bar-track {
+      height: 10px;
+      background: #f3f4f6;
+      border-radius: 5px;
+      position: relative;
+      overflow: visible;
+    }
+    .peer-bar-fill {
+      height: 100%;
+      border-radius: 5px;
+      transition: width .8s ease;
+    }
+    .peer-bar-fill.highlight { background: var(--accent); }
+    .peer-bar-fill.normal { background: #c7d2fe; }
+    .peer-bar-fill.median-line {
+      position: absolute;
+      top: -4px;
+      width: 2px;
+      height: 18px;
+      background: var(--text-muted);
+      border-radius: 2px;
+    }
+    .goldilocks-zone {
+      position: absolute;
+      top: 0; height: 100%;
+      background: rgba(5,150,105,.12);
+      border-left: 1.5px dashed rgba(5,150,105,.4);
+      border-right: 1.5px dashed rgba(5,150,105,.4);
+    }
+    .peer-legend {
+      display: flex;
+      gap: 16px;
+      margin-top: 12px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .peer-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Score breakdown */
+    .score-component {
+      margin-bottom: 12px;
+    }
+    .sc-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      margin-bottom: 5px;
+    }
+    .sc-name { font-weight: 500; }
+    .sc-value { font-weight: 700; }
+    .sc-track {
+      height: 8px;
+      background: #f3f4f6;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .sc-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width .8s ease;
+    }
+    .interpretation-box {
+      background: var(--accent-bg);
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 13px;
+      color: #3730a3;
+      margin-top: 16px;
+      line-height: 1.5;
+    }
+
+    /* Signals */
+    .signal-card {
+      display: flex;
+      gap: 14px;
+      padding: 16px;
+      border-radius: 10px;
+      margin-bottom: 12px;
+      align-items: flex-start;
+    }
+    .signal-card:last-child { margin-bottom: 0; }
+    .signal-icon {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+    .signal-card.positive { background: var(--success-bg); }
+    .signal-card.positive .signal-icon { background: #a7f3d0; }
+    .signal-card.warning { background: var(--warning-bg); }
+    .signal-card.warning .signal-icon { background: #fde68a; }
+    .signal-card.info { background: var(--info-bg); }
+    .signal-card.info .signal-icon { background: #bae6fd; }
+    .signal-card.danger { background: var(--danger-bg); }
+    .signal-card.danger .signal-icon { background: #fecaca; }
+    .signal-body {}
+    .signal-title { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+    .signal-desc { font-size: 13px; line-height: 1.55; color: var(--text-muted); }
+
+    /* CTA */
+    .cta-card {
+      background: linear-gradient(135deg, var(--brand) 0%, #1e3a5f 100%);
+      border-radius: var(--radius);
+      padding: 36px;
+      color: white;
+      margin-top: 24px;
+      text-align: center;
+    }
+    .cta-card h2 { font-size: 22px; font-weight: 800; margin-bottom: 8px; }
+    .cta-card p { color: rgba(255,255,255,.65); font-size: 14px; margin-bottom: 24px; }
+    .cta-features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+      max-width: 600px;
+      margin: 0 auto 28px;
+      text-align: left;
+    }
+    .cta-feature {
+      background: rgba(255,255,255,.08);
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-size: 13px;
+      color: rgba(255,255,255,.8);
+      line-height: 1.4;
+    }
+    .cta-feature strong { display: block; color: white; font-size: 14px; margin-bottom: 2px; }
+    .cta-btn {
+      display: inline-block;
+      background: var(--accent);
+      color: white;
+      padding: 14px 32px;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: background .2s;
+    }
+    .cta-btn:hover { background: #4338ca; }
+
+    /* Full-width sections */
+    .full-card {
+      background: white;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    /* Goldilocks indicator */
+    .goldilocks-banner {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 20px;
+      border-radius: 10px;
+      margin-top: 16px;
+    }
+    .goldilocks-banner.in-zone { background: var(--success-bg); }
+    .goldilocks-banner.out-zone { background: var(--warning-bg); }
+    .gz-icon { font-size: 24px; }
+    .gz-text {}
+    .gz-title { font-weight: 700; font-size: 14px; }
+    .gz-desc { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+
+    /* Share bar */
+    .share-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .share-bar p { font-size: 13px; color: var(--text-muted); }
+    .share-url {
+      flex: 1;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 13px;
+      color: var(--text-muted);
+      cursor: pointer;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      min-width: 0;
+    }
+    .share-btn {
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background .2s;
+      white-space: nowrap;
+    }
+    .share-btn:hover { background: #4338ca; }
+
+    /* Percentile badge */
+    .percentile-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 20px;
+      margin-left: 8px;
+    }
+
+    @media print {
+      .site-header { display: none; }
+      .hero { padding: 24px; }
+      .search-wrap, .example-tickers, .share-bar { display: none; }
+      #report { padding: 0; }
+      .card, .full-card { box-shadow: none; border: 1px solid var(--border); }
+    }
+
+    @media (max-width: 600px) {
+      .report-header { flex-direction: column; gap: 20px; }
+      .score-gauge { flex-direction: row; gap: 16px; }
+      .donut-wrap { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="https://sentiocap.com" class="logo">
+    <div class="logo-mark">S</div>
+    <span class="logo-text">SentioCap</span>
+  </a>
+  <span class="header-tagline">Capital Allocation Intelligence</span>
+</header>
+
+<div class="hero">
+  <h1>Public Company Analyzer</h1>
+  <p>See how any S&P 500 company splits its spending between running the business and transforming it — using only public 10-K data.</p>
+  <div class="search-wrap">
+    <input
+      id="ticker-input"
+      type="text"
+      placeholder="Enter ticker, e.g. MSCI"
+      maxlength="10"
+      autocomplete="off"
+      autocorrect="off"
+      spellcheck="false"
+    />
+    <button id="analyze-btn">Analyze →</button>
+    <div class="autocomplete-dropdown" id="autocomplete"></div>
+  </div>
+  <div class="example-tickers">
+    Try: <span onclick="runTicker('MSCI')">MSCI</span>
+    <span onclick="runTicker('AAPL')">AAPL</span>
+    <span onclick="runTicker('FDS')">FDS</span>
+    <span onclick="runTicker('SPGI')">SPGI</span>
+    <span onclick="runTicker('MCO')">MCO</span>
+  </div>
+</div>
+
+<div class="loading-wrap" id="loading">
+  <div class="spinner"></div>
+  <p>Analyzing capital allocation…</p>
+</div>
+
+<div class="error-wrap" id="error-wrap">
+  <div class="error-card">
+    <h3 id="error-title">Ticker not found</h3>
+    <p id="error-msg"></p>
+    <div class="error-suggestions" id="error-suggestions"></div>
+  </div>
+</div>
+
+<div id="report"></div>
+
+<script>
+// ---------------------------------------------------------------------------
+// Config
+// ---------------------------------------------------------------------------
+const API_BASE = (
+  window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+) ? 'http://localhost:8000' : 'https://api.sentiocap.com';
+
+let allTickers = [];
+
+// ---------------------------------------------------------------------------
+// Init
+// ---------------------------------------------------------------------------
+document.addEventListener('DOMContentLoaded', () => {
+  loadTickers();
+  setupSearch();
+
+  const params = new URLSearchParams(window.location.search);
+  const t = params.get('ticker');
+  if (t) {
+    document.getElementById('ticker-input').value = t.toUpperCase();
+    runTicker(t);
+  }
+});
+
+async function loadTickers() {
+  try {
+    const res = await fetch(`${API_BASE}/api/public/tickers`);
+    const data = await res.json();
+    allTickers = data.tickers || [];
+  } catch(e) {
+    // silent fail — autocomplete just won't work
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Search setup
+// ---------------------------------------------------------------------------
+function setupSearch() {
+  const input = document.getElementById('ticker-input');
+  const btn = document.getElementById('analyze-btn');
+  const dropdown = document.getElementById('autocomplete');
+
+  input.addEventListener('keydown', e => {
+    const items = dropdown.querySelectorAll('.autocomplete-item');
+    const active = dropdown.querySelector('.autocomplete-item.active');
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (!active) items[0]?.classList.add('active');
+      else {
+        active.classList.remove('active');
+        (active.nextElementSibling || items[0])?.classList.add('active');
+      }
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (!active) items[items.length - 1]?.classList.add('active');
+      else {
+        active.classList.remove('active');
+        (active.previousElementSibling || items[items.length - 1])?.classList.add('active');
+      }
+    } else if (e.key === 'Enter') {
+      const activeItem = dropdown.querySelector('.autocomplete-item.active');
+      if (activeItem) {
+        input.value = activeItem.dataset.ticker;
+        dropdown.style.display = 'none';
+      }
+      runTicker(input.value);
+    } else if (e.key === 'Escape') {
+      dropdown.style.display = 'none';
+    }
+  });
+
+  input.addEventListener('input', () => {
+    const q = input.value.toUpperCase().trim();
+    if (!q || q.length < 1) { dropdown.style.display = 'none'; return; }
+
+    const matches = allTickers
+      .filter(t => t.ticker.startsWith(q) || t.name.toUpperCase().includes(q))
+      .slice(0, 8);
+
+    if (!matches.length) { dropdown.style.display = 'none'; return; }
+
+    dropdown.innerHTML = matches.map(t => `
+      <div class="autocomplete-item" data-ticker="${t.ticker}" onclick="pickTicker('${t.ticker}')">
+        <span class="ac-ticker">${t.ticker}</span>
+        <span class="ac-name">${t.name}</span>
+      </div>
+    `).join('');
+    dropdown.style.display = 'block';
+  });
+
+  document.addEventListener('click', e => {
+    if (!input.contains(e.target) && !dropdown.contains(e.target)) {
+      dropdown.style.display = 'none';
+    }
+  });
+
+  btn.addEventListener('click', () => runTicker(input.value));
+}
+
+function pickTicker(ticker) {
+  document.getElementById('ticker-input').value = ticker;
+  document.getElementById('autocomplete').style.display = 'none';
+  runTicker(ticker);
+}
+
+// ---------------------------------------------------------------------------
+// Main analysis run
+// ---------------------------------------------------------------------------
+async function runTicker(ticker) {
+  ticker = (ticker || '').trim().toUpperCase();
+  if (!ticker) return;
+
+  document.getElementById('ticker-input').value = ticker;
+
+  // Update URL
+  const url = new URL(window.location);
+  url.searchParams.set('ticker', ticker);
+  window.history.replaceState({}, '', url);
+
+  // Show loading
+  document.getElementById('loading').style.display = 'block';
+  document.getElementById('error-wrap').style.display = 'none';
+  document.getElementById('report').style.display = 'none';
+  document.getElementById('analyze-btn').disabled = true;
+
+  try {
+    const res = await fetch(`${API_BASE}/api/public/analyze/${ticker}`);
+    const data = await res.json();
+
+    if (!res.ok) {
+      showError(data);
+    } else {
+      renderReport(data);
+    }
+  } catch(e) {
+    showError({ detail: { error: 'Could not connect to API. Please try again.', suggestions: [] } });
+  } finally {
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('analyze-btn').disabled = false;
+  }
+}
+
+function showError(data) {
+  const detail = data.detail || data;
+  document.getElementById('error-title').textContent = 'Company Not Found';
+  document.getElementById('error-msg').textContent = detail.error || 'An error occurred.';
+
+  const sugDiv = document.getElementById('error-suggestions');
+  const sugs = detail.suggestions || [];
+  if (sugs.length) {
+    sugDiv.innerHTML = '<p>Did you mean:</p>' + sugs.map(s =>
+      `<span class="suggestion-pill" onclick="runTicker('${s.ticker}')">${s.ticker} — ${s.name}</span>`
+    ).join('');
+    sugDiv.style.display = 'block';
+  } else {
+    sugDiv.style.display = 'none';
+  }
+
+  document.getElementById('error-wrap').style.display = 'block';
+}
+
+// ---------------------------------------------------------------------------
+// Report renderer
+// ---------------------------------------------------------------------------
+function renderReport(d) {
+  const el = document.getElementById('report');
+  const sc = d.sentiocap_score;
+  const al = d.allocation;
+  const tr = d.trend;
+  const pc = d.peer_comparison;
+  const gl = d.goldilocks;
+
+  // Score color
+  const scoreColor = sc.score >= 80 ? '#059669' : sc.score >= 60 ? '#4f46e5' : sc.score >= 45 ? '#d97706' : '#dc2626';
+  const strokeOffset = 314 - (sc.score / 100 * 314);
+
+  // Direction arrow
+  const dirIcon = tr.direction === 'increasing' ? '↑' : tr.direction === 'decreasing' ? '↓' : '→';
+  const dirClass = tr.direction === 'increasing' ? 'trend-up' : tr.direction === 'decreasing' ? 'trend-down' : 'trend-stable';
+
+  // Percentile badge color
+  const pctColor = pc.percentile >= 75 ? '#059669' : pc.percentile >= 50 ? '#4f46e5' : pc.percentile >= 25 ? '#d97706' : '#dc2626';
+
+  el.innerHTML = `
+    <div class="share-bar">
+      <p>Share this report:</p>
+      <div class="share-url" onclick="copyUrl()">${window.location.href}</div>
+      <button class="share-btn" onclick="copyUrl()">📋 Copy Link</button>
+      <button class="share-btn" onclick="window.print()" style="background:#374151">🖨️ Print</button>
+    </div>
+
+    <!-- Report Header -->
+    <div class="report-header">
+      <div class="company-info">
+        <div class="company-ticker">${d.company.ticker}</div>
+        <div class="company-name">${d.company.name}</div>
+        <span class="sector-badge">${d.company.sector}</span>
+        <span class="year-badge">FY ${d.latest_year}</span>
+        <div style="margin-top:12px; font-size:13px; color:var(--text-muted);">
+          <strong style="color:var(--text);">Percentile</strong>
+          <span class="percentile-badge" style="background:${pctColor}22; color:${pctColor};">
+            ${pc.percentile}th in ${d.company.sector}
+          </span>
+        </div>
+      </div>
+      <div class="score-gauge">
+        <div class="gauge-ring">
+          <svg width="120" height="120" viewBox="0 0 120 120">
+            <circle class="gauge-bg" cx="60" cy="60" r="50" stroke="#e5e7eb" fill="none" stroke-width="10"/>
+            <circle class="gauge-fill" cx="60" cy="60" r="50" fill="none" stroke-width="10"
+              stroke="${scoreColor}"
+              stroke-dasharray="314 314"
+              stroke-dashoffset="${strokeOffset}"
+              stroke-linecap="round"
+            />
+          </svg>
+          <div class="gauge-center">
+            <div class="gauge-score" style="color:${scoreColor}">${sc.score}</div>
+            <div class="gauge-grade" style="color:${scoreColor}">${sc.grade}</div>
+          </div>
+        </div>
+        <div class="gauge-label">SentioCap Score</div>
+      </div>
+    </div>
+
+    <!-- Section 1: Capital Allocation Profile -->
+    <div class="cards-grid">
+      <div class="card" id="alloc-card">
+        <div class="card-title">Capital Allocation Profile</div>
+        <div class="donut-wrap">
+          <div class="donut-chart">
+            <canvas id="donut-chart" width="120" height="120"></canvas>
+          </div>
+          <div class="donut-legend">
+            <div class="legend-item">
+              <div class="legend-dot" style="background:#4f46e5"></div>
+              <span class="legend-label">Change-the-Business (CTB)</span>
+              <span class="legend-value" style="color:#4f46e5">${al.ctb_pct}%</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot" style="background:#e0e7ff"></div>
+              <span class="legend-label">Run-the-Business (RTB)</span>
+              <span class="legend-value" style="color:#6b7280">${al.rtb_pct}%</span>
+            </div>
+          </div>
+        </div>
+        <div class="stats-row">
+          <div class="stat-item">
+            <div class="stat-label">Revenue</div>
+            <div class="stat-value">${fmtMoney(al.revenue)}</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">CTB Proxy</div>
+            <div class="stat-value">${fmtMoney(al.ctb_proxy)}</div>
+            <div class="stat-sub">R&D + CapEx + SW Cap</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">R&D</div>
+            <div class="stat-value">${fmtMoney(al.rd)}</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">CapEx</div>
+            <div class="stat-value">${fmtMoney(al.capex)}</div>
+          </div>
+          ${al.sw_capitalized > 0 ? `
+          <div class="stat-item">
+            <div class="stat-label">Capitalized SW</div>
+            <div class="stat-value">${fmtMoney(al.sw_capitalized)}</div>
+            <div class="stat-sub">ASC 350-40</div>
+          </div>` : ''}
+        </div>
+      </div>
+
+      <!-- Section 1b: CTB Trend -->
+      <div class="card">
+        <div class="card-title">CTB% Trend</div>
+        <span class="trend-direction ${dirClass}">${dirIcon} ${tr.direction.charAt(0).toUpperCase()+tr.direction.slice(1)}</span>
+        ${tr.cagr_3yr !== null ? `<div style="font-size:12px; color:var(--text-muted); margin-bottom:12px;">3yr CAGR: <strong>${tr.cagr_3yr > 0 ? '+' : ''}${tr.cagr_3yr}%</strong></div>` : ''}
+        <canvas id="trend-chart" height="100"></canvas>
+        <div class="goldilocks-banner ${gl.in_zone ? 'in-zone' : 'out-zone'}" style="margin-top:16px;">
+          <span class="gz-icon">${gl.in_zone ? '🎯' : '⚠️'}</span>
+          <div class="gz-text">
+            <div class="gz-title">${gl.in_zone ? 'Goldilocks Zone' : 'Outside Goldilocks Zone'}</div>
+            <div class="gz-desc">${gl.assessment}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 2: Peer Comparison -->
+    <div class="full-card" id="peer-card">
+      <div class="card-title">Peer Comparison — ${d.company.sector} Sector</div>
+      <div id="peer-bars"></div>
+      <div class="peer-legend">
+        <div class="peer-legend-item">
+          <div style="width:12px; height:12px; background:#4f46e5; border-radius:3px;"></div>
+          <span>${d.company.ticker} (this company)</span>
+        </div>
+        <div class="peer-legend-item">
+          <div style="width:12px; height:12px; background:#c7d2fe; border-radius:3px;"></div>
+          <span>Peers</span>
+        </div>
+        <div class="peer-legend-item">
+          <div style="width:2px; height:12px; background:var(--text-muted);"></div>
+          <span>Sector Median (${pc.sector_median_ctb_pct}%)</span>
+        </div>
+        <div class="peer-legend-item">
+          <div style="width:12px; height:12px; background:rgba(5,150,105,.15); border: 1px dashed rgba(5,150,105,.5); border-radius:3px;"></div>
+          <span>Goldilocks Zone (10–20%)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 3: Score Breakdown -->
+    <div class="full-card">
+      <div class="card-title">SentioCap Score Breakdown</div>
+      ${renderScoreComponents(sc.components, scoreColor)}
+      <div class="interpretation-box">💡 ${sc.interpretation}</div>
+    </div>
+
+    <!-- Section 4: Signals -->
+    <div class="full-card">
+      <div class="card-title">Signals Detected from Public Data</div>
+      ${d.signals.map(s => renderSignal(s)).join('')}
+    </div>
+
+    <!-- Section 5: CTA -->
+    <div class="cta-card">
+      <h2>This analysis uses public data only.</h2>
+      <p>Imagine what's possible with your actual budget, headcount, and vendor data.</p>
+      <div class="cta-features">
+        <div class="cta-feature"><strong>Full Classification</strong>Classify every expense line — not just R&D + CapEx proxy</div>
+        <div class="cta-feature"><strong>Investment ROI</strong>Track individual investment returns over time</div>
+        <div class="cta-feature"><strong>25 Signals</strong>Detect 25 decision signals vs 3–4 from public data</div>
+        <div class="cta-feature"><strong>Board Deck</strong>Auto-generate your capital allocation board report</div>
+        <div class="cta-feature"><strong>500+ Benchmarks</strong>Compare against real internal data from 500+ companies</div>
+      </div>
+      <a href="mailto:tyson@sentiocap.com?subject=SentioCap Pilot Request — ${d.company.ticker}&body=Hi Tyson,%0A%0AI saw the public analysis for ${d.company.ticker} and I'm interested in a pilot." class="cta-btn">
+        Request a Free Pilot →
+      </a>
+    </div>
+  `;
+
+  el.style.display = 'block';
+  el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  // Render charts after DOM update
+  setTimeout(() => {
+    renderDonut(al.ctb_pct, al.rtb_pct);
+    renderTrend(tr.years, tr.ctb_pct);
+    renderPeerBars(d.company.ticker, al.ctb_pct, pc);
+  }, 50);
+}
+
+// ---------------------------------------------------------------------------
+// Render helpers
+// ---------------------------------------------------------------------------
+function renderScoreComponents(comp, color) {
+  const labels = {
+    allocation_quality: 'Allocation Quality',
+    trend_direction: 'Trend Direction',
+    peer_position: 'Peer Position',
+    investment_intensity: 'Investment Intensity',
+    consistency: 'Data Consistency',
+  };
+  return Object.entries(comp).map(([key, val]) => `
+    <div class="score-component">
+      <div class="sc-header">
+        <span class="sc-name">${labels[key] || key}</span>
+        <span class="sc-value">${val}</span>
+      </div>
+      <div class="sc-track">
+        <div class="sc-fill" style="width:${val}%; background:${val >= 70 ? '#059669' : val >= 50 ? '#4f46e5' : '#d97706'}"></div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderSignal(s) {
+  const icons = { positive: '✅', warning: '⚠️', info: 'ℹ️', danger: '🚨' };
+  return `
+    <div class="signal-card ${s.type}">
+      <div class="signal-icon">${icons[s.type] || 'ℹ️'}</div>
+      <div class="signal-body">
+        <div class="signal-title">${s.title}</div>
+        <div class="signal-desc">${s.description}</div>
+      </div>
+    </div>
+  `;
+}
+
+function renderPeerBars(ticker, ctbPct, pc) {
+  const allItems = [
+    { ticker, name: ticker + ' (this company)', ctb_pct: ctbPct, isSelf: true },
+    ...pc.peers,
+  ];
+  allItems.sort((a, b) => b.ctb_pct - a.ctb_pct);
+
+  const maxVal = Math.max(...allItems.map(p => p.ctb_pct), pc.sector_median_ctb_pct, 22) * 1.1;
+
+  const medianPct = (pc.sector_median_ctb_pct / maxVal * 100).toFixed(1);
+  const glMinPct = (10 / maxVal * 100).toFixed(1);
+  const glMaxPct = (Math.min(20, maxVal) / maxVal * 100).toFixed(1);
+
+  document.getElementById('peer-bars').innerHTML = allItems.map(p => `
+    <div class="peer-bar-wrap">
+      <div class="peer-bar-label">
+        <span class="peer-name ${p.isSelf ? 'highlight' : ''}">${p.ticker}${p.isSelf ? ' ★' : ''} ${p.name && !p.isSelf ? '— ' + truncate(p.name, 28) : ''}</span>
+        <span class="peer-pct">${p.ctb_pct.toFixed(1)}%</span>
+      </div>
+      <div class="peer-bar-track">
+        <div class="goldilocks-zone" style="left:${glMinPct}%; width:${(glMaxPct - glMinPct)}%"></div>
+        <div class="peer-bar-fill ${p.isSelf ? 'highlight' : 'normal'}" style="width:${(p.ctb_pct / maxVal * 100).toFixed(1)}%"></div>
+        <div class="peer-bar-fill median-line" style="left:${medianPct}%"></div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ---------------------------------------------------------------------------
+// Chart.js charts
+// ---------------------------------------------------------------------------
+function renderDonut(ctbPct, rtbPct) {
+  const ctx = document.getElementById('donut-chart');
+  if (!ctx) return;
+  new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ['CTB', 'RTB'],
+      datasets: [{
+        data: [ctbPct, rtbPct],
+        backgroundColor: ['#4f46e5', '#e0e7ff'],
+        borderWidth: 0,
+        hoverOffset: 4,
+      }],
+    },
+    options: {
+      responsive: false,
+      cutout: '68%',
+      plugins: { legend: { display: false }, tooltip: { enabled: true } },
+      animation: { animateRotate: true, duration: 900 },
+    },
+  });
+}
+
+function renderTrend(years, values) {
+  const ctx = document.getElementById('trend-chart');
+  if (!ctx) return;
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: years,
+      datasets: [{
+        label: 'CTB%',
+        data: values,
+        borderColor: '#4f46e5',
+        backgroundColor: 'rgba(79,70,229,.08)',
+        borderWidth: 2.5,
+        pointRadius: 4,
+        pointBackgroundColor: '#4f46e5',
+        fill: true,
+        tension: 0.35,
+      }],
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: { label: ctx => ` ${ctx.parsed.y.toFixed(1)}% CTB` },
+        },
+      },
+      scales: {
+        y: {
+          min: 0,
+          ticks: { callback: v => v + '%', font: { size: 11 } },
+          grid: { color: 'rgba(0,0,0,.05)' },
+        },
+        x: { ticks: { font: { size: 11 } }, grid: { display: false } },
+      },
+      animation: { duration: 900 },
+    },
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Utils
+// ---------------------------------------------------------------------------
+function fmtMoney(v) {
+  if (!v) return '—';
+  const n = Number(v);
+  if (n >= 1e9) return '$' + (n / 1e9).toFixed(1) + 'B';
+  if (n >= 1e6) return '$' + Math.round(n / 1e6) + 'M';
+  if (n >= 1e3) return '$' + Math.round(n / 1e3) + 'K';
+  return '$' + n;
+}
+
+function truncate(str, maxLen) {
+  return str && str.length > maxLen ? str.slice(0, maxLen) + '…' : str;
+}
+
+function copyUrl() {
+  navigator.clipboard.writeText(window.location.href).then(() => {
+    const btn = document.querySelector('.share-btn');
+    if (btn) { btn.textContent = '✓ Copied!'; setTimeout(() => btn.textContent = '📋 Copy Link', 2000); }
+  });
+}
+</script>
+</body>
+</html>
