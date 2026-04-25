@@ -609,6 +609,10 @@ export interface ScoutStats {
   accuracy_pct: number
   pending_review: number
   recent: ClassificationRecord[]
+  // Data matching stats (optional — hydrated when matching data exists)
+  matching_quality_score?: number
+  matching_needs_review?: number
+  matching_auto_matched?: number
 }
 
 // Compass

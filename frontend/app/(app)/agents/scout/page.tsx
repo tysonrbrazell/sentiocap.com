@@ -2,7 +2,8 @@
 
 import { useState, useRef } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { Upload, CheckCircle, Clock, RefreshCw } from 'lucide-react'
+import { Upload, CheckCircle, Clock, RefreshCw, GitMerge, ArrowRight } from 'lucide-react'
+import Link from 'next/link'
 import { api } from '@/lib/api'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
@@ -185,6 +186,45 @@ export default function ScoutPage() {
                 </table>
               </div>
             )}
+          </CardContent>
+        </Card>
+
+        {/* Data Matching */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base flex items-center gap-2">
+              <GitMerge className="w-4 h-4 text-brand-accent" />
+              Data Matching
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center justify-between">
+              <div className="space-y-1">
+                <p className="text-sm text-gray-600">
+                  Map messy external data (Salesforce, JIRA) to your investments.
+                  Scout learns from every confirmation.
+                </p>
+                {(stats?.matching_needs_review ?? 0) > 0 && (
+                  <p className="text-sm text-yellow-700 font-medium">
+                    ⚠ {stats?.matching_needs_review} items need review
+                  </p>
+                )}
+                {(stats?.matching_quality_score ?? 0) > 0 && (
+                  <p className="text-sm text-gray-500">
+                    Data quality score:{' '}
+                    <strong style={{ color: '#4A7C59' }}>
+                      {stats?.matching_quality_score?.toFixed(0)}%
+                    </strong>
+                  </p>
+                )}
+              </div>
+              <Link href="/agents/scout/matching">
+                <Button variant="outline" className="flex items-center gap-2">
+                  Review Matches
+                  <ArrowRight className="w-4 h-4" />
+                </Button>
+              </Link>
+            </div>
           </CardContent>
         </Card>
 

@@ -7,6 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from config import settings
 from routers import auth, plans, actuals, investments, dashboard, classify, benchmarks, documents, decisions, agent, memory
 from connectors.router import router as connectors_router
+from routers.matching import router as matching_router
 
 app = FastAPI(
     title="SentioCap API",
@@ -46,6 +47,7 @@ app.include_router(decisions.router, prefix="/api")
 app.include_router(agent.router, prefix="/api/agent", tags=["agent"])
 app.include_router(memory.router, prefix="/api", tags=["memory"])
 app.include_router(connectors_router, prefix="/api", tags=["connectors"])
+app.include_router(matching_router, prefix="/api", tags=["matching"])
 
 # ---------------------------------------------------------------------------
 # Health check

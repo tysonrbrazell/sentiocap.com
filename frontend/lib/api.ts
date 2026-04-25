@@ -300,4 +300,58 @@ export const api = {
       }),
     unifiedCost: () => get<UnifiedCostView[]>('/api/connectors/unified-cost'),
   },
+
+  matching: {
+    preview: (sourceSystem: string, items?: unknown[]) =>
+      post<{ results: unknown[]; total: number; needs_review: number; auto_matched: number; unmatched: number }>(
+        '/api/matching/preview',
+        { source_system: sourceSystem, ...(items ? { items } : {}) }
+      ),
+    confirm: (body: {
+      source_id: string
+      source_system: string
+      source_name: string
+      target_id: string
+      target_name: string
+      target_type: string
+      allocation_pct?: number
+    }) => post<{ status: string }>('/api/matching/confirm', body),
+    confirmBatch: (sourceSystem: string, matches: unknown[]) =>
+      post<{ confirmed: string[]; errors: unknown[]; total: number }>(
+        '/api/matching/confirm-batch',
+        { source_system: sourceSystem, matches }
+      ),
+    split: (body: {
+      source_id: string
+      source_name: string
+      source_system: string
+      splits: unknown[]
+    }) => post<{ status: string }>('/api/matching/split', body),
+    markRtb: (body: {
+      source_id: string
+      source_name: string
+      source_system: string
+      l2_category: string
+    }) => post<{ status: string }>('/api/matching/mark-rtb', body),
+    dismiss: (sourceId: string, sourceSystem: string, sourceName?: string) =>
+      post<{ status: string }>('/api/matching/dismiss', {
+        source_id: sourceId,
+        source_system: sourceSystem,
+        source_name: sourceName ?? '',
+      }),
+    stats: () => get<{
+      total: number
+      confirmed: number
+      auto_matched: number
+      needs_review: number
+      unmatched: number
+      quality_score: number
+      by_system: Record<string, { total: number; confirmed: number }>
+    }>('/api/matching/stats'),
+    autoMatch: (sourceSystem: string, threshold?: number) =>
+      post<{ auto_matched: unknown[]; needs_review: unknown[]; unmatched: unknown[]; stats: unknown }>(
+        '/api/matching/auto-match',
+        { source_system: sourceSystem, auto_confirm_threshold: threshold ?? 0.85 }
+      ),
+  },
 }

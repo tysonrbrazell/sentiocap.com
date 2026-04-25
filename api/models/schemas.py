@@ -1066,3 +1066,61 @@ class MappingUpdateRequest(BaseModel):
     investment_id: Optional[UUID] = None
     l2_category: Optional[str] = None
     confirmed: Optional[bool] = None
+
+
+# ---------------------------------------------------------------------------
+# Fuzzy Matching
+# ---------------------------------------------------------------------------
+
+class MatchCandidateSchema(BaseModel):
+    target_id: str
+    target_name: str
+    target_type: str  # 'investment' | 'rtb_category'
+    confidence: float
+    match_method: str
+    reasoning: str
+    allocation_pct: float = 100.0
+
+    model_config = {"from_attributes": True}
+
+
+class MatchResultSchema(BaseModel):
+    source_id: str
+    source_name: str
+    source_type: str  # 'product' | 'project' | 'epic' | 'cost_center'
+    source_system: str  # 'salesforce' | 'jira' | 'erp'
+    match_status: str  # 'auto_matched' | 'needs_review' | 'unmatched'
+    needs_review: bool
+    best_match: Optional[MatchCandidateSchema] = None
+    candidates: list[MatchCandidateSchema] = []
+
+    model_config = {"from_attributes": True}
+
+
+class MatchConfirmationRequest(BaseModel):
+    source_id: str
+    source_system: str
+    source_name: str = ""
+    target_id: str
+    target_name: str = ""
+    target_type: str = "investment"  # 'investment' | 'rtb_category'
+    allocation_pct: float = 100.0
+
+
+class MatchSplitRequest(BaseModel):
+    source_id: str
+    source_name: str
+    source_system: str
+    splits: list[dict]  # [{target_id, target_name, target_type, allocation_pct}]
+
+
+class MatchStats(BaseModel):
+    total: int = 0
+    confirmed: int = 0
+    auto_matched: int = 0
+    needs_review: int = 0
+    unmatched: int = 0
+    quality_score: float = 0.0
+    by_system: dict = {}
+
+    model_config = {"from_attributes": True}
