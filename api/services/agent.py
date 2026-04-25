@@ -20,6 +20,7 @@ from supabase import Client
 
 from config import settings
 from services.signals import SignalDetector
+from services.memory import AgentMemory
 
 logger = logging.getLogger(__name__)
 
@@ -180,6 +181,7 @@ class SentiocapAgent:
     def __init__(self, org_id: str, db: Client):
         self.org_id = org_id
         self.db = db
+        self.memory = AgentMemory(org_id=org_id, supabase_client=db)
 
     # -----------------------------------------------------------------------
     # 1. Morning Briefing
@@ -216,6 +218,9 @@ class SentiocapAgent:
                 elif pct > 0.9:
                     threshold_alerts.append({"name": inv["name"], "pct": round(pct * 100, 1), "issue": "approaching_limit"})
 
+        # Forecast bias adjustments from Oracle memory
+        forecast_bias = await self.memory.get_forecast_bias()
+
         context_data = {
             "org_name": org_name,
             "portfolio_summary": portfolio,
@@ -227,6 +232,7 @@ class SentiocapAgent:
             "upcoming_deadlines": upcoming,
             "budget_threshold_alerts": threshold_alerts[:10],
             "recent_actuals_periods": list(set(a.get("period") for a in actuals))[:6],
+            "forecast_bias": forecast_bias,  # Oracle's learned bias corrections
         }
 
         system = (
@@ -276,6 +282,9 @@ class SentiocapAgent:
         signals = _fetch_decisions(self.db, self.org_id)
         benchmarks = _fetch_benchmarks(self.db, org.get("sector", ""))
 
+        # Load report preferences from Scribe memory
+        report_prefs = await self.memory.get_report_preferences("board_deck")
+
         context_data = {
             "org_name": org_name,
             "period": period,
@@ -297,11 +306,19 @@ class SentiocapAgent:
                 status: len([i for i in investments if i.get("status") == status])
                 for status in ["proposed", "approved", "in_progress", "completed", "on_hold"]
             },
+            "report_preferences": report_prefs,  # Scribe's learned format preferences
         }
+
+        # Customize system prompt based on learned preferences
+        max_pages_hint = f" Target approximately {report_prefs['max_pages']} pages." if report_prefs.get("max_pages") else ""
+        tone_hint = f" Tone: {report_prefs['tone']}." if report_prefs.get("tone") else ""
+        exclude_hint = ""
+        if report_prefs.get("exclude_sections"):
+            exclude_hint = f" Exclude these sections: {', '.join(report_prefs['exclude_sections'])}."
 
         system = (
             f"You are a CFO-level analyst writing a quarterly board investment review for {org_name}. "
-            f"Generate a comprehensive, professional document in markdown. Be specific with numbers. "
+            f"Generate a comprehensive, professional document in markdown. Be specific with numbers.{max_pages_hint}{tone_hint}{exclude_hint} "
             f"Structure it with these sections using ## headers:\n"
             f"1. Executive Summary\n2. RTB/CTB Overview\n3. Investment Portfolio Performance\n"
             f"4. Variance Analysis\n5. Benchmark Position\n6. Decision Log\n"

@@ -750,6 +750,150 @@ class DecisionScanResult(BaseModel):
     decision_ids: list[str] = []
 
 
+# ---------------------------------------------------------------------------
+# Memory — Agent Learning Layer
+# ---------------------------------------------------------------------------
+
+class GlossaryEntryUpdate(BaseModel):
+    """Partial update for a firm_glossary entry."""
+    firm_term: Optional[str] = None
+    mapped_l1: Optional[str] = None
+    mapped_l2: Optional[str] = None
+    mapped_l3: Optional[str] = None
+    mapped_l4: Optional[str] = None
+    confidence: Optional[float] = Field(None, ge=0.0, le=1.0)
+    notes: Optional[str] = None
+
+
+class GlossaryEntry(BaseModel):
+    id: UUID
+    org_id: UUID
+    firm_term: str
+    mapped_l1: Optional[str] = None
+    mapped_l2: Optional[str] = None
+    mapped_l3: Optional[str] = None
+    mapped_l4: Optional[str] = None
+    confidence: float = 1.0
+    source: str = "manual"  # 'manual', 'learned', 'correction'
+    usage_count: int = 1
+    last_used_at: Optional[datetime] = None
+    created_at: datetime
+    updated_at: datetime
+
+    model_config = {"from_attributes": True}
+
+
+class SignalPreferenceUpdate(BaseModel):
+    """Manually override sensitivity for a signal category."""
+    sensitivity_override: Optional[float] = Field(
+        None,
+        description="null=auto, 0=suppress, 0.5=less, 1.0=normal, 2.0=amplify",
+    )
+    notes: Optional[str] = None
+
+
+class SignalPreference(BaseModel):
+    id: UUID
+    org_id: UUID
+    category: str
+    action: str  # 'acknowledged', 'resolved', 'dismissed'
+    count: int = 1
+    last_action_at: Optional[datetime] = None
+    sensitivity_override: Optional[float] = None
+    notes: Optional[str] = None
+    created_at: datetime
+    updated_at: datetime
+
+    model_config = {"from_attributes": True}
+
+
+class PeerGroupCreate(BaseModel):
+    name: str
+    tickers: list[str] = Field(..., min_length=1, description="List of peer company tickers")
+    is_default: bool = False
+
+
+class PeerGroup(BaseModel):
+    id: UUID
+    org_id: UUID
+    name: str
+    tickers: list[str]
+    is_default: bool = False
+    created_by: Optional[UUID] = None
+    created_at: datetime
+    updated_at: datetime
+
+    model_config = {"from_attributes": True}
+
+
+class ForecastAccuracy(BaseModel):
+    id: UUID
+    org_id: UUID
+    period: str  # 'YYYY-MM'
+    forecast_date: date
+    l2_category: str
+    forecasted_amount: float
+    actual_amount: Optional[float] = None
+    variance_pct: Optional[float] = None
+    bias_direction: Optional[str] = None  # 'over' or 'under'
+    created_at: datetime
+    updated_at: datetime
+
+    model_config = {"from_attributes": True}
+
+
+class DecisionOutcome(BaseModel):
+    id: UUID
+    org_id: UUID
+    decision_id: Optional[UUID] = None
+    category: str
+    action_taken: str  # 'killed', 'accelerated', 'reallocated', 'extended', 'ignored'
+    investment_id: Optional[UUID] = None
+    metrics_before: dict = {}
+    metrics_after: dict = {}
+    outcome_score: Optional[float] = None  # -1 to 1
+    outcome_notes: Optional[str] = None
+    measured_at: Optional[datetime] = None
+    created_at: datetime
+    updated_at: datetime
+
+    model_config = {"from_attributes": True}
+
+
+class ReportFeedbackCreate(BaseModel):
+    report_type: str = Field(
+        ...,
+        description="e.g. 'board_deck', 'monthly_briefing', 'investment_case'",
+    )
+    score: float = Field(..., ge=1, le=5, description="1=poor, 5=excellent")
+    feedback_text: Optional[str] = None
+
+
+class ReportFeedback(BaseModel):
+    id: UUID
+    org_id: UUID
+    report_type: str
+    preferences: dict = {}
+    feedback_scores: list[dict] = []
+    created_at: datetime
+    updated_at: datetime
+
+    model_config = {"from_attributes": True}
+
+
+class NetworkIntelligence(BaseModel):
+    id: UUID
+    intelligence_type: str
+    key: str
+    data: dict
+    n_companies: int = 0
+    confidence: float = 0.5
+    last_updated: Optional[datetime] = None
+    created_at: datetime
+
+    model_config = {"from_attributes": True}
+
+
 # Update forward refs
 PlanResponse.model_rebuild()
 TreemapNode.model_rebuild()

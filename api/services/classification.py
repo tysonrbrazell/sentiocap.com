@@ -12,6 +12,7 @@ from typing import Optional
 import anthropic
 
 from config import settings
+from services.memory import AgentMemory
 
 logger = logging.getLogger(__name__)
 
@@ -150,9 +151,29 @@ def classify_single(
     cost_center: Optional[str] = None,
     gl_account: Optional[str] = None,
     amount: Optional[str] = None,
+    memory: Optional["AgentMemory"] = None,
 ) -> dict:
-    """Classify a single expense item. Returns dict with l1/l2/l3/l4/confidence/reasoning."""
+    """Classify a single expense item. Returns dict with l1/l2/l3/l4/confidence/reasoning.
+
+    If memory is provided, prior classifications and firm glossary context are injected
+    into the system prompt so Scout learns from past corrections.
+    """
+    import asyncio
+
     client = _get_client()
+
+    # Build memory-enhanced system prompt
+    system = SYSTEM_PROMPT
+    if memory is not None:
+        try:
+            loop = asyncio.new_event_loop()
+            firm_context = loop.run_until_complete(memory.build_classification_context())
+            loop.close()
+            if firm_context:
+                system = SYSTEM_PROMPT + "\n\n## Firm-Specific Terminology\n" + firm_context
+        except Exception as mem_err:
+            logger.warning(f"Memory context fetch failed: {mem_err}")
+
     user_msg = SINGLE_USER_TEMPLATE.format(
         description=description,
         cost_center=cost_center or "N/A",
@@ -163,7 +184,7 @@ def classify_single(
         response = client.messages.create(
             model=MODEL,
             max_tokens=512,
-            system=SYSTEM_PROMPT,
+            system=system,
             messages=[{"role": "user", "content": user_msg}],
         )
         raw = response.content[0].text
@@ -176,16 +197,30 @@ def classify_single(
         return _fallback_single()
 
 
-def classify_batch(items: list[dict]) -> list[dict]:
+def classify_batch(items: list[dict], memory: Optional["AgentMemory"] = None) -> list[dict]:
     """Classify a list of expense items. Each item must have 'id' and 'description'.
 
+    If memory is provided, firm glossary context is injected into the batch system prompt.
     Returns list of classification dicts (each with 'id' + l1/l2/l3/l4/confidence/reasoning).
     """
     if not items:
         return []
 
+    import asyncio
+
     client = _get_client()
     batch_system = SYSTEM_PROMPT + "\n" + BATCH_EXTRA
+
+    # Inject firm-specific glossary context from memory
+    if memory is not None:
+        try:
+            loop = asyncio.new_event_loop()
+            firm_context = loop.run_until_complete(memory.build_classification_context())
+            loop.close()
+            if firm_context:
+                batch_system = batch_system + "\n\n## Firm-Specific Terminology\n" + firm_context
+        except Exception as mem_err:
+            logger.warning(f"Memory context fetch failed: {mem_err}")
 
     all_results: list[dict] = []
 

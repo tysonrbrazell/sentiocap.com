@@ -15,6 +15,7 @@ import anthropic
 from supabase import Client
 
 from config import settings
+from services.memory import AgentMemory
 
 logger = logging.getLogger(__name__)
 
@@ -156,8 +157,9 @@ class SignalDetector:
         20: {"key": "regulatory_tailwind",    "name": "Regulatory Tailwind",         "severity": "info"},
     }
 
-    def __init__(self, db: Client):
+    def __init__(self, db: Client, memory: Optional[AgentMemory] = None):
         self.db = db
+        self.memory = memory
 
     def _fetch_investments(self, org_id: str) -> list[dict]:
         res = (
@@ -229,6 +231,21 @@ class SignalDetector:
     # Investment-level detectors (categories 1-9, 15-20)
     # -----------------------------------------------------------------------
 
+    def _check_sensitivity(self, org_id: str, category_key: str) -> bool:
+        """Return False if this org dismisses this signal category too often (suppress it)."""
+        if self.memory is None:
+            return True
+        import asyncio
+        try:
+            loop = asyncio.new_event_loop()
+            sensitivity = loop.run_until_complete(self.memory.get_signal_sensitivity(category_key))
+            loop.close()
+            # If sensitivity below 0.3 threshold, suppress
+            return sensitivity >= 0.3
+        except Exception as e:
+            logger.warning(f"Sensitivity check failed for {category_key}: {e}")
+            return True
+
     def scan_investments(self, org_id: str) -> list[dict]:
         investments = self._fetch_investments(org_id)
         if not investments:
@@ -265,7 +282,7 @@ class SignalDetector:
                     kill_signal = True
                 elif benefit_realization is not None and benefit_realization < 0.2:
                     kill_signal = True
-            if kill_signal and not _already_exists(self.db, org_id, "kill_eliminate", inv_id):
+            if kill_signal and self._check_sensitivity(org_id, "kill_eliminate") and not _already_exists(self.db, org_id, "kill_eliminate", inv_id):
                 new_decisions.append(_build_decision(
                     org_id=org_id, category_num=1, category_key="kill_eliminate",
                     category_name="Kill / Eliminate", severity="critical",
@@ -278,7 +295,7 @@ class SignalDetector:
             if roi is not None and strategic_rating >= 4 and planned_total > 0:
                 spend_pct = actual_total / planned_total if planned_total else 0
                 if benefit_realization is not None and benefit_realization < 0.20 and spend_pct < 0.50:
-                    if not _already_exists(self.db, org_id, "pause_reassess", inv_id):
+                    if self._check_sensitivity(org_id, "pause_reassess") and not _already_exists(self.db, org_id, "pause_reassess", inv_id):
                         new_decisions.append(_build_decision(
                             org_id=org_id, category_num=2, category_key="pause_reassess",
                             category_name="Pause & Reassess", severity="critical",
@@ -289,7 +306,7 @@ class SignalDetector:
 
             # Cat 3: Cost Overrun
             if planned_total > 0 and actual_total > planned_total * 1.3:
-                if not _already_exists(self.db, org_id, "cost_overrun", inv_id):
+                if self._check_sensitivity(org_id, "cost_overrun") and not _already_exists(self.db, org_id, "cost_overrun", inv_id):
                     overrun_pct = round((actual_total / planned_total - 1) * 100, 1)
                     new_decisions.append(_build_decision(
                         org_id=org_id, category_num=3, category_key="cost_overrun",
@@ -307,7 +324,7 @@ class SignalDetector:
                     monthly_benefit = total_benefit_actual / 12
                     payback_months = int(costs / monthly_benefit) if monthly_benefit > 0 else None
                 if payback_months is not None and payback_months < 12 and benefit_realization is not None and benefit_realization > 0.80:
-                    if not _already_exists(self.db, org_id, "accelerate", inv_id):
+                    if self._check_sensitivity(org_id, "accelerate") and not _already_exists(self.db, org_id, "accelerate", inv_id):
                         new_decisions.append(_build_decision(
                             org_id=org_id, category_num=4, category_key="accelerate",
                             category_name="Accelerate / Double Down", severity="critical",
@@ -318,7 +335,7 @@ class SignalDetector:
 
             # Cat 5: Turnaround Required
             if roi is not None and 0.30 <= roi <= 0.80 and tenure > 2 and strategic_rating >= 3:
-                if not _already_exists(self.db, org_id, "turnaround_required", inv_id):
+                if self._check_sensitivity(org_id, "turnaround_required") and not _already_exists(self.db, org_id, "turnaround_required", inv_id):
                     new_decisions.append(_build_decision(
                         org_id=org_id, category_num=5, category_key="turnaround_required",
                         category_name="Turnaround Required", severity="warning",
@@ -330,7 +347,7 @@ class SignalDetector:
             # Cat 7: Reclassify RTB↔CTB
             l1 = (inv.get("l2_category") or "").split("-")[0]  # RTB or CTB
             if l1 == "CTB" and tenure > 4 and not inv.get("target_completion"):
-                if not _already_exists(self.db, org_id, "reclassify_rtb_ctb", inv_id):
+                if self._check_sensitivity(org_id, "reclassify_rtb_ctb") and not _already_exists(self.db, org_id, "reclassify_rtb_ctb", inv_id):
                     new_decisions.append(_build_decision(
                         org_id=org_id, category_num=7, category_key="reclassify_rtb_ctb",
                         category_name="Reclassify RTB↔CTB", severity="warning",
@@ -341,7 +358,7 @@ class SignalDetector:
 
             # Cat 9: Extend Timeline
             if benefit_realization is not None and 0.40 <= benefit_realization <= 0.80:
-                if not _already_exists(self.db, org_id, "extend_timeline", inv_id):
+                if self._check_sensitivity(org_id, "extend_timeline") and not _already_exists(self.db, org_id, "extend_timeline", inv_id):
                     new_decisions.append(_build_decision(
                         org_id=org_id, category_num=9, category_key="extend_timeline",
                         category_name="Extend Timeline", severity="warning",
@@ -360,7 +377,7 @@ class SignalDetector:
                     .eq("category", "kill_eliminate")
                     .execute()
                 )
-                if not kill_exists.data and not _already_exists(self.db, org_id, "zombie_investment", inv_id):
+                if not kill_exists.data and self._check_sensitivity(org_id, "zombie_investment") and not _already_exists(self.db, org_id, "zombie_investment", inv_id):
                     new_decisions.append(_build_decision(
                         org_id=org_id, category_num=16, category_key="zombie_investment",
                         category_name="Zombie Investment", severity="critical",
@@ -380,7 +397,7 @@ class SignalDetector:
                             consecutive_optimism += 1
                         else:
                             consecutive_optimism = 0
-                if consecutive_optimism >= 3 and not _already_exists(self.db, org_id, "benefit_hockey_stick", inv_id):
+                if consecutive_optimism >= 3 and self._check_sensitivity(org_id, "benefit_hockey_stick") and not _already_exists(self.db, org_id, "benefit_hockey_stick", inv_id):
                     new_decisions.append(_build_decision(
                         org_id=org_id, category_num=17, category_key="benefit_hockey_stick",
                         category_name="Benefit Hockey Stick", severity="warning",
@@ -392,7 +409,7 @@ class SignalDetector:
             # Cat 18: Hiring-Blocked
             if status in ("approved", "in_progress") and planned_total > 0:
                 underspend_pct = 1 - (actual_total / planned_total)
-                if underspend_pct > 0.30 and not _already_exists(self.db, org_id, "hiring_blocked", inv_id):
+                if underspend_pct > 0.30 and self._check_sensitivity(org_id, "hiring_blocked") and not _already_exists(self.db, org_id, "hiring_blocked", inv_id):
                     new_decisions.append(_build_decision(
                         org_id=org_id, category_num=18, category_key="hiring_blocked",
                         category_name="Hiring-Blocked Investment", severity="warning",
@@ -403,7 +420,7 @@ class SignalDetector:
 
             # Cat 19: Decommission & Redeploy
             if status == "completed" and benefit_realization is not None and benefit_realization > 1.0:
-                if not _already_exists(self.db, org_id, "decommission_redeploy", inv_id):
+                if self._check_sensitivity(org_id, "decommission_redeploy") and not _already_exists(self.db, org_id, "decommission_redeploy", inv_id):
                     new_decisions.append(_build_decision(
                         org_id=org_id, category_num=19, category_key="decommission_redeploy",
                         category_name="Decommission & Redeploy", severity="info",
@@ -417,7 +434,7 @@ class SignalDetector:
             l2 = (inv.get("l2_category") or "").upper()
             is_regulatory = l4 in REGULATORY_L4_CODES or l2 in {"RTB-CMP"}
             if is_regulatory and roi is not None and roi > 1.50:
-                if not _already_exists(self.db, org_id, "regulatory_tailwind", inv_id):
+                if self._check_sensitivity(org_id, "regulatory_tailwind") and not _already_exists(self.db, org_id, "regulatory_tailwind", inv_id):
                     new_decisions.append(_build_decision(
                         org_id=org_id, category_num=20, category_key="regulatory_tailwind",
                         category_name="Regulatory Tailwind", severity="info",
