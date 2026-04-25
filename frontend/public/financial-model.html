@@ -1,0 +1,1401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SentioCap — 5-Year Financial Model</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg: #FAFAF8;
+  --primary: #1A1A1A;
+  --accent: #4A7C59;
+  --accent-light: rgba(74,124,89,0.12);
+  --accent-mid: rgba(74,124,89,0.35);
+  --border: #E8E8E4;
+  --surface: #FFFFFF;
+  --surface-2: #F3F3F0;
+  --muted: #6B6B68;
+  --light: #9B9B98;
+  --red: #C94A4A;
+  --red-light: rgba(201,74,74,0.10);
+  --orange: #D97328;
+  --blue: #3872B8;
+  --blue-light: rgba(56,114,184,0.10);
+  --sidebar: 340px;
+  --r: 8px;
+  --r-lg: 12px;
+  --sh: 0 1px 4px rgba(0,0,0,0.06);
+  --sh-md: 0 4px 12px rgba(0,0,0,0.07);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--primary);
+  font-size: 13.5px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── HEADER ── */
+.site-header {
+  background: var(--primary);
+  color: #fff;
+  padding: 0 24px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+}
+.logo { display:flex; align-items:center; gap:10px; font-weight:700; font-size:15px; letter-spacing:-0.02em; }
+.logo-mark {
+  width:28px; height:28px; border-radius:6px;
+  background: var(--accent);
+  display:flex; align-items:center; justify-content:center;
+  font-size:13px; font-weight:800; color:#fff; letter-spacing:-0.05em;
+}
+.logo-subtitle { font-weight:300; opacity:0.45; margin-left:2px; font-size:13px; }
+.header-meta { font-size:11px; color:rgba(255,255,255,0.45); display:flex; align-items:center; gap:12px; }
+.live-badge {
+  display:inline-flex; align-items:center; gap:5px;
+  background: rgba(74,124,89,0.25); color: #6ebe8a;
+  padding:3px 9px; border-radius:10px; font-size:10px; font-weight:600;
+}
+.live-dot { width:5px; height:5px; background:#6ebe8a; border-radius:50%; animation:pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+/* ── APP LAYOUT ── */
+.app-layout { display:flex; min-height:calc(100vh - 52px); }
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width: var(--sidebar);
+  flex-shrink: 0;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  position: sticky;
+  top: 52px;
+  height: calc(100vh - 52px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+.sidebar::-webkit-scrollbar { width:4px; }
+.sidebar::-webkit-scrollbar-thumb { background:var(--border); border-radius:4px; }
+
+.assum-section { border-bottom: 1px solid var(--border); }
+.assum-header {
+  padding: 12px 18px;
+  font-weight: 600;
+  font-size: 10.5px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: var(--surface-2);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  user-select: none;
+  transition: background 0.12s;
+}
+.assum-header:hover { background: #EEEEE9; }
+.toggle-arrow { font-size:12px; transition:transform 0.2s; line-height:1; }
+.assum-body {
+  padding: 14px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+}
+
+/* ── FORM CONTROLS ── */
+.form-row { display:flex; flex-direction:column; gap:5px; }
+.form-label {
+  font-size:11.5px;
+  font-weight:500;
+  color:var(--primary);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.form-label .val {
+  font-weight:600; color:var(--accent);
+  font-variant-numeric:tabular-nums;
+  background:var(--accent-light);
+  padding:1px 7px; border-radius:10px; font-size:11px;
+}
+
+input[type="range"] {
+  -webkit-appearance:none; appearance:none;
+  width:100%; height:4px;
+  background:var(--border); border-radius:2px; outline:none; cursor:pointer;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance:none; width:14px; height:14px;
+  background:var(--accent); border-radius:50%; cursor:pointer;
+  box-shadow:0 1px 4px rgba(74,124,89,0.35);
+  transition:transform 0.1s, box-shadow 0.1s;
+}
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform:scale(1.25);
+  box-shadow:0 2px 6px rgba(74,124,89,0.5);
+}
+input[type="range"]:focus { outline:none; }
+
+input[type="number"] {
+  width:100%; padding:7px 10px;
+  border:1px solid var(--border);
+  border-radius:var(--r);
+  font-family:inherit; font-size:12.5px;
+  background:var(--bg); color:var(--primary);
+  outline:none; transition:border-color 0.15s, box-shadow 0.15s;
+}
+input[type="number"]:focus {
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px var(--accent-light);
+}
+
+.form-hint { font-size:10.5px; color:var(--light); margin-top:-3px; }
+
+/* Mix Section */
+.mix-box {
+  background:var(--surface-2); border-radius:var(--r);
+  padding:12px; display:flex; flex-direction:column; gap:9px;
+}
+.mix-total-row {
+  display:flex; justify-content:flex-end;
+  font-size:10.5px; color:var(--muted);
+}
+.mix-total-row.err { color:var(--red); font-weight:600; }
+
+/* Headcount grid */
+.hc-grid {
+  display:grid;
+  grid-template-columns: 50px repeat(5, 1fr);
+  gap:4px; align-items:center;
+  font-size:11px;
+}
+.hc-grid .hc-head {
+  text-align:center; font-weight:600; font-size:10px;
+  color:var(--accent); letter-spacing:0.06em;
+}
+.hc-grid .hc-row-label {
+  font-weight:500; color:var(--muted); font-size:11px;
+}
+.hc-grid input[type="number"] {
+  padding:5px 3px; text-align:center; font-size:11.5px;
+}
+
+/* Subsection label */
+.sub-label {
+  font-size:10px; font-weight:700; text-transform:uppercase;
+  letter-spacing:0.09em; color:var(--light); margin-bottom:-4px;
+}
+.divider { border:none; border-top:1px solid var(--border); }
+
+/* ── MAIN ── */
+.main-content {
+  flex:1; overflow-x:hidden;
+  padding:24px; display:flex;
+  flex-direction:column; gap:24px;
+  min-width:0;
+}
+
+/* ── SCENARIO BAR ── */
+.scenario-bar {
+  display:flex; align-items:center; gap:10px;
+  flex-wrap:wrap; background:var(--surface);
+  border:1px solid var(--border); border-radius:var(--r-lg);
+  padding:12px 16px; box-shadow:var(--sh);
+}
+.scenario-bar-label {
+  font-size:11px; font-weight:700; color:var(--muted);
+  text-transform:uppercase; letter-spacing:0.08em; margin-right:4px;
+}
+.scenario-btn {
+  padding:6px 16px;
+  border:1.5px solid var(--border);
+  border-radius:20px;
+  background:var(--surface);
+  font-family:inherit; font-size:12px; font-weight:500;
+  cursor:pointer; transition:all 0.15s;
+  color:var(--primary);
+}
+.scenario-btn:hover { border-color:var(--accent); color:var(--accent); background:var(--accent-light); }
+.scenario-btn.active {
+  background:var(--accent); border-color:var(--accent);
+  color:#fff; font-weight:600;
+  box-shadow:0 2px 8px rgba(74,124,89,0.3);
+}
+
+/* ── SECTION HEADING ── */
+.section-heading {
+  font-size:17px; font-weight:700; letter-spacing:-0.02em;
+  color:var(--primary); margin-bottom:14px;
+  display:flex; align-items:center; gap:12px;
+}
+.section-heading::after {
+  content:''; flex:1; height:1px; background:var(--border);
+}
+
+/* ── KPI CARDS ── */
+.kpi-row {
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:12px; margin-bottom:16px;
+}
+.kpi-card {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--r-lg); padding:16px;
+  box-shadow:var(--sh);
+  transition:box-shadow 0.15s;
+}
+.kpi-card:hover { box-shadow:var(--sh-md); }
+.kpi-label {
+  font-size:10.5px; font-weight:600; color:var(--muted);
+  text-transform:uppercase; letter-spacing:0.07em; margin-bottom:6px;
+}
+.kpi-value {
+  font-size:22px; font-weight:800; letter-spacing:-0.04em;
+  color:var(--primary); font-variant-numeric:tabular-nums; line-height:1.1;
+}
+.kpi-sub { font-size:10.5px; color:var(--light); margin-top:5px; }
+
+/* ── CHARTS ── */
+.charts-2col { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.chart-card {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--r-lg); padding:18px; box-shadow:var(--sh);
+}
+.chart-card-title {
+  font-size:12.5px; font-weight:600; color:var(--primary);
+  margin-bottom:14px; display:flex; align-items:center; justify-content:space-between;
+}
+.chart-legend-pills { display:flex; gap:8px; flex-wrap:wrap; }
+.pill {
+  display:inline-flex; align-items:center; gap:4px;
+  font-size:10px; font-weight:500; color:var(--muted);
+}
+.pill-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+
+/* ── CARD ── */
+.card {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--r-lg); box-shadow:var(--sh); overflow:hidden;
+}
+
+/* ── P&L TABLE ── */
+.pl-wrap { overflow-x:auto; max-height:520px; overflow-y:auto; }
+table.pl-tbl {
+  width:100%; border-collapse:collapse;
+  font-size:11.5px; white-space:nowrap;
+}
+.pl-tbl th {
+  padding:8px 11px; text-align:right;
+  font-size:10px; font-weight:600;
+  letter-spacing:0.04em; color:var(--muted);
+  background:var(--surface-2);
+  border-bottom:2px solid var(--border);
+  position:sticky; top:0; z-index:2;
+}
+.pl-tbl th:first-child {
+  text-align:left; position:sticky; left:0;
+  z-index:4; background:var(--surface-2);
+  min-width:164px; border-right:1px solid var(--border);
+}
+.pl-tbl td {
+  padding:5px 11px; text-align:right;
+  border-bottom:1px solid #F0F0EC;
+  font-variant-numeric:tabular-nums;
+  color:var(--primary);
+}
+.pl-tbl td:first-child {
+  text-align:left; position:sticky; left:0;
+  background:var(--surface); z-index:1;
+  font-weight:500; border-right:1px solid var(--border);
+}
+.pl-tbl tr.grp-hdr td {
+  background:var(--surface-2); font-weight:700;
+  font-size:10px; letter-spacing:0.07em;
+  text-transform:uppercase; color:var(--muted);
+  padding:9px 11px 3px; border-bottom:none;
+}
+.pl-tbl tr.grp-hdr td:first-child { background:var(--surface-2); }
+.pl-tbl tr.bold-row td { font-weight:700; }
+.pl-tbl tr.shade-green td { background:rgba(74,124,89,0.07); font-weight:700; }
+.pl-tbl tr.shade-green td:first-child { background:rgba(74,124,89,0.07); }
+.pl-tbl tr.spacer td { height:6px; background:transparent; border:none; }
+.pl-tbl tr.spacer td:first-child { background:transparent; border:none; }
+.pl-tbl .neg { color:var(--red); }
+.pl-tbl .pos { color:var(--accent); }
+.pl-tbl .dim { color:var(--muted); font-size:11px; }
+.pl-tbl th.yr-hdr {
+  background:var(--accent); color:#fff;
+  text-align:center; font-size:10px;
+  letter-spacing:0.06em;
+}
+.pl-tbl th.yr-divider { border-left:2px solid var(--bg); }
+
+/* ── UNIT ECON TABLE ── */
+.ue-tbl { width:100%; border-collapse:collapse; font-size:13px; }
+.ue-tbl tr { border-bottom:1px solid var(--border); }
+.ue-tbl tr:last-child { border-bottom:none; }
+.ue-tbl td { padding:11px 16px; }
+.ue-tbl td:first-child { font-weight:500; width:38%; color:var(--primary); }
+.ue-tbl td:nth-child(2) {
+  font-weight:700; font-size:16px; width:22%;
+  color:var(--accent); font-variant-numeric:tabular-nums;
+}
+.ue-tbl td:last-child { color:var(--muted); font-size:11.5px; }
+.ue-tbl tr.ue-warn td:nth-child(2) { color:var(--red); }
+
+/* ── FUNDING CARDS ── */
+.funding-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+.f-card {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--r-lg); padding:20px; box-shadow:var(--sh);
+}
+.f-card.hero { border-color:var(--accent-mid); border-width:1.5px; }
+.f-label { font-size:10.5px; font-weight:600; text-transform:uppercase; letter-spacing:0.07em; color:var(--muted); margin-bottom:8px; }
+.f-value { font-size:28px; font-weight:800; letter-spacing:-0.04em; color:var(--accent); line-height:1.1; margin-bottom:5px; }
+.f-value.warn { color:var(--red); }
+.f-sub { font-size:11.5px; color:var(--muted); }
+
+/* ── RESPONSIVE ── */
+@media (max-width:1100px) {
+  .kpi-row { grid-template-columns:repeat(3,1fr); }
+  .charts-2col { grid-template-columns:1fr; }
+}
+@media (max-width:900px) {
+  .app-layout { flex-direction:column; }
+  .sidebar { width:100%; height:auto; position:static; border-right:none; border-bottom:1px solid var(--border); }
+  .funding-grid { grid-template-columns:repeat(2,1fr); }
+}
+@media (max-width:600px) {
+  .kpi-row { grid-template-columns:repeat(2,1fr); }
+  .funding-grid { grid-template-columns:1fr; }
+  .main-content { padding:14px; }
+}
+
+/* ── PRINT ── */
+@media print {
+  .sidebar, .scenario-bar { display:none; }
+  .app-layout { display:block; }
+  .main-content { padding:0; }
+  .site-header { position:static; }
+  .card, .kpi-card, .chart-card, .f-card { break-inside:avoid; }
+}
+</style>
+</head>
+<body>
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ HEADER ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<header class="site-header">
+  <div class="logo">
+    <div class="logo-mark">SC</div>
+    SentioCap
+    <span class="logo-subtitle">/ 5-Year Financial Model</span>
+  </div>
+  <div class="header-meta">
+    <span class="live-badge"><span class="live-dot"></span>Live</span>
+    <span>Interactive Projection Tool</span>
+  </div>
+</header>
+
+<div class="app-layout">
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ SIDEBAR ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<aside class="sidebar">
+
+  <!-- Customer Growth -->
+  <div class="assum-section">
+    <div class="assum-header" onclick="toggleSection(this)">
+      <span>Customer Growth</span>
+      <span class="toggle-arrow">▾</span>
+    </div>
+    <div class="assum-body">
+
+      <div class="form-row">
+        <label class="form-label">Starting Customers <span class="val" id="v_start">5</span></label>
+        <input type="range" id="startingCustomers" min="0" max="50" value="5" step="1"
+          oninput="sv(this,'v_start'); rc()">
+      </div>
+
+      <div class="form-row">
+        <label class="form-label">Monthly Growth Rate <span class="val" id="v_growth">15%</span></label>
+        <input type="range" id="monthlyGrowthRate" min="5" max="30" value="15" step="0.5"
+          oninput="sv(this,'v_growth','%'); rc()">
+      </div>
+
+      <div class="form-row">
+        <label class="form-label">Annual Churn Rate <span class="val" id="v_churn">10%</span></label>
+        <input type="range" id="churnRate" min="0" max="25" value="10" step="0.5"
+          oninput="sv(this,'v_churn','%'); rc()">
+      </div>
+
+      <div>
+        <div class="sub-label" style="margin-bottom:8px">Customer Mix (must total 100%)</div>
+        <div class="mix-box">
+          <div class="form-row">
+            <label class="form-label">Starter <span class="val" id="v_starter">40%</span></label>
+            <input type="range" id="starterPct" min="0" max="100" value="40" step="1"
+              oninput="onMix(); rc()">
+          </div>
+          <div class="form-row">
+            <label class="form-label">Professional <span class="val" id="v_prof">45%</span></label>
+            <input type="range" id="profPct" min="0" max="100" value="45" step="1"
+              oninput="onMix(); rc()">
+          </div>
+          <div class="form-row">
+            <label class="form-label">Enterprise <span class="val" id="v_ent">15%</span></label>
+            <input type="range" id="entPct" min="0" max="100" value="15" step="1"
+              oninput="onMix(); rc()">
+          </div>
+          <div class="mix-total-row" id="mixTotal">Total: 100%</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Pricing -->
+  <div class="assum-section">
+    <div class="assum-header" onclick="toggleSection(this)">
+      <span>Pricing</span>
+      <span class="toggle-arrow">▾</span>
+    </div>
+    <div class="assum-body">
+
+      <div class="form-row">
+        <label class="form-label">Starter Annual Price</label>
+        <input type="number" id="starterPrice" min="24000" max="60000" value="36000" step="1000"
+          oninput="rc()">
+        <div class="form-hint">Range $24K – $60K</div>
+      </div>
+
+      <div class="form-row">
+        <label class="form-label">Professional Annual Price</label>
+        <input type="number" id="profPrice" min="50000" max="120000" value="75000" step="1000"
+          oninput="rc()">
+        <div class="form-hint">Range $50K – $120K</div>
+      </div>
+
+      <div class="form-row">
+        <label class="form-label">Enterprise Annual Price</label>
+        <input type="number" id="entPrice" min="100000" max="400000" value="200000" step="5000"
+          oninput="rc()">
+        <div class="form-hint">Range $100K – $400K</div>
+      </div>
+
+      <hr class="divider">
+
+      <div class="form-row">
+        <label class="form-label">Data Product Customers (max) <span class="val" id="v_dataMax">50</span></label>
+        <input type="range" id="dataProducts" min="0" max="200" value="50" step="5"
+          oninput="sv(this,'v_dataMax'); rc()">
+        <div class="form-hint">Ramps from 0 → max over Year 2–5</div>
+      </div>
+
+      <div class="form-row">
+        <label class="form-label">Data Product Avg Price</label>
+        <input type="number" id="dataProductPrice" min="50000" max="250000" value="100000" step="5000"
+          oninput="rc()">
+        <div class="form-hint">Range $50K – $250K</div>
+      </div>
+
+      <div class="form-row">
+        <label class="form-label">Network Discount <span class="val" id="v_netdisc">20%</span></label>
+        <input type="range" id="networkDiscount" min="0" max="30" value="20" step="1"
+          oninput="sv(this,'v_netdisc','%'); rc()">
+        <div class="form-hint">SaaS discount for data contributors</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Costs -->
+  <div class="assum-section">
+    <div class="assum-header" onclick="toggleSection(this)">
+      <span>Costs</span>
+      <span class="toggle-arrow">▾</span>
+    </div>
+    <div class="assum-body">
+
+      <div class="sub-label">Variable COGS</div>
+      <div class="form-row">
+        <label class="form-label">AI/LLM Cost / Customer / Month ($)</label>
+        <input type="number" id="aiCost" min="1" max="30" value="6" step="0.5" oninput="rc()">
+        <div class="form-hint">Range $1 – $30</div>
+      </div>
+      <div class="form-row">
+        <label class="form-label">Infrastructure / Customer / Month ($)</label>
+        <input type="number" id="infraCost" min="1" max="20" value="5" step="0.5" oninput="rc()">
+        <div class="form-hint">Range $1 – $20</div>
+      </div>
+
+      <hr class="divider">
+      <div class="sub-label">Headcount (per year)</div>
+
+      <div class="hc-grid">
+        <div></div>
+        <div class="hc-head">Y1</div>
+        <div class="hc-head">Y2</div>
+        <div class="hc-head">Y3</div>
+        <div class="hc-head">Y4</div>
+        <div class="hc-head">Y5</div>
+
+        <div class="hc-row-label">Eng</div>
+        <input type="number" id="eng_y1" min="0" max="30" value="3" step="1" oninput="rc()">
+        <input type="number" id="eng_y2" min="0" max="30" value="5" step="1" oninput="rc()">
+        <input type="number" id="eng_y3" min="0" max="30" value="8" step="1" oninput="rc()">
+        <input type="number" id="eng_y4" min="0" max="30" value="12" step="1" oninput="rc()">
+        <input type="number" id="eng_y5" min="0" max="30" value="15" step="1" oninput="rc()">
+
+        <div class="hc-row-label">Sales</div>
+        <input type="number" id="sales_y1" min="0" max="20" value="2" step="1" oninput="rc()">
+        <input type="number" id="sales_y2" min="0" max="20" value="4" step="1" oninput="rc()">
+        <input type="number" id="sales_y3" min="0" max="20" value="6" step="1" oninput="rc()">
+        <input type="number" id="sales_y4" min="0" max="20" value="8" step="1" oninput="rc()">
+        <input type="number" id="sales_y5" min="0" max="20" value="10" step="1" oninput="rc()">
+      </div>
+
+      <div class="form-row">
+        <label class="form-label">Avg Engineer Salary ($/yr)</label>
+        <input type="number" id="engSalary" min="120000" max="250000" value="180000" step="5000" oninput="rc()">
+        <div class="form-hint">Range $120K – $250K</div>
+      </div>
+      <div class="form-row">
+        <label class="form-label">Avg Sales Salary + Commission ($/yr)</label>
+        <input type="number" id="salesSalary" min="150000" max="300000" value="220000" step="5000" oninput="rc()">
+        <div class="form-hint">Range $150K – $300K</div>
+      </div>
+      <div class="form-row">
+        <label class="form-label">Marketing Spend / Month ($)</label>
+        <input type="number" id="marketingMo" min="0" max="100000" value="10000" step="1000" oninput="rc()">
+        <div class="form-hint">Range $0 – $100K</div>
+      </div>
+      <div class="form-row">
+        <label class="form-label">G&amp;A % of Revenue <span class="val" id="v_ga">10%</span></label>
+        <input type="range" id="gaPercent" min="5" max="20" value="10" step="0.5"
+          oninput="sv(this,'v_ga','%'); rc()">
+      </div>
+      <div class="form-row">
+        <label class="form-label">SOC 2 / Compliance ($, Year 2)</label>
+        <input type="number" id="complianceCost" min="0" max="200000" value="75000" step="5000" oninput="rc()">
+        <div class="form-hint">One-time cost charged in Month 13</div>
+      </div>
+
+    </div>
+  </div><!-- end costs section -->
+
+  <div style="height:20px"></div>
+</aside><!-- end sidebar -->
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ MAIN ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<main class="main-content">
+
+  <!-- ── SCENARIO BAR ── -->
+  <div class="scenario-bar">
+    <span class="scenario-bar-label">Scenario:</span>
+    <button class="scenario-btn" id="btn-conservative" onclick="applyScenario('conservative')">📉 Conservative</button>
+    <button class="scenario-btn active" id="btn-base" onclick="applyScenario('base')">📊 Base Case</button>
+    <button class="scenario-btn" id="btn-aggressive" onclick="applyScenario('aggressive')">🚀 Aggressive</button>
+    <div style="margin-left:auto;font-size:11px;color:var(--muted)">All values update in real-time ·  Drag sliders or type to adjust</div>
+  </div>
+
+  <!-- ── SECTION 2: DASHBOARD ── -->
+  <div>
+    <div class="section-heading">Revenue Dashboard</div>
+
+    <!-- KPI Cards -->
+    <div class="kpi-row">
+      <div class="kpi-card">
+        <div class="kpi-label">Year 5 ARR</div>
+        <div class="kpi-value" id="kpi_y5arr">—</div>
+        <div class="kpi-sub">Annual Recurring Revenue</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Year 5 Customers</div>
+        <div class="kpi-value" id="kpi_y5cust">—</div>
+        <div class="kpi-sub">Active subscriptions</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Year 5 Gross Margin</div>
+        <div class="kpi-value" id="kpi_y5gm">—</div>
+        <div class="kpi-sub">After COGS</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">LTV / CAC</div>
+        <div class="kpi-value" id="kpi_ltvcac">—</div>
+        <div class="kpi-sub">Target: &gt;3× healthy</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Break-even Month</div>
+        <div class="kpi-value" id="kpi_be">—</div>
+        <div class="kpi-sub">Cumulative cash positive</div>
+      </div>
+    </div>
+
+    <!-- Revenue & Customer Charts -->
+    <div class="charts-2col">
+      <div class="chart-card">
+        <div class="chart-card-title">Monthly Recurring Revenue (MRR)</div>
+        <canvas id="revenueChart" height="210"></canvas>
+      </div>
+      <div class="chart-card">
+        <div class="chart-card-title">Customer Growth</div>
+        <canvas id="customerChart" height="210"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cash Flow Chart -->
+  <div class="chart-card">
+    <div class="chart-card-title">Cumulative Cash Flow — green = positive, red = deficit</div>
+    <canvas id="cashChart" height="130"></canvas>
+  </div>
+
+  <!-- ── SECTION 3: P&L TABLE ── -->
+  <div>
+    <div class="section-heading">Profit &amp; Loss</div>
+    <div class="card">
+      <div class="pl-wrap">
+        <table class="pl-tbl">
+          <thead id="plHead"></thead>
+          <tbody id="plBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SECTION 4: UNIT ECONOMICS ── -->
+  <div>
+    <div class="section-heading">Unit Economics</div>
+    <div class="card">
+      <div style="padding:8px 0">
+        <table class="ue-tbl" id="ueTbl">
+          <tbody>
+            <tr>
+              <td>Blended ARPU (Annual)</td>
+              <td id="ue_arpu">—</td>
+              <td>Weighted average across Starter / Professional / Enterprise mix</td>
+            </tr>
+            <tr>
+              <td>CAC (Customer Acquisition Cost)</td>
+              <td id="ue_cac">—</td>
+              <td>(Year 1 sales cost + marketing) ÷ new customers added in Year 1</td>
+            </tr>
+            <tr>
+              <td>LTV (Customer Lifetime Value)</td>
+              <td id="ue_ltv">—</td>
+              <td>ARPU × (1 ÷ annual churn rate)</td>
+            </tr>
+            <tr>
+              <td>LTV / CAC Ratio</td>
+              <td id="ue_ltvcac">—</td>
+              <td>Target &gt;3× for a healthy SaaS business</td>
+            </tr>
+            <tr>
+              <td>Months to Recover CAC</td>
+              <td id="ue_payback">—</td>
+              <td>CAC ÷ (ARPU ÷ 12)</td>
+            </tr>
+            <tr>
+              <td>Gross Margin per Customer</td>
+              <td id="ue_gmpc">—</td>
+              <td>(ARPU/12 − AI cost − Infra cost) ÷ (ARPU/12)</td>
+            </tr>
+            <tr>
+              <td>AI Cost as % of Revenue</td>
+              <td id="ue_airev">—</td>
+              <td>Year 1 total AI/LLM costs ÷ Year 1 total revenue</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SECTION 6: FUNDING ANALYSIS ── -->
+  <div>
+    <div class="section-heading">Funding Analysis</div>
+    <div class="funding-grid">
+      <div class="f-card">
+        <div class="f-label">Break-even Month</div>
+        <div class="f-value" id="f_be">—</div>
+        <div class="f-sub" id="f_be_sub">Month cumulative cash turns positive</div>
+      </div>
+      <div class="f-card">
+        <div class="f-label">Capital Required</div>
+        <div class="f-value" id="f_cap">—</div>
+        <div class="f-sub" id="f_cap_sub">Max cash deficit before break-even</div>
+      </div>
+      <div class="f-card">
+        <div class="f-label">Self-funded Monthly Draw</div>
+        <div class="f-value warn" id="f_burn">—</div>
+        <div class="f-sub" id="f_burn_sub">Avg monthly burn from savings to break-even</div>
+      </div>
+      <div class="f-card">
+        <div class="f-label">Seed Runway ($2M Raised)</div>
+        <div class="f-value" id="f_runway">—</div>
+        <div class="f-sub">Months of runway with $2M seed round</div>
+      </div>
+      <div class="f-card">
+        <div class="f-label">Year 3 Implied Valuation</div>
+        <div class="f-value" id="f_val3">—</div>
+        <div class="f-sub">10× Year 3 ARR (SaaS multiple)</div>
+      </div>
+      <div class="f-card hero">
+        <div class="f-label">Year 5 Implied Valuation</div>
+        <div class="f-value" id="f_val5">—</div>
+        <div class="f-sub">10× Year 5 ARR (SaaS multiple)</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="height:48px"></div>
+</main>
+</div><!-- app-layout -->
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ JAVASCRIPT ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<script>
+'use strict';
+
+// ── Model state ──
+let model = []; // 60 months
+let rChart, cChart, cashChartObj;
+
+// ── Slider sync ──
+function sv(el, labelId, suffix) {
+  suffix = suffix || '';
+  document.getElementById(labelId).textContent = el.value + suffix;
+}
+
+// ── Section toggle ──
+function toggleSection(hdr) {
+  const body = hdr.parentElement.querySelector('.assum-body');
+  const arr  = hdr.querySelector('.toggle-arrow');
+  const open = body.style.display !== 'none';
+  body.style.display  = open ? 'none' : '';
+  arr.style.transform = open ? 'rotate(-90deg)' : '';
+}
+
+// ── Customer mix display ──
+function onMix() {
+  const s = +document.getElementById('starterPct').value;
+  const p = +document.getElementById('profPct').value;
+  const e = +document.getElementById('entPct').value;
+  const t = s + p + e;
+  document.getElementById('v_starter').textContent = s + '%';
+  document.getElementById('v_prof').textContent    = p + '%';
+  document.getElementById('v_ent').textContent     = e + '%';
+  const el = document.getElementById('mixTotal');
+  el.textContent = 'Total: ' + t + '%';
+  el.className = 'mix-total-row' + (Math.abs(t - 100) > 0.5 ? ' err' : '');
+}
+
+// ── Normalise mix → fractions summing to 1 ──
+function getMix() {
+  const s = Math.max(0, +document.getElementById('starterPct').value);
+  const p = Math.max(0, +document.getElementById('profPct').value);
+  const e = Math.max(0, +document.getElementById('entPct').value);
+  const t = s + p + e;
+  if (t === 0) return { s: 1/3, p: 1/3, e: 1/3 };
+  return { s: s/t, p: p/t, e: e/t };
+}
+
+// ── Formatters ──
+function fmt(v) {
+  if (v == null || isNaN(v)) return '—';
+  const neg = v < 0 ? '-' : '';
+  const a = Math.abs(v);
+  if (a >= 1e9) return neg + '$' + (a/1e9).toFixed(1) + 'B';
+  if (a >= 1e6) return neg + '$' + (a/1e6).toFixed(1) + 'M';
+  if (a >= 1e3) return neg + '$' + (a/1e3).toFixed(0) + 'K';
+  return neg + '$' + a.toFixed(0);
+}
+function fmtPct(v, dec) {
+  if (v == null || isNaN(v) || !isFinite(v)) return '—';
+  return (v * 100).toFixed(dec != null ? dec : 1) + '%';
+}
+function fmtX(v) {
+  if (v == null || isNaN(v) || !isFinite(v) || v > 9999) return '>9999×';
+  return v.toFixed(1) + '×';
+}
+function fmtN(v) {
+  if (v == null || isNaN(v)) return '—';
+  return Math.round(v).toLocaleString();
+}
+
+// ── Short-hand to recalculate ──
+function rc() { recalculate(); }
+
+// ══════════════════════════════════════════════════════════════
+// CORE CALCULATION ENGINE
+// ══════════════════════════════════════════════════════════════
+function recalculate() {
+  // ── Read inputs ──
+  const startCust   = Math.max(0, +document.getElementById('startingCustomers').value || 5);
+  const growthRate  = (+document.getElementById('monthlyGrowthRate').value || 15) / 100;
+  const annChurn    = (+document.getElementById('churnRate').value || 10) / 100;
+  const moChurn     = annChurn / 12;
+  const mix         = getMix();
+
+  const starterP    = +document.getElementById('starterPrice').value    || 36000;
+  const profP       = +document.getElementById('profPrice').value       || 75000;
+  const entP        = +document.getElementById('entPrice').value        || 200000;
+
+  const dataMax     = +document.getElementById('dataProducts').value    || 50;
+  const dataP       = +document.getElementById('dataProductPrice').value || 100000;
+  const netDisc     = (+document.getElementById('networkDiscount').value || 20) / 100;
+
+  const aiCost      = +document.getElementById('aiCost').value          || 6;
+  const infraCost   = +document.getElementById('infraCost').value       || 5;
+
+  const engY        = [1,2,3,4,5].map(y => +document.getElementById('eng_y'+y).value   || 0);
+  const saleY       = [1,2,3,4,5].map(y => +document.getElementById('sales_y'+y).value || 0);
+  const engSal      = +document.getElementById('engSalary').value   || 180000;
+  const saleSal     = +document.getElementById('salesSalary').value || 220000;
+  const mktMo       = +document.getElementById('marketingMo').value || 10000;
+  const gaPct       = (+document.getElementById('gaPercent').value || 10) / 100;
+  const complianceC = +document.getElementById('complianceCost').value || 75000;
+
+  // ── Derived ──
+  const blendedARPU   = mix.s * starterP + mix.p * profP + mix.e * entP;
+  const blendedARPUMo = blendedARPU / 12;
+
+  // ── Build 60-month model ──
+  model = [];
+  let cumCash  = 0;
+  let prevCust = startCust;
+
+  for (let m = 1; m <= 60; m++) {
+    const yr = Math.ceil(m / 12); // 1-5
+    const isY2plus = m >= 13;
+
+    // Customers
+    let endCust, newCust, churnedCust;
+    if (m === 1) {
+      endCust    = startCust;
+      newCust    = startCust;
+      churnedCust = 0;
+    } else {
+      newCust    = prevCust * growthRate;
+      churnedCust = prevCust * moChurn;
+      endCust    = Math.max(0, prevCust + newCust - churnedCust);
+    }
+
+    // Tier breakdown
+    const starterCust = endCust * mix.s;
+    const profCust    = endCust * mix.p;
+    const entCust     = endCust * mix.e;
+
+    // Data product customers: ramp linearly month 13 → 60
+    let dataCust = 0;
+    if (isY2plus) {
+      const prog = (m - 13) / 47; // 0→1 over months 13-60
+      dataCust = dataMax * Math.min(1, prog);
+    }
+
+    // Revenue
+    // SaaS: regular customers at full price, data contributors get network discount
+    const dataContribOverlap = Math.min(dataCust, endCust);
+    const regularCust        = Math.max(0, endCust - dataContribOverlap);
+    const saasRev  = regularCust * blendedARPUMo + dataContribOverlap * blendedARPUMo * (1 - netDisc);
+    const dataRev  = isY2plus ? dataCust * (dataP / 12) : 0;
+    const totRev   = saasRev + dataRev;
+
+    // COGS
+    const aiTot    = endCust * aiCost;
+    const infraTot = endCust * infraCost;
+    const cogs     = aiTot + infraTot;
+    const gp       = totRev - cogs;
+    const gpPct    = totRev > 0 ? gp / totRev : 0;
+
+    // OpEx
+    const engCount  = engY[yr - 1]  || 0;
+    const saleCount = saleY[yr - 1] || 0;
+
+    const engCost   = engCount  * engSal  / 12;
+    const smCost    = saleCount * saleSal / 12 + mktMo;
+    const gaCost    = totRev * gaPct;
+    const compMo    = m === 13 ? complianceC : 0;
+    const totOpEx   = engCost + smCost + gaCost + compMo;
+
+    const ebitda    = gp - totOpEx;
+    const ebitdaPct = totRev > 0 ? ebitda / totRev : 0;
+    cumCash += ebitda;
+
+    model.push({
+      m, yr,
+      endCust, newCust, churnedCust,
+      starterCust, profCust, entCust,
+      dataCust,
+      saasRev, dataRev, totRev,
+      aiTot, infraTot, cogs, gp, gpPct,
+      engCost, smCost, gaCost, compMo, totOpEx,
+      ebitda, ebitdaPct, cumCash
+    });
+
+    prevCust = endCust;
+  }
+
+  // ── Update all outputs ──
+  updateKPIs(blendedARPU, annChurn, engY, saleY, engSal, saleSal, mktMo, aiCost, infraCost);
+  updateCharts();
+  updatePLTable();
+  updateUnitEconomics(blendedARPU, annChurn, engY, saleY, engSal, saleSal, mktMo, aiCost, infraCost);
+  updateFunding();
+}
+
+// ══════════════════════════════════════════════════════════════
+// KPI CARDS
+// ══════════════════════════════════════════════════════════════
+function updateKPIs(arpu, annChurn, engY, saleY, engSal, saleSal, mktMo, aiCost, infraCost) {
+  const m60 = model[59];
+  document.getElementById('kpi_y5arr').textContent  = fmt(m60.totRev * 12);
+  document.getElementById('kpi_y5cust').textContent = fmtN(m60.endCust);
+  document.getElementById('kpi_y5gm').textContent   = fmtPct(m60.gpPct);
+
+  // CAC & LTV (Year 1 basis)
+  const y1 = model.slice(0, 12);
+  const y1Sales = saleY[0] * saleSal;
+  const y1Mkt   = mktMo * 12;
+  let y1NewCust = 0;
+  y1.forEach((row, i) => {
+    if (i === 0) y1NewCust += row.endCust;
+    else         y1NewCust += Math.max(0, row.newCust);
+  });
+  const cac   = y1NewCust > 0 ? (y1Sales + y1Mkt) / y1NewCust : 0;
+  const ltv   = annChurn > 0  ? arpu / annChurn : arpu * 20;
+  const ltvcac = cac > 0 ? ltv / cac : 0;
+
+  document.getElementById('kpi_ltvcac').textContent = fmtX(ltvcac);
+
+  // Break-even
+  const be = model.find(r => r.cumCash > 0);
+  document.getElementById('kpi_be').textContent = be ? 'Mo ' + be.m : 'Never';
+}
+
+// ══════════════════════════════════════════════════════════════
+// CHARTS
+// ══════════════════════════════════════════════════════════════
+const chartBase = {
+  responsive: true,
+  maintainAspectRatio: true,
+  interaction: { mode: 'index', intersect: false },
+  plugins: {
+    legend: {
+      position: 'bottom',
+      labels: { font: { family: 'Inter', size: 11 }, boxWidth: 10, padding: 14, usePointStyle: true }
+    },
+    tooltip: {
+      backgroundColor: '#1A1A1A',
+      titleFont: { family: 'Inter', size: 11 },
+      bodyFont:  { family: 'Inter', size: 11 },
+      padding: 10, cornerRadius: 6,
+    }
+  },
+  scales: {
+    x: {
+      ticks: { font: { family: 'Inter', size: 10 }, maxTicksLimit: 13, color: '#9B9B98' },
+      grid:  { color: '#F0F0EC' }, border: { color: '#E8E8E4' }
+    },
+    y: {
+      ticks: { font: { family: 'Inter', size: 10 }, color: '#9B9B98' },
+      grid:  { color: '#F0F0EC' }, border: { color: '#E8E8E4' }
+    }
+  }
+};
+
+function makeChartOpts(fmtFn) {
+  const base = JSON.parse(JSON.stringify(chartBase));
+  base.plugins.tooltip.callbacks = {
+    label: ctx => ctx.dataset.label + ': ' + fmtFn(ctx.parsed.y)
+  };
+  base.scales.y.ticks.callback = v => fmtFn(v);
+  return base;
+}
+
+function updateCharts() {
+  const labels = model.map(r => 'M' + r.m);
+
+  // Revenue chart
+  if (rChart) rChart.destroy();
+  rChart = new Chart(document.getElementById('revenueChart'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        { label: 'Total MRR',   data: model.map(r => r.totRev),  borderColor: '#4A7C59', backgroundColor: 'rgba(74,124,89,0.10)', fill: true,  borderWidth: 2.5, tension: 0.35, pointRadius: 0 },
+        { label: 'SaaS MRR',   data: model.map(r => r.saasRev), borderColor: '#3872B8', backgroundColor: 'transparent',            fill: false, borderWidth: 1.5, tension: 0.35, pointRadius: 0 },
+        { label: 'Data MRR',   data: model.map(r => r.dataRev), borderColor: '#D97328', backgroundColor: 'transparent',            fill: false, borderWidth: 1.5, tension: 0.35, pointRadius: 0, borderDash: [5, 3] },
+      ]
+    },
+    options: makeChartOpts(fmt)
+  });
+
+  // Customer chart
+  if (cChart) cChart.destroy();
+  cChart = new Chart(document.getElementById('customerChart'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        { label: 'Total',       data: model.map(r => r.endCust),     borderColor: '#3872B8', backgroundColor: 'rgba(56,114,184,0.10)', fill: true,  borderWidth: 2.5, tension: 0.35, pointRadius: 0 },
+        { label: 'Starter',    data: model.map(r => r.starterCust), borderColor: '#6BA8D9', backgroundColor: 'transparent',             fill: false, borderWidth: 1.5, tension: 0.35, pointRadius: 0 },
+        { label: 'Professional', data: model.map(r => r.profCust),  borderColor: '#4A7C59', backgroundColor: 'transparent',             fill: false, borderWidth: 1.5, tension: 0.35, pointRadius: 0 },
+        { label: 'Enterprise', data: model.map(r => r.entCust),     borderColor: '#D97328', backgroundColor: 'transparent',             fill: false, borderWidth: 1.5, tension: 0.35, pointRadius: 0 },
+        { label: 'Mo. Churn',  data: model.map(r => r.churnedCust), borderColor: '#C94A4A', backgroundColor: 'transparent',             fill: false, borderWidth: 1.5, tension: 0.35, pointRadius: 0, borderDash: [5, 3] },
+      ]
+    },
+    options: makeChartOpts(v => Math.round(v).toLocaleString())
+  });
+
+  // Cash flow chart
+  if (cashChartObj) cashChartObj.destroy();
+  cashChartObj = new Chart(document.getElementById('cashChart'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        label: 'Cumulative Cash',
+        data: model.map(r => r.cumCash),
+        borderColor: '#4A7C59',
+        segment: {
+          borderColor: ctx => ctx.p0.parsed.y < 0 ? '#C94A4A' : '#4A7C59',
+          backgroundColor: ctx => ctx.p0.parsed.y < 0 ? 'rgba(201,74,74,0.08)' : 'rgba(74,124,89,0.08)',
+        },
+        backgroundColor: 'rgba(74,124,89,0.08)',
+        fill: true,
+        borderWidth: 2,
+        tension: 0.35,
+        pointRadius: 0
+      }]
+    },
+    options: makeChartOpts(fmt)
+  });
+}
+
+// ══════════════════════════════════════════════════════════════
+// P&L TABLE
+// ══════════════════════════════════════════════════════════════
+function updatePLTable() {
+  // Build column defs
+  // Year 1: months 1-12 (monthly)
+  // Years 2-5: Q1-Q4 each (quarterly)
+  const cols = [];
+  for (let m = 1; m <= 12; m++) {
+    cols.push({ label: 'M' + m, yr: 1, months: [m], firstOfYear: m === 1 });
+  }
+  for (let y = 2; y <= 5; y++) {
+    for (let q = 1; q <= 4; q++) {
+      const s = (y - 1) * 12 + (q - 1) * 3 + 1;
+      cols.push({ label: 'Y' + y + ' Q' + q, yr: y, months: [s, s+1, s+2], firstOfYear: q === 1 });
+    }
+  }
+
+  // Aggregate data per column
+  const agg = cols.map(col => {
+    const rows = col.months.map(m => model[m - 1]).filter(Boolean);
+    if (!rows.length) return null;
+    const sum = k => rows.reduce((s, r) => s + (r[k] || 0), 0);
+    const totRev  = sum('totRev');
+    const cogs    = sum('cogs');
+    const gp      = sum('gp');
+    const totOpEx = sum('totOpEx');
+    const ebitda  = sum('ebitda');
+    return {
+      label:       col.label,
+      yr:          col.yr,
+      firstOfYear: col.firstOfYear,
+      saasRev:     sum('saasRev'),
+      dataRev:     sum('dataRev'),
+      totRev,
+      aiTot:       sum('aiTot'),
+      infraTot:    sum('infraTot'),
+      cogs,
+      gp,
+      gpPct:       totRev > 0 ? gp / totRev : 0,
+      engCost:     sum('engCost'),
+      smCost:      sum('smCost'),
+      gaCost:      sum('gaCost'),
+      compMo:      sum('compMo'),
+      totOpEx,
+      ebitda,
+      ebitdaPct:   totRev > 0 ? ebitda / totRev : 0,
+      cumCash:     rows[rows.length - 1].cumCash,
+    };
+  });
+
+  // ── Header ──
+  let hHtml = '';
+  // Row 1: year bands
+  hHtml += '<tr>';
+  hHtml += '<th style="position:sticky;left:0;z-index:5;background:var(--surface-2)"></th>';
+  hHtml += '<th colspan="12" class="yr-hdr">YEAR 1 — MONTHLY</th>';
+  for (let y = 2; y <= 5; y++) {
+    hHtml += `<th colspan="4" class="yr-hdr yr-divider">YEAR ${y}</th>`;
+  }
+  hHtml += '</tr>';
+  // Row 2: col labels
+  hHtml += '<tr>';
+  hHtml += '<th style="position:sticky;left:0;z-index:5;background:var(--surface-2);text-align:left;min-width:160px;border-right:1px solid var(--border)">Metric</th>';
+  agg.forEach(c => {
+    const bl = c.firstOfYear && c.yr > 1 ? 'border-left:2px solid var(--accent-mid);' : '';
+    hHtml += `<th style="${bl}">${c.label}</th>`;
+  });
+  hHtml += '</tr>';
+  document.getElementById('plHead').innerHTML = hHtml;
+
+  // ── Row definitions ──
+  const rowDefs = [
+    { group: 'Revenue' },
+    { key: 'saasRev',   label: 'SaaS Revenue',          fmt: 'cur' },
+    { key: 'dataRev',   label: 'Data Product Revenue',  fmt: 'cur' },
+    { key: 'totRev',    label: 'Total Revenue',          fmt: 'cur', bold: true, shade: 'green' },
+    { spacer: true },
+    { group: 'Cost of Revenue' },
+    { key: 'aiTot',    label: 'AI / LLM Costs',         fmt: 'cur' },
+    { key: 'infraTot', label: 'Infrastructure',         fmt: 'cur' },
+    { key: 'cogs',     label: 'Total COGS',             fmt: 'cur', bold: true },
+    { key: 'gp',       label: 'Gross Profit',           fmt: 'cur', bold: true, shade: 'green' },
+    { key: 'gpPct',    label: 'Gross Margin %',         fmt: 'pct' },
+    { spacer: true },
+    { group: 'Operating Expenses' },
+    { key: 'engCost',  label: 'Engineering',            fmt: 'cur' },
+    { key: 'smCost',   label: 'Sales & Marketing',      fmt: 'cur' },
+    { key: 'gaCost',   label: 'G&A',                   fmt: 'cur' },
+    { key: 'compMo',   label: 'Compliance / SOC 2',     fmt: 'cur' },
+    { key: 'totOpEx',  label: 'Total OpEx',             fmt: 'cur', bold: true },
+    { spacer: true },
+    { key: 'ebitda',   label: 'EBITDA',                 fmt: 'cur', bold: true, shade: 'ebitda', signed: true },
+    { key: 'ebitdaPct',label: 'EBITDA Margin %',        fmt: 'pct', signed: true },
+    { key: 'cumCash',  label: 'Cumulative Cash',        fmt: 'cur', bold: true, shade: 'cash', signed: true },
+  ];
+
+  let bHtml = '';
+  rowDefs.forEach(rd => {
+    if (rd.spacer) {
+      bHtml += '<tr class="spacer"><td></td>' + agg.map(() => '<td></td>').join('') + '</tr>';
+      return;
+    }
+    if (rd.group) {
+      bHtml += `<tr class="grp-hdr"><td>${rd.group}</td>` + agg.map(() => '<td></td>').join('') + '</tr>';
+      return;
+    }
+
+    let trCls = '';
+    if      (rd.shade === 'green')  trCls = 'shade-green';
+    else if (rd.bold)               trCls = 'bold-row';
+
+    bHtml += `<tr class="${trCls}"><td>${rd.label}</td>`;
+    agg.forEach(c => {
+      const bl  = c.firstOfYear && c.yr > 1 ? 'border-left:2px solid rgba(74,124,89,0.2);' : '';
+      const raw = c[rd.key];
+      let txt = '—'; let cls = '';
+
+      if (raw != null) {
+        if (rd.fmt === 'pct') {
+          txt = fmtPct(raw);
+          if (rd.signed) cls = raw >= 0 ? 'pos' : 'neg';
+        } else {
+          // currency
+          txt = fmt(raw);
+          if (rd.shade === 'ebitda' || rd.shade === 'cash' || rd.signed) {
+            cls = raw >= 0 ? 'pos' : 'neg';
+          }
+        }
+      }
+
+      bHtml += `<td class="${cls}" style="${bl}">${txt}</td>`;
+    });
+    bHtml += '</tr>';
+  });
+
+  document.getElementById('plBody').innerHTML = bHtml;
+}
+
+// ══════════════════════════════════════════════════════════════
+// UNIT ECONOMICS
+// ══════════════════════════════════════════════════════════════
+function updateUnitEconomics(arpu, annChurn, engY, saleY, engSal, saleSal, mktMo, aiCost, infraCost) {
+  document.getElementById('ue_arpu').textContent = fmt(arpu);
+
+  // Year 1 CAC
+  const y1 = model.slice(0, 12);
+  const y1Sales = saleY[0] * saleSal;
+  const y1Mkt   = mktMo * 12;
+  let y1NewCust = 0;
+  y1.forEach((row, i) => {
+    if (i === 0) y1NewCust += row.endCust;
+    else         y1NewCust += Math.max(0, row.newCust);
+  });
+  const cac    = y1NewCust > 0 ? (y1Sales + y1Mkt) / y1NewCust : 0;
+  const ltv    = annChurn > 0  ? arpu / annChurn : arpu * 20;
+  const ltvcac = cac > 0 ? ltv / cac : 0;
+
+  document.getElementById('ue_cac').textContent = fmt(cac);
+  document.getElementById('ue_ltv').textContent = fmt(ltv);
+  document.getElementById('ue_ltvcac').textContent = fmtX(ltvcac);
+
+  // Toggle warning class
+  const ltvRow = document.getElementById('ue_ltvcac').closest('tr');
+  ltvRow.className = ltvcac < 3 && ltvcac > 0 ? 'ue-warn' : '';
+
+  // Payback
+  const arpuMo  = arpu / 12;
+  const payback = cac > 0 && arpuMo > 0 ? cac / arpuMo : 0;
+  document.getElementById('ue_payback').textContent = payback > 0 ? payback.toFixed(1) + ' mo' : '—';
+
+  // GM per customer
+  const gmpc = arpuMo > 0 ? (arpuMo - aiCost - infraCost) / arpuMo : 0;
+  document.getElementById('ue_gmpc').textContent = fmtPct(gmpc);
+
+  // AI% of revenue (Year 1)
+  const y1Rev = y1.reduce((s, r) => s + r.totRev, 0);
+  const y1AI  = y1.reduce((s, r) => s + r.aiTot, 0);
+  document.getElementById('ue_airev').textContent = y1Rev > 0 ? fmtPct(y1AI / y1Rev) : '—';
+
+  // Sync LTV/CAC KPI card
+  document.getElementById('kpi_ltvcac').textContent = fmtX(ltvcac);
+}
+
+// ══════════════════════════════════════════════════════════════
+// FUNDING ANALYSIS
+// ══════════════════════════════════════════════════════════════
+function updateFunding() {
+  const be      = model.find(r => r.cumCash > 0);
+  const beMonth = be ? be.m : null;
+  const minCash = Math.min(...model.map(r => r.cumCash), 0);
+  const capReq  = Math.abs(minCash);
+
+  // Break-even
+  document.getElementById('f_be').textContent     = beMonth ? 'Month ' + beMonth : 'Never';
+  document.getElementById('f_be_sub').textContent  = beMonth
+    ? `Profitable in Year ${Math.ceil(beMonth / 12)} (Month ${beMonth})`
+    : 'No break-even within 5 years under current assumptions';
+
+  // Capital required
+  document.getElementById('f_cap').textContent     = fmt(capReq);
+  document.getElementById('f_cap_sub').textContent  = capReq > 0
+    ? `Peak cash deficit before break-even`
+    : 'Cash flow positive from launch';
+
+  // Self-funded burn
+  const bm      = beMonth || 60;
+  const avgBurn = capReq / bm;
+  document.getElementById('f_burn').textContent     = fmt(avgBurn) + '/mo';
+  document.getElementById('f_burn_sub').textContent  = `Avg monthly draw over ${bm} months`;
+
+  // Seed runway
+  const runway = avgBurn > 0 ? Math.min(60, Math.round(2000000 / avgBurn)) : 60;
+  document.getElementById('f_runway').textContent = runway + ' months';
+
+  // Year 3 & Year 5 valuations
+  const y3ARR = model[35].totRev * 12;
+  const y5ARR = model[59].totRev * 12;
+  document.getElementById('f_val3').textContent = fmt(y3ARR * 10);
+  document.getElementById('f_val5').textContent = fmt(y5ARR * 10);
+
+  // Update KPI break-even
+  document.getElementById('kpi_be').textContent = beMonth ? 'Mo ' + beMonth : 'Never';
+}
+
+// ══════════════════════════════════════════════════════════════
+// SCENARIOS
+// ══════════════════════════════════════════════════════════════
+const SCENARIOS = {
+  conservative: {
+    startingCustomers: 3, monthlyGrowthRate: 10, churnRate: 15,
+    starterPct: 50, profPct: 40, entPct: 10,
+    starterPrice: 28000, profPrice: 55000, entPrice: 130000,
+    dataProducts: 20, dataProductPrice: 70000, networkDiscount: 15,
+    aiCost: 8, infraCost: 6,
+    eng_y1: 2, eng_y2: 3, eng_y3: 5, eng_y4: 8, eng_y5: 11,
+    sales_y1: 1, sales_y2: 2, sales_y3: 4, sales_y4: 6, sales_y5: 8,
+    engSalary: 165000, salesSalary: 200000, marketingMo: 6000,
+    gaPercent: 13, complianceCost: 100000,
+  },
+  base: {
+    startingCustomers: 5, monthlyGrowthRate: 15, churnRate: 10,
+    starterPct: 40, profPct: 45, entPct: 15,
+    starterPrice: 36000, profPrice: 75000, entPrice: 200000,
+    dataProducts: 50, dataProductPrice: 100000, networkDiscount: 20,
+    aiCost: 6, infraCost: 5,
+    eng_y1: 3, eng_y2: 5, eng_y3: 8, eng_y4: 12, eng_y5: 15,
+    sales_y1: 2, sales_y2: 4, sales_y3: 6, sales_y4: 8, sales_y5: 10,
+    engSalary: 180000, salesSalary: 220000, marketingMo: 10000,
+    gaPercent: 10, complianceCost: 75000,
+  },
+  aggressive: {
+    startingCustomers: 8, monthlyGrowthRate: 25, churnRate: 5,
+    starterPct: 30, profPct: 50, entPct: 20,
+    starterPrice: 44000, profPrice: 90000, entPrice: 250000,
+    dataProducts: 100, dataProductPrice: 150000, networkDiscount: 20,
+    aiCost: 5, infraCost: 4,
+    eng_y1: 4, eng_y2: 8, eng_y3: 12, eng_y4: 18, eng_y5: 22,
+    sales_y1: 3, sales_y2: 6, sales_y3: 9, sales_y4: 12, sales_y5: 15,
+    engSalary: 190000, salesSalary: 235000, marketingMo: 18000,
+    gaPercent: 8, complianceCost: 75000,
+  }
+};
+
+// Slider labels that need suffix updates
+const SLIDER_LABELS = {
+  startingCustomers: ['v_start',    ''],
+  monthlyGrowthRate: ['v_growth',   '%'],
+  churnRate:         ['v_churn',    '%'],
+  starterPct:        ['v_starter',  '%'],
+  profPct:           ['v_prof',     '%'],
+  entPct:            ['v_ent',      '%'],
+  dataProducts:      ['v_dataMax',  ''],
+  networkDiscount:   ['v_netdisc',  '%'],
+  gaPercent:         ['v_ga',       '%'],
+};
+
+function applyScenario(name) {
+  const s = SCENARIOS[name];
+  if (!s) return;
+
+  // Clear all active states
+  document.querySelectorAll('.scenario-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('btn-' + name).classList.add('active');
+
+  // Set all values
+  Object.entries(s).forEach(([id, val]) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.value = val;
+    // Update slider label if applicable
+    if (SLIDER_LABELS[id]) {
+      const [labelId, suffix] = SLIDER_LABELS[id];
+      const lbl = document.getElementById(labelId);
+      if (lbl) lbl.textContent = val + suffix;
+    }
+  });
+
+  onMix();
+  recalculate();
+}
+
+// ══════════════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  onMix();
+  recalculate();
+});
+</script>
+</body>
+</html>
