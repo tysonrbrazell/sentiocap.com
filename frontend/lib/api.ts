@@ -40,6 +40,12 @@ import type {
   ComplianceData,
   SavedScenario,
   AgentInfo,
+  ConnectorConfig,
+  ConnectorMapping,
+  CrmRevenueRow,
+  EffortRow,
+  UnifiedCostView,
+  SyncResult,
 } from './types'
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
@@ -268,5 +274,30 @@ export const api = {
 
   agents: {
     all: () => get<AgentInfo[]>('/api/agent/all'),
+  },
+
+  connectors: {
+    list: () => get<ConnectorConfig[]>('/api/connectors'),
+    connect: (type: string) =>
+      post<{ status: string; connector: ConnectorConfig }>(`/api/connectors/${type}/connect`, { mock: true }),
+    disconnect: (type: string) =>
+      post<{ status: string }>(`/api/connectors/${type}/disconnect`, {}),
+    sync: (type: string) => post<SyncResult>(`/api/connectors/${type}/sync`, {}),
+    status: (type: string) => get<ConnectorConfig>(`/api/connectors/${type}/status`),
+    revenueData: (type: string, period?: string) => {
+      const qs = period ? `?period=${period}` : ''
+      return get<CrmRevenueRow[]>(`/api/connectors/${type}/data/revenue${qs}`)
+    },
+    effortData: (type: string, period?: string) => {
+      const qs = period ? `?period=${period}` : ''
+      return get<EffortRow[]>(`/api/connectors/${type}/data/effort${qs}`)
+    },
+    mappings: (type: string) => get<ConnectorMapping[]>(`/api/connectors/${type}/mappings`),
+    updateMapping: (type: string, id: string, data: Partial<ConnectorMapping>) =>
+      request<ConnectorMapping>(`/api/connectors/${type}/mappings/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify(data),
+      }),
+    unifiedCost: () => get<UnifiedCostView[]>('/api/connectors/unified-cost'),
   },
 }

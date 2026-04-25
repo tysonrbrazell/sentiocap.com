@@ -898,3 +898,171 @@ class NetworkIntelligence(BaseModel):
 PlanResponse.model_rebuild()
 TreemapNode.model_rebuild()
 UploadPreviewRow.model_rebuild()
+
+
+# ---------------------------------------------------------------------------
+# Connectors
+# ---------------------------------------------------------------------------
+
+class ConnectorTypeEnum(str, Enum):
+    salesforce = "salesforce"
+    jira = "jira"
+    hubspot = "hubspot"
+    dynamics = "dynamics"
+    workday = "workday"
+    sap = "sap"
+    servicenow = "servicenow"
+
+
+class ConnectorStatusEnum(str, Enum):
+    disconnected = "disconnected"
+    connected = "connected"
+    syncing = "syncing"
+    error = "error"
+
+
+class SyncStatusEnum(str, Enum):
+    pending = "pending"
+    running = "running"
+    completed = "completed"
+    failed = "failed"
+
+
+class ConnectorConfigResponse(BaseModel):
+    id: Optional[UUID] = None
+    org_id: Optional[UUID] = None
+    connector_type: str
+    status: str = "disconnected"
+    sync_frequency: str = "daily"
+    last_sync_at: Optional[datetime] = None
+    config: dict = {}
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
+    last_sync: Optional[dict] = None
+
+    model_config = {"from_attributes": True}
+
+
+class ConnectorSyncResponse(BaseModel):
+    id: UUID
+    connector_id: UUID
+    org_id: UUID
+    status: str
+    started_at: Optional[datetime] = None
+    completed_at: Optional[datetime] = None
+    records_synced: int = 0
+    records_mapped: int = 0
+    errors: list[dict] = []
+    created_at: datetime
+
+    model_config = {"from_attributes": True}
+
+
+class ConnectorMappingResponse(BaseModel):
+    id: Optional[UUID] = None
+    org_id: Optional[UUID] = None
+    connector_type: str
+    source_type: str
+    source_id: str
+    source_name: str
+    investment_id: Optional[UUID] = None
+    l2_category: Optional[str] = None
+    mapping_method: str = "ai"
+    confidence: float = 0.5
+    confirmed: bool = False
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
+
+    model_config = {"from_attributes": True}
+
+
+class CrmRevenueDataResponse(BaseModel):
+    id: Optional[UUID] = None
+    org_id: Optional[UUID] = None
+    connector_type: str
+    period: str
+    source_product: Optional[str] = None
+    source_segment: Optional[str] = None
+    investment_id: Optional[UUID] = None
+    pipeline_amount: float = 0
+    closed_won_amount: float = 0
+    new_logos: int = 0
+    churned_amount: float = 0
+    avg_deal_size: Optional[float] = None
+    win_rate: Optional[float] = None
+    avg_cycle_days: Optional[int] = None
+    synced_at: Optional[datetime] = None
+    created_at: Optional[datetime] = None
+
+    model_config = {"from_attributes": True}
+
+
+class EffortDataResponse(BaseModel):
+    id: Optional[UUID] = None
+    org_id: Optional[UUID] = None
+    connector_type: str
+    period: str
+    source_project: Optional[str] = None
+    source_epic: Optional[str] = None
+    investment_id: Optional[UUID] = None
+    hours_logged: float = 0
+    effort_cost: float = 0
+    story_points_completed: int = 0
+    issues_total: int = 0
+    issues_bugs: int = 0
+    issues_features: int = 0
+    issues_tasks: int = 0
+    velocity_trend: Optional[float] = None
+    backlog_growth: int = 0
+    completion_pct: float = 0
+    synced_at: Optional[datetime] = None
+    created_at: Optional[datetime] = None
+
+    model_config = {"from_attributes": True}
+
+
+class UnifiedCostView(BaseModel):
+    investment_id: str
+    investment_name: str
+    l2_category: Optional[str] = None
+    status: Optional[str] = None
+    planned_cost: float = 0
+    gl_actual_cost: float = 0
+    effort_cost: float = 0
+    effort_hours: float = 0
+    revenue_pipeline: float = 0
+    revenue_closed: float = 0
+    new_logos: int = 0
+    churn_amount: float = 0
+    deployment_rate: Optional[float] = None
+    effort_efficiency: Optional[float] = None
+    roi_on_plan: Optional[float] = None
+    roi_on_effort: Optional[float] = None
+    pipeline_coverage: Optional[float] = None
+    discrepancies: list[str] = []
+    health_signals: list[dict] = []
+    signal: str = "GREEN"  # GREEN | YELLOW | RED
+
+    model_config = {"from_attributes": True}
+
+
+class SyncResult(BaseModel):
+    connector_type: str
+    org_id: str
+    status: str
+    records_synced: int = 0
+    records_mapped: int = 0
+    errors: list[dict] = []
+    started_at: Optional[datetime] = None
+    completed_at: Optional[datetime] = None
+
+
+class ConnectorConnectRequest(BaseModel):
+    auth_code: Optional[str] = None
+    mock: bool = True  # default to mock mode
+
+
+class MappingUpdateRequest(BaseModel):
+    investment_id: Optional[UUID] = None
+    l2_category: Optional[str] = None
+    confirmed: Optional[bool] = None

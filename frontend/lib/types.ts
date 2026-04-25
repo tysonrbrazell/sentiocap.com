@@ -704,3 +704,110 @@ export interface AgentStatus {
   capabilities: string[]
   last_checked: string
 }
+
+// ---------------------------------------------------------------------------
+// Connectors
+// ---------------------------------------------------------------------------
+
+export interface ConnectorConfig {
+  id: string | null
+  org_id: string | null
+  connector_type: string
+  status: 'disconnected' | 'connected' | 'syncing' | 'error'
+  sync_frequency: string
+  last_sync_at: string | null
+  config: Record<string, unknown>
+  created_at: string | null
+  updated_at: string | null
+  last_sync: {
+    records_synced: number
+    status: string
+    completed_at: string
+  } | null
+}
+
+export interface ConnectorMapping {
+  id: string | null
+  org_id: string | null
+  connector_type: string
+  source_type: string
+  source_id: string
+  source_name: string
+  investment_id: string | null
+  l2_category: string | null
+  mapping_method: string
+  confidence: number
+  confirmed: boolean
+  created_at: string | null
+  updated_at: string | null
+}
+
+export interface CrmRevenueRow {
+  id: string | null
+  period: string
+  source_product: string | null
+  source_segment: string | null
+  investment_id: string | null
+  pipeline_amount: number
+  closed_won_amount: number
+  new_logos: number
+  churned_amount: number
+  avg_deal_size: number | null
+  win_rate: number | null
+  avg_cycle_days: number | null
+}
+
+export interface EffortRow {
+  id: string | null
+  period: string
+  source_project: string | null
+  source_epic: string | null
+  investment_id: string | null
+  hours_logged: number
+  effort_cost: number
+  story_points_completed: number
+  issues_total: number
+  issues_bugs: number
+  issues_features: number
+  issues_tasks: number
+  velocity_trend: number | null
+  backlog_growth: number
+  completion_pct: number
+}
+
+export interface UnifiedCostView {
+  investment_id: string
+  investment_name: string
+  l2_category: string | null
+  status: string | null
+  planned_cost: number
+  gl_actual_cost: number
+  effort_cost: number
+  effort_hours: number
+  revenue_pipeline: number
+  revenue_closed: number
+  new_logos: number
+  churn_amount: number
+  deployment_rate: number | null
+  effort_efficiency: number | null
+  roi_on_plan: number | null
+  roi_on_effort: number | null
+  pipeline_coverage: number | null
+  discrepancies: string[]
+  health_signals: Array<{
+    category: number | null
+    name: string
+    description: string
+    severity: 'critical' | 'warning' | 'info'
+  }>
+  signal: 'GREEN' | 'YELLOW' | 'RED'
+}
+
+export interface SyncResult {
+  status: string
+  records_synced: number
+  records_mapped: number
+  errors: Array<{ message: string; type: string }>
+  started_at: string | null
+  completed_at: string | null
+}
