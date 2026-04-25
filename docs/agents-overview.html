@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SentioCap — Meet Your Agent Team</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: #FAFAF8;
+      color: #1A1A1A;
+      line-height: 1.6;
+    }
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    .logo {
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #4A7C59;
+      margin-bottom: 1rem;
+    }
+    h1 {
+      font-size: 2.4rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      line-height: 1.2;
+    }
+    .subtitle {
+      font-size: 1.1rem;
+      color: #666;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    /* The Problem */
+    .problem {
+      background: #1A1A1A;
+      color: #fff;
+      border-radius: 16px;
+      padding: 2rem 2.5rem;
+      margin-bottom: 3rem;
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+    .problem-left {
+      flex: 1;
+    }
+    .problem h2 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      color: #fff;
+    }
+    .problem p {
+      font-size: 0.95rem;
+      color: #ccc;
+      line-height: 1.7;
+    }
+    .problem-right {
+      flex: 0 0 280px;
+      text-align: center;
+    }
+    .problem-stat {
+      font-size: 3rem;
+      font-weight: 700;
+      color: #4A7C59;
+    }
+    .problem-stat-label {
+      font-size: 0.85rem;
+      color: #999;
+    }
+
+    /* Agent Grid */
+    .agents {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.25rem;
+      margin-bottom: 3rem;
+    }
+    .agent-card {
+      background: #fff;
+      border: 1px solid #e8e8e5;
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: box-shadow 0.2s;
+    }
+    .agent-card:hover {
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    }
+    .agent-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+    .agent-emoji {
+      font-size: 1.8rem;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f5f5f2;
+      border-radius: 10px;
+    }
+    .agent-name {
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+    .agent-role {
+      font-size: 0.8rem;
+      color: #4A7C59;
+      font-weight: 500;
+    }
+    .agent-desc {
+      font-size: 0.9rem;
+      color: #555;
+      margin-bottom: 0.75rem;
+      line-height: 1.6;
+    }
+    .agent-capabilities {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+    .cap-tag {
+      font-size: 0.75rem;
+      padding: 0.2rem 0.6rem;
+      background: #f0f7f2;
+      color: #4A7C59;
+      border-radius: 20px;
+      font-weight: 500;
+    }
+
+    /* How it works */
+    .how {
+      background: #fff;
+      border: 1px solid #e8e8e5;
+      border-radius: 16px;
+      padding: 2.5rem;
+      margin-bottom: 3rem;
+    }
+    .how h2 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    .flow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .flow-step {
+      text-align: center;
+      padding: 1rem;
+      min-width: 140px;
+    }
+    .flow-emoji { font-size: 1.5rem; margin-bottom: 0.3rem; }
+    .flow-label { font-size: 0.8rem; font-weight: 600; }
+    .flow-detail { font-size: 0.7rem; color: #888; }
+    .flow-arrow { font-size: 1.2rem; color: #ccc; }
+
+    /* Differentiator */
+    .diff {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+      margin-bottom: 3rem;
+    }
+    .diff-card {
+      text-align: center;
+      padding: 1.5rem;
+      background: #fff;
+      border: 1px solid #e8e8e5;
+      border-radius: 12px;
+    }
+    .diff-number {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #4A7C59;
+    }
+    .diff-label {
+      font-size: 0.85rem;
+      color: #666;
+      margin-top: 0.25rem;
+    }
+
+    /* CTA */
+    .cta {
+      text-align: center;
+      padding: 2.5rem;
+      background: linear-gradient(135deg, #1A1A1A 0%, #2d3a2e 100%);
+      border-radius: 16px;
+      color: #fff;
+    }
+    .cta h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    .cta p {
+      color: #ccc;
+      margin-bottom: 1.5rem;
+      font-size: 0.95rem;
+    }
+    .cta-btn {
+      display: inline-block;
+      padding: 0.75rem 2rem;
+      background: #4A7C59;
+      color: #fff;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: background 0.2s;
+    }
+    .cta-btn:hover { background: #3d6a4b; }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 0.8rem;
+      color: #999;
+    }
+
+    @media (max-width: 768px) {
+      .agents { grid-template-columns: 1fr; }
+      .diff { grid-template-columns: 1fr; }
+      .problem { flex-direction: column; }
+      .problem-right { flex: none; }
+      h1 { font-size: 1.8rem; }
+    }
+
+    @media print {
+      body { background: #fff; }
+      .page { padding: 1rem; }
+      .agent-card:hover { box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+
+    <div class="header">
+      <div class="logo">SentioCap</div>
+      <h1>Your Finance Team, Multiplied.</h1>
+      <p class="subtitle">Eight AI agents that continuously classify, monitor, benchmark, forecast, and recommend — so your team focuses on decisions, not data.</p>
+    </div>
+
+    <div class="problem">
+      <div class="problem-left">
+        <h2>The Problem</h2>
+        <p>Every company invests in change. Few can prove it's working. CFOs spend weeks building reports that are outdated by the time they're presented. Investment decisions are made on gut feel, not data. And no one knows how their allocation compares to peers.</p>
+      </div>
+      <div class="problem-right">
+        <div class="problem-stat">8</div>
+        <div class="problem-stat-label">AI agents working 24/7<br>so your team doesn't have to</div>
+      </div>
+    </div>
+
+    <div class="agents">
+
+      <div class="agent-card">
+        <div class="agent-header">
+          <div class="agent-emoji">🔍</div>
+          <div>
+            <div class="agent-name">Scout</div>
+            <div class="agent-role">Classification Agent</div>
+          </div>
+        </div>
+        <div class="agent-desc">Connects to your ERP and continuously classifies every expense into a standard investment taxonomy. Reads board decks, budget books, and GL dumps. Learns your language over time.</div>
+        <div class="agent-capabilities">
+          <span class="cap-tag">Auto-classify</span>
+          <span class="cap-tag">Document intake</span>
+          <span class="cap-tag">RTB/CTB split</span>
+          <span class="cap-tag">Self-improving</span>
+        </div>
+      </div>
+
+      <div class="agent-card">
+        <div class="agent-header">
+          <div class="agent-emoji">🎯</div>
+          <div>
+            <div class="agent-name">Sentinel</div>
+            <div class="agent-role">Signal Detection Agent</div>
+          </div>
+        </div>
+        <div class="agent-desc">Watches every investment, every metric, every trend. Fires alerts when action is needed — kill underperformers, accelerate winners, flag cost overruns, catch zombie projects before they drain resources.</div>
+        <div class="agent-capabilities">
+          <span class="cap-tag">20 decision categories</span>
+          <span class="cap-tag">Auto-escalation</span>
+          <span class="cap-tag">AI narratives</span>
+          <span class="cap-tag">Owner routing</span>
+        </div>
+      </div>
+
+      <div class="agent-card">
+        <div class="agent-header">
+          <div class="agent-emoji">📊</div>
+          <div>
+            <div class="agent-name">Compass</div>
+            <div class="agent-role">Benchmarking Agent</div>
+          </div>
+        </div>
+        <div class="agent-desc">Knows where you stand relative to 500+ peers, always. Monitors public filings, tracks sector shifts, and alerts when your allocation drifts outside the optimal zone.</div>
+        <div class="agent-capabilities">
+          <span class="cap-tag">S&P 500 benchmarks</span>
+          <span class="cap-tag">Peer comparison</span>
+          <span class="cap-tag">Goldilocks zone</span>
+          <span class="cap-tag">Drift alerts</span>
+        </div>
+      </div>
+
+      <div class="agent-card">
+        <div class="agent-header">
+          <div class="agent-emoji">📈</div>
+          <div>
+            <div class="agent-name">Oracle</div>
+            <div class="agent-role">Forecasting Agent</div>
+          </div>
+        </div>
+        <div class="agent-desc">After every month close, automatically generates a full-year reforecast. Predicts which investments will miss targets 60-90 days before it happens. No more surprises at quarter-end.</div>
+        <div class="agent-capabilities">
+          <span class="cap-tag">Auto-reforecast</span>
+          <span class="cap-tag">Early warnings</span>
+          <span class="cap-tag">Trend analysis</span>
+          <span class="cap-tag">Scenario modeling</span>
+        </div>
+      </div>
+
+      <div class="agent-card">
+        <div class="agent-header">
+          <div class="agent-emoji">📝</div>
+          <div>
+            <div class="agent-name">Scribe</div>
+            <div class="agent-role">Reporting Agent</div>
+          </div>
+        </div>
+        <div class="agent-desc">Writes the quarterly investment review, the monthly CFO briefing, and the board deck — from actual data, not templates. Your team reviews and approves instead of building from scratch.</div>
+        <div class="agent-capabilities">
+          <span class="cap-tag">Board decks</span>
+          <span class="cap-tag">Monthly briefings</span>
+          <span class="cap-tag">Investment cases</span>
+          <span class="cap-tag">Variance narratives</span>
+        </div>
+      </div>
+
+      <div class="agent-card">
+        <div class="agent-header">
+          <div class="agent-emoji">💬</div>
+          <div>
+            <div class="agent-name">Sage</div>
+            <div class="agent-role">Conversational Agent</div>
+          </div>
+        </div>
+        <div class="agent-desc">Ask anything about your capital allocation in plain English. "What's happening with Project X?" "Why is CTB underspent?" "Should we increase investment in AI?" Instant answers backed by your data.</div>
+        <div class="agent-capabilities">
+          <span class="cap-tag">Natural language</span>
+          <span class="cap-tag">Data-backed answers</span>
+          <span class="cap-tag">Follow-up suggestions</span>
+          <span class="cap-tag">Slack / Teams</span>
+        </div>
+      </div>
+
+      <div class="agent-card">
+        <div class="agent-header">
+          <div class="agent-emoji">🔮</div>
+          <div>
+            <div class="agent-name">Strategist</div>
+            <div class="agent-role">Scenario Agent</div>
+          </div>
+        </div>
+        <div class="agent-desc">Model every "what if" before you commit. Kill Project X and reallocate to Y? Increase CTB by $20M? Consolidate three investments into one? See the projected impact in seconds, not weeks.</div>
+        <div class="agent-capabilities">
+          <span class="cap-tag">What-if modeling</span>
+          <span class="cap-tag">Portfolio impact</span>
+          <span class="cap-tag">Side-by-side compare</span>
+          <span class="cap-tag">Trade-off analysis</span>
+        </div>
+      </div>
+
+      <div class="agent-card">
+        <div class="agent-header">
+          <div class="agent-emoji">🛡️</div>
+          <div>
+            <div class="agent-name">Guardian</div>
+            <div class="agent-role">Compliance Agent</div>
+          </div>
+        </div>
+        <div class="agent-desc">Ensures every allocation follows policy. Catches spending that exceeds thresholds, flags unclassified items, monitors investment commitments vs actual deployments. Nothing falls through the cracks.</div>
+        <div class="agent-capabilities">
+          <span class="cap-tag">Policy enforcement</span>
+          <span class="cap-tag">Approval tracking</span>
+          <span class="cap-tag">Audit trail</span>
+          <span class="cap-tag">Threshold alerts</span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="how">
+      <h2>How It Works</h2>
+      <div class="flow">
+        <div class="flow-step">
+          <div class="flow-emoji">📥</div>
+          <div class="flow-label">Connect</div>
+          <div class="flow-detail">ERP, GL, or upload files</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-emoji">🔍</div>
+          <div class="flow-label">Scout classifies</div>
+          <div class="flow-detail">Every line, automatically</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-emoji">🎯</div>
+          <div class="flow-label">Sentinel watches</div>
+          <div class="flow-detail">Alerts when action needed</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-emoji">💬</div>
+          <div class="flow-label">You decide</div>
+          <div class="flow-detail">Agents recommend, you approve</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-emoji">📝</div>
+          <div class="flow-label">Scribe reports</div>
+          <div class="flow-detail">Board deck writes itself</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="diff">
+      <div class="diff-card">
+        <div class="diff-number">20</div>
+        <div class="diff-label">Decision categories detected automatically — more than any competitor</div>
+      </div>
+      <div class="diff-card">
+        <div class="diff-number">500+</div>
+        <div class="diff-label">S&P 500 companies in the benchmark dataset — instant peer comparison</div>
+      </div>
+      <div class="diff-card">
+        <div class="diff-number">24/7</div>
+        <div class="diff-label">Continuous monitoring — agents never sleep, never miss a signal</div>
+      </div>
+    </div>
+
+    <div class="cta">
+      <h2>Stop building reports. Start making decisions.</h2>
+      <p>Your agents are ready. Connect your data and see what they find in the first hour.</p>
+      <a href="mailto:tyson@pairwater.com" class="cta-btn">Request a Demo →</a>
+    </div>
+
+    <div class="footer">
+      <p>SentioCap — Capital Allocation Intelligence</p>
+      <p style="margin-top: 0.25rem;">sentiocap.com</p>
+    </div>
+
+  </div>
+</body>
+</html>
