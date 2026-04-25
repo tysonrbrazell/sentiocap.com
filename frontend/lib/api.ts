@@ -395,7 +395,7 @@ export const api = {
       body: JSON.stringify(data),
     }),
     reclassify: () => post<{ message: string; total: number; updated: number }>('/api/coa/reclassify', {}),
-    analyze: (file: File, opts?: {
+    analyze: async (file: File, opts?: {
       account_code_column?: string
       account_name_column?: string
       amount_column?: string
