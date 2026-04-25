@@ -33,6 +33,13 @@ import type {
   AgentReforecast,
   AgentStatus,
   ScenarioChange,
+  ScoutStats,
+  CompassPosition,
+  OracleData,
+  GeneratedReport,
+  ComplianceData,
+  SavedScenario,
+  AgentInfo,
 } from './types'
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
@@ -219,5 +226,47 @@ export const api = {
     scan: () => post<DecisionScanResult>('/api/decisions/scan'),
     update: (id: string, data: { status?: string; owner?: string; resolution_notes?: string }) =>
       request<Decision>(`/api/decisions/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+  },
+
+  // Per-agent APIs (extend as backend grows)
+  scout: {
+    stats: () => get<ScoutStats>('/api/agent/scout/stats'),
+    uploadDocument: (file: File) => upload<{ job_id: string; message: string }>('/api/agent/scout/upload', file),
+    queue: () => get<{ items: Array<{ id: string; description: string; confidence: number }> }>('/api/agent/scout/queue'),
+  },
+
+  compass: {
+    position: () => get<CompassPosition>('/api/agent/compass/position'),
+  },
+
+  oracle: {
+    data: (period?: string) => {
+      const qs = period ? `?period=${period}` : ''
+      return get<OracleData>(`/api/agent/oracle${qs}`)
+    },
+  },
+
+  scribe: {
+    reports: () => get<GeneratedReport[]>('/api/agent/scribe/reports'),
+    generateBoardDeck: (period: string, format = 'markdown') =>
+      post<AgentBoardDeck>('/api/agent/board-deck', { period, format }),
+    generateBriefing: (period: string) =>
+      post<GeneratedReport>('/api/agent/scribe/briefing', { period }),
+  },
+
+  guardian: {
+    data: () => get<ComplianceData>('/api/agent/guardian'),
+    resolveFlag: (flagId: string) => post<{ ok: boolean }>(`/api/agent/guardian/flags/${flagId}/resolve`),
+  },
+
+  strategist: {
+    scenarios: () => get<SavedScenario[]>('/api/agent/strategist/scenarios'),
+    saveScenario: (name: string, changes: ScenarioChange[], result?: AgentScenario) =>
+      post<SavedScenario>('/api/agent/strategist/scenarios', { name, changes, result }),
+    deleteScenario: (id: string) => del<void>(`/api/agent/strategist/scenarios/${id}`),
+  },
+
+  agents: {
+    all: () => get<AgentInfo[]>('/api/agent/all'),
   },
 }

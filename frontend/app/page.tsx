@@ -10,7 +10,7 @@ export default function LandingPage() {
   useEffect(() => {
     const token = getAuthToken()
     if (token) {
-      router.replace('/agent')
+      router.replace('/agents')
     } else {
       router.replace('/login')
     }

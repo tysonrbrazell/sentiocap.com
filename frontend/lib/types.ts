@@ -573,6 +573,123 @@ export interface AgentReforecast {
   confidence: 'high' | 'medium' | 'low'
 }
 
+// ---------------------------------------------------------------------------
+// Per-agent status & data types
+// ---------------------------------------------------------------------------
+
+export type AgentStatusLevel = 'active' | 'needs_attention' | 'idle'
+
+export interface AgentInfo {
+  id: string
+  name: string
+  emoji: string
+  description: string
+  href: string
+  status: AgentStatusLevel
+  last_run?: string
+  key_metric?: string
+}
+
+// Scout
+export interface ClassificationRecord {
+  id: string
+  source_description: string
+  classified_l1: string
+  classified_l2: string
+  classified_l3: string
+  classified_l4: string
+  confidence: number
+  confirmed: boolean
+  created_at: string
+}
+
+export interface ScoutStats {
+  total_classified: number
+  confirmed_count: number
+  accuracy_pct: number
+  pending_review: number
+  recent: ClassificationRecord[]
+}
+
+// Compass
+export interface CompassPosition {
+  ctb_pct: number
+  goldilocks_min: number
+  goldilocks_max: number
+  in_goldilocks: boolean
+  peer_median_ctb: number
+}
+
+// Oracle early warning
+export interface EarlyWarning {
+  investment_id: string
+  investment_name: string
+  risk_type: string
+  projected_miss_pct: number
+  days_to_target: number
+  message: string
+}
+
+export interface OracleData {
+  reforecast: AgentReforecast | null
+  early_warnings: EarlyWarning[]
+}
+
+// Scribe report
+export interface GeneratedReport {
+  id: string
+  report_type: string
+  period: string
+  generated_at: string
+  content: string
+  format: string
+}
+
+// Guardian
+export interface ComplianceFlag {
+  id: string
+  item_type: string
+  item_name: string
+  flag_type: string
+  severity: 'critical' | 'warning' | 'info'
+  message: string
+  created_at: string
+}
+
+export interface PolicyRule {
+  id: string
+  name: string
+  description: string
+  threshold?: number
+  enabled: boolean
+}
+
+export interface AuditEntry {
+  id: string
+  action: string
+  actor: string
+  item_type: string
+  item_name: string
+  timestamp: string
+  details?: string
+}
+
+export interface ComplianceData {
+  compliance_score: number
+  flags: ComplianceFlag[]
+  policy_rules: PolicyRule[]
+  audit_log: AuditEntry[]
+}
+
+// Strategist
+export interface SavedScenario {
+  id: string
+  name: string
+  changes: ScenarioChange[]
+  result?: AgentScenario
+  created_at: string
+}
+
 export interface AgentStatus {
   org_id: string
   org_name: string
