@@ -1,0 +1,1429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SentioCap — Your Finance Team, Multiplied</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── Reset & Base ──────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #FAFAF8;
+      --text:     #1A1A1A;
+      --accent:   #4A7C59;
+      --accent2:  #3a6247;
+      --muted:    #6B7280;
+      --border:   #E5E5E0;
+      --card:     #FFFFFF;
+      --red:      #DC2626;
+      --yellow:   #D97706;
+      --green:    #4A7C59;
+      --blue:     #2563EB;
+      --tag-bg:   #F0F4F1;
+    }
+
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+    }
+
+    /* ─── Slide Container ───────────────────────────────────── */
+    .deck {
+      display: flex;
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+    }
+
+    .slides-wrapper {
+      display: flex;
+      transition: transform 0.55s cubic-bezier(0.77, 0, 0.18, 1);
+      height: 100vh;
+      will-change: transform;
+    }
+
+    .slide {
+      min-width: 100vw;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 3rem 4rem;
+      position: relative;
+      background: var(--bg);
+      overflow: hidden;
+    }
+
+    .slide-inner {
+      width: 100%;
+      max-width: 1100px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    /* ─── Nav Dots ──────────────────────────────────────────── */
+    #nav-dots {
+      position: fixed;
+      bottom: 1.75rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 0.5rem;
+      z-index: 100;
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--border);
+      cursor: pointer;
+      transition: background 0.25s, transform 0.25s;
+    }
+
+    .dot.active {
+      background: var(--accent);
+      transform: scale(1.3);
+    }
+
+    /* ─── Slide Number ──────────────────────────────────────── */
+    .slide-num {
+      position: absolute;
+      bottom: 1.75rem;
+      right: 2rem;
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+    }
+
+    /* ─── Nav Arrows ────────────────────────────────────────── */
+    .nav-arrow {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 100;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--muted);
+      font-size: 1.5rem;
+      padding: 0.75rem;
+      opacity: 0.4;
+      transition: opacity 0.2s;
+    }
+
+    .nav-arrow:hover { opacity: 1; }
+    #arrow-prev { left: 1rem; }
+    #arrow-next { right: 1rem; }
+
+    /* ─── Typography ────────────────────────────────────────── */
+    .label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    h1 {
+      font-size: clamp(3rem, 7vw, 5.5rem);
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -0.03em;
+      color: var(--text);
+    }
+
+    h2 {
+      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      line-height: 1.1;
+    }
+
+    h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .tagline {
+      font-size: clamp(1rem, 2vw, 1.4rem);
+      color: var(--muted);
+      font-weight: 400;
+      line-height: 1.5;
+    }
+
+    .quote {
+      font-size: clamp(1rem, 1.8vw, 1.3rem);
+      font-style: italic;
+      color: var(--muted);
+      border-left: 3px solid var(--accent);
+      padding-left: 1.25rem;
+      line-height: 1.6;
+    }
+
+    /* ─── Accent Line ───────────────────────────────────────── */
+    .accent-line {
+      width: 3rem;
+      height: 3px;
+      background: var(--accent);
+      border-radius: 2px;
+    }
+
+    /* ─── Cards & Grids ─────────────────────────────────────── */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+
+    .three-col {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.25rem;
+    }
+
+    .four-col {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+    }
+
+    .big-stat {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 800;
+      color: var(--accent);
+      line-height: 1;
+      letter-spacing: -0.03em;
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 0.35rem;
+      line-height: 1.4;
+    }
+
+    /* ─── Flow Bar ──────────────────────────────────────────── */
+    .flow {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      flex-wrap: wrap;
+    }
+
+    .flow-step {
+      background: var(--tag-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.55rem 1rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .flow-step.highlight {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+    }
+
+    .flow-arrow {
+      color: var(--muted);
+      font-size: 1rem;
+      padding: 0 0.4rem;
+    }
+
+    /* ─── Agent Grid ────────────────────────────────────────── */
+    .agent-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.1rem 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .agent-icon { font-size: 1.4rem; }
+    .agent-name { font-weight: 700; font-size: 0.92rem; }
+    .agent-desc { font-size: 0.75rem; color: var(--muted); line-height: 1.4; }
+
+    /* ─── Data Ladder ───────────────────────────────────────── */
+    .ladder {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .ladder-step {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.6rem 1rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--card);
+    }
+
+    .ladder-step .bar {
+      height: 6px;
+      border-radius: 3px;
+      background: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .ladder-step .label-text {
+      font-size: 0.82rem;
+      font-weight: 600;
+      min-width: 180px;
+    }
+
+    .ladder-step .value-text {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    /* ─── Cost Layers ───────────────────────────────────────── */
+    .cost-layer {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      padding: 1rem 1.5rem;
+      border-radius: 10px;
+      border-left: 4px solid var(--accent);
+      background: var(--card);
+      border-top: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .cost-layer-icon { font-size: 1.5rem; }
+    .cost-layer-title { font-weight: 700; font-size: 0.95rem; }
+    .cost-layer-sub { font-size: 0.78rem; color: var(--muted); }
+
+    /* ─── Signal Tiers ──────────────────────────────────────── */
+    .signal-tier {
+      padding: 0.85rem 1.25rem;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--card);
+    }
+
+    .signal-tier-header {
+      font-weight: 700;
+      font-size: 0.88rem;
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .signal-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+    }
+
+    .tag {
+      font-size: 0.7rem;
+      font-weight: 500;
+      padding: 0.2rem 0.55rem;
+      border-radius: 20px;
+      background: var(--tag-bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    .tag.red { background: #FEF2F2; border-color: #FECACA; color: var(--red); }
+    .tag.yellow { background: #FFFBEB; border-color: #FDE68A; color: var(--yellow); }
+    .tag.green { background: #F0FDF4; border-color: #BBF7D0; color: #15803D; }
+    .tag.blue { background: #EFF6FF; border-color: #BFDBFE; color: var(--blue); }
+
+    /* ─── Flywheel ──────────────────────────────────────────── */
+    .flywheel {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .fw-step {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 0.5rem 1.1rem;
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .fw-arrow {
+      color: var(--accent);
+      font-size: 1.1rem;
+      padding: 0 0.3rem;
+    }
+
+    /* ─── Comparison Table ──────────────────────────────────── */
+    .comp-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.78rem;
+    }
+
+    .comp-table th {
+      padding: 0.6rem 0.75rem;
+      text-align: left;
+      font-weight: 700;
+      font-size: 0.72rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border-bottom: 2px solid var(--border);
+    }
+
+    .comp-table th:first-child { color: var(--text); }
+
+    .comp-table td {
+      padding: 0.55rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+      line-height: 1.3;
+    }
+
+    .comp-table tr:last-child td { border-bottom: none; }
+
+    .comp-table td:nth-child(2) {
+      font-weight: 600;
+      color: var(--accent);
+      background: #F4F8F5;
+    }
+
+    .comp-table th:nth-child(2) {
+      color: var(--accent);
+      background: #F4F8F5;
+    }
+
+    .comp-table .check { color: var(--accent); font-weight: 700; }
+    .comp-table .cross { color: #D1D5DB; }
+
+    /* ─── Pricing Cards ─────────────────────────────────────── */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+
+    .price-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .price-card.featured {
+      border-color: var(--accent);
+      border-width: 2px;
+      background: #F4F8F5;
+    }
+
+    .price-tier { font-weight: 800; font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
+    .price-amount { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.02em; }
+    .price-per { font-size: 0.72rem; color: var(--muted); }
+    .price-features { list-style: none; display: flex; flex-direction: column; gap: 0.3rem; }
+    .price-features li { font-size: 0.76rem; color: var(--muted); display: flex; align-items: flex-start; gap: 0.4rem; line-height: 1.4; }
+    .price-features li::before { content: "—"; color: var(--accent); flex-shrink: 0; font-weight: 600; }
+
+    .investor-box {
+      background: var(--tag-bg);
+      border: 1px dashed var(--accent);
+      border-radius: 10px;
+      padding: 0.9rem 1.25rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .investor-box strong { color: var(--text); }
+
+    /* ─── ROI ───────────────────────────────────────────────── */
+    .roi-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.7rem 1.1rem;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    .roi-icon { font-size: 1.3rem; flex-shrink: 0; }
+    .roi-text { font-size: 0.88rem; line-height: 1.4; }
+    .roi-text strong { font-weight: 700; }
+
+    /* ─── Timeline ──────────────────────────────────────────── */
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      position: relative;
+    }
+
+    .tl-item {
+      display: flex;
+      gap: 1.25rem;
+      padding-bottom: 1rem;
+      position: relative;
+    }
+
+    .tl-item:last-child { padding-bottom: 0; }
+
+    .tl-left {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+      flex-shrink: 0;
+      width: 90px;
+    }
+
+    .tl-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
+      margin-top: 5px;
+    }
+
+    .tl-line {
+      flex: 1;
+      width: 2px;
+      background: var(--border);
+      margin-top: 4px;
+    }
+
+    .tl-item:last-child .tl-line { display: none; }
+
+    .tl-period {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      white-space: nowrap;
+      margin-top: 2px;
+    }
+
+    .tl-content {
+      font-size: 0.85rem;
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    /* ─── CTA Slide ─────────────────────────────────────────── */
+    .cta-links {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .cta-link {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 1.5rem;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      text-decoration: none;
+      color: var(--text);
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .cta-link:hover {
+      border-color: var(--accent);
+      background: #F4F8F5;
+    }
+
+    .cta-link-icon { font-size: 1.4rem; }
+    .cta-link-label { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); }
+    .cta-link-value { font-size: 0.92rem; font-weight: 600; color: var(--accent); }
+
+    /* ─── Title Slide ───────────────────────────────────────── */
+    .brand-name {
+      font-size: clamp(4rem, 9vw, 7rem);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      color: var(--text);
+      line-height: 1;
+    }
+
+    .brand-sub {
+      font-size: clamp(1.1rem, 2.5vw, 1.8rem);
+      font-weight: 300;
+      color: var(--muted);
+      letter-spacing: -0.01em;
+    }
+
+    .brand-badge {
+      display: inline-block;
+      background: var(--accent);
+      color: white;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.4rem 0.9rem;
+      border-radius: 100px;
+    }
+
+    /* ─── Bullet List ───────────────────────────────────────── */
+    .bullet-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+
+    .bullet-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      font-size: 0.92rem;
+      line-height: 1.5;
+    }
+
+    .bullet-list li::before {
+      content: "→";
+      color: var(--accent);
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 0.05rem;
+    }
+
+    /* ─── Print ─────────────────────────────────────────────── */
+    @media print {
+      body { overflow: visible; height: auto; }
+      .deck { flex-direction: column; overflow: visible; height: auto; }
+      .slides-wrapper { flex-direction: column; transform: none !important; height: auto; }
+      .slide { page-break-after: always; min-width: 100%; width: 100%; overflow: visible; }
+      #nav-dots, .nav-arrow { display: none; }
+      .slide-num { display: none; }
+    }
+
+    /* ─── Mobile ────────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      .slide { padding: 2rem 1.5rem; }
+      .three-col, .four-col { grid-template-columns: 1fr; }
+      .two-col { grid-template-columns: 1fr; }
+      .pricing-grid { grid-template-columns: 1fr; }
+      .flow { gap: 0.35rem; }
+      .flywheel { gap: 0.25rem; }
+      .comp-table { font-size: 0.68rem; }
+      .comp-table th, .comp-table td { padding: 0.4rem 0.5rem; }
+      .brand-name { font-size: 3.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="deck">
+  <div class="slides-wrapper" id="slides-wrapper">
+
+    <!-- ═══════════════════════════════════════════════════════
+         SLIDE 1 — Title
+    ═══════════════════════════════════════════════════════════ -->
+    <div class="slide" data-slide="1">
+      <div class="slide-inner">
+        <span class="brand-badge">Capital Allocation Intelligence</span>
+        <div style="margin-top:0.5rem;">
+          <div class="brand-name">SentioCap</div>
+        </div>
+        <div class="brand-sub">Your Finance Team, Multiplied.</div>
+        <div class="accent-line"></div>
+        <p class="tagline" style="max-width:620px;">
+          AI agents that continuously classify, monitor, benchmark, forecast, and recommend —<br>
+          so your team focuses on decisions, not data.
+        </p>
+        <div class="flow" style="margin-top:0.5rem;">
+          <div class="flow-step">8 AI Agents</div>
+          <div class="flow-arrow">·</div>
+          <div class="flow-step">25 Decision Signals</div>
+          <div class="flow-arrow">·</div>
+          <div class="flow-step">Value on Day One</div>
+          <div class="flow-arrow">·</div>
+          <div class="flow-step">No Data Cleanup Required</div>
+        </div>
+      </div>
+      <div class="slide-num">01 / 14</div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SLIDE 2 — The Problem
+    ═══════════════════════════════════════════════════════════ -->
+    <div class="slide" data-slide="2">
+      <div class="slide-inner">
+        <div class="label">The Problem</div>
+        <h2>The data quality tax is real.<br>And it's killing your team's potential.</h2>
+        <div class="three-col">
+          <div class="card">
+            <div class="big-stat">$13M/yr</div>
+            <div class="stat-label">Average cost of poor data quality per organization <span style="opacity:0.7">(Gartner)</span></div>
+          </div>
+          <div class="card">
+            <div class="big-stat">80%</div>
+            <div class="stat-label">Of analyst time spent cleaning data, not analyzing it <span style="opacity:0.7">(IBM)</span></div>
+          </div>
+          <div class="card">
+            <div class="big-stat">9–18mo</div>
+            <div class="stat-label">Typical implementation time for legacy tools like Apptio</div>
+          </div>
+        </div>
+        <div class="quote">
+          "Your data is messy. Your tools require it to be clean. That's backwards."
+        </div>
+      </div>
+      <div class="slide-num">02 / 14</div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SLIDE 3 — The Insight
+    ═══════════════════════════════════════════════════════════ -->
+    <div class="slide" data-slide="3">
+      <div class="slide-inner">
+        <div class="label">The Insight</div>
+        <h2>Every company invests in change.<br>Few can prove it's working.</h2>
+        <div class="quote">
+          "CFOs are flying blind on their most important question: is our capital allocation actually working?"
+        </div>
+        <ul class="bullet-list">
+          <li>CFOs can't tell you their true RTB/CTB split — the numbers are buried in messy GL data</li>
+          <li>Investment ROI is self-reported, not verified — everyone claims success</li>
+          <li>Board decks take weeks to build and are outdated the moment they're presented</li>
+          <li>No one knows how their allocation compares to peers — the benchmark doesn't exist</li>
+        </ul>
+        <div style="display:flex;gap:1rem;margin-top:0.5rem;">
+          <div class="card" style="flex:1;">
+            <div style="font-size:0.8rem;font-weight:700;color:var(--accent)">Run-The-Business (RTB)</div>
+            <div style="font-size:0.75rem;color:var(--muted);margin-top:0.25rem;">Keeping the lights on — maintenance, operations, support</div>
+          </div>
+          <div class="card" style="flex:1;">
+            <div style="font-size:0.8rem;font-weight:700;color:var(--accent)">Change-The-Business (CTB)</div>
+            <div style="font-size:0.75rem;color:var(--muted);margin-top:0.25rem;">Growth — new products, transformation, competitive advantage</div>
+          </div>
+          <div class="card" style="flex:1;">
+            <div style="font-size:0.8rem;font-weight:700;color:var(--accent)">Goldilocks Zone</div>
+            <div style="font-size:0.75rem;color:var(--muted);margin-top:0.25rem;">Industry best practice: 10–20% CTB. Most companies don't know where they are.</div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-num">03 / 14</div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SLIDE 4 — What We Do
+    ═══════════════════════════════════════════════════════════ -->
+    <div class="slide" data-slide="4">
+      <div class="slide-inner">
+        <div class="label">What We Do</div>
+        <h2>SentioCap deploys a team of 8 AI agents<br>that work 24/7 on your capital allocation.</h2>
+        <div class="flow" style="margin: 0.5rem 0;">
+          <div class="flow-step">Connect data</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step highlight">Agents classify</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step highlight">Agents monitor</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step highlight">Agents recommend</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">You decide</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step highlight">Agents report</div>
+        </div>
+        <div class="three-col">
+          <div class="card">
+            <div style="font-size:0.82rem;font-weight:700;margin-bottom:0.4rem;">✦ No Implementation</div>
+            <div style="font-size:0.76rem;color:var(--muted);line-height:1.5;">Value on day one. Upload a CSV and Scout classifies everything instantly. No 9-month setup.</div>
+          </div>
+          <div class="card">
+            <div style="font-size:0.82rem;font-weight:700;margin-bottom:0.4rem;">✦ No Data Cleanup</div>
+            <div style="font-size:0.76rem;color:var(--muted);line-height:1.5;">6-layer fuzzy matching handles messy data at any quality level — from a single CSV to fully connected systems.</div>
+          </div>
+          <div class="card">
+            <div style="font-size:0.82rem;font-weight:700;margin-bottom:0.4rem;">✦ No Consultants</div>
+            <div style="font-size:0.76rem;color:var(--muted);line-height:1.5;">Agents replace the analyst team that builds your board deck, detects your budget issues, and benchmarks your peers.</div>
+          </div>
+        </div>
+        <div class="quote">
+          "Value on day one. No 9-month implementation. No data cleanup required."
+        </div>
+      </div>
+      <div class="slide-num">04 / 14</div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SLIDE 5 — Meet Your Agent Team
+    ═══════════════════════════════════════════════════════════ -->
+    <div class="slide" data-slide="5">
+      <div class="slide-inner">
+        <div class="label">The Agent Team</div>
+        <h2>Meet your always-on finance team.</h2>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0.85rem;">
+          <div class="agent-card">
+            <div class="agent-icon">🔍</div>
+            <div class="agent-name">Scout</div>
+            <div class="agent-desc">Classifies every expense. Reads any document format. Learns your company's language.</div>
+          </div>
+          <div class="agent-card">
+            <div class="agent-icon">🎯</div>
+            <div class="agent-name">Sentinel</div>
+            <div class="agent-desc">25 signal categories. Auto-escalation. Watches everything. Doesn't cry wolf.</div>
+          </div>
+          <div class="agent-card">
+            <div class="agent-icon">📊</div>
+            <div class="agent-name">Compass</div>
+            <div class="agent-desc">500+ company benchmarks. Peer rankings. Goldilocks zone tracking.</div>
+          </div>
+          <div class="agent-card">
+            <div class="agent-icon">📈</div>
+            <div class="agent-name">Oracle</div>
+            <div class="agent-desc">Auto-reforecast after every close. Early warnings 60–90 days ahead.</div>
+          </div>
+          <div class="agent-card">
+            <div class="agent-icon">📝</div>
+            <div class="agent-name">Scribe</div>
+            <div class="agent-desc">Writes your board deck from actual data. Monthly CFO briefing. Board-ready.</div>
+          </div>
+          <div class="agent-card">
+            <div class="agent-icon">💬</div>
+            <div class="agent-name">Sage</div>
+            <div class="agent-desc">Ask anything in plain English, get data-backed answers in seconds.</div>
+          </div>
+          <div class="agent-card">
+            <div class="agent-icon">🔮</div>
+            <div class="agent-name">Strategist</div>
+            <div class="agent-desc">"What if we kill X and reallocate to Y?" Models every scenario with trade-offs.</div>
+          </div>
+          <div class="agent-card">
+            <div class="agent-icon">🛡️</div>
+            <div class="agent-name">Guardian</div>
+            <div class="agent-desc">Policy compliance, approval thresholds, audit trails. Nothing falls through the cracks.</div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-num">05 / 14</div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SLIDE 6 — The Messy Data Advantage
+    ═══════════════════════════════════════════════════════════ -->
+    <div class="slide" data-slide="6">
+      <div class="slide-inner">
+        <div class="label">The Messy Data Advantage</div>
+        <h2>Your data is messy.<br>Our agents don't care.</h2>
+        <div class="two-col">
+          <div style="display:flex;flex-direction:column;gap:0.75rem;">
+            <ul class="bullet-list">
+              <li><strong>6-layer fuzzy matching:</strong> confirmed → glossary → exact → fuzzy → keyword → AI</li>
+              <li>90% precision, 0% false positives — agents suggest, humans confirm</li>
+              <li>Agents learn your company's language over time</li>
+              <li>Value at EVERY data quality level</li>
+            </ul>
+            <div class="card" style="font-size:0.8rem;color:var(--muted);font-style:italic;">
+              Every enterprise tool fails because it assumes clean data. SentioCap is designed for the reality: data is always messy.
+            </div>
+          </div>
+          <div>
+            <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:0.75rem;">Data Quality Ladder — Value at every level</div>
+            <div class="ladder">
+              <div class="ladder-step">
+                <div class="bar" style="width:30px;"></div>
+                <div class="label-text">GL only</div>
+                <div class="value-text">Classify, benchmark, detect spend signals</div>
+              </div>
+              <div class="ladder-step">
+                <div class="bar" style="width:55px;"></div>
+                <div class="label-text">GL + Salesforce</div>
+                <div class="value-text">+ validate revenue benefits, pipeline gaps</div>
+              </div>
+              <div class="ladder-step">
+                <div class="bar" style="width:80px;"></div>
+                <div class="label-text">GL + JIRA</div>
+                <div class="value-text">+ validate effort, detect ghost investments</div>
+              </div>
+              <div class="ladder-step">
+                <div class="bar" style="width:105px;"></div>
+                <div class="label-text">All three — messy</div>
+                <div class="value-text">+ unified cost view with confidence scores</div>
+              </div>
+              <div class="ladder-step" style="border-color:var(--accent);">
+                <div class="bar" style="width:140px;background:#2a5c3f;"></div>
+                <div class="label-text" style="color:var(--accent);">All three — clean</div>
+                <div class="value-text">Full power: true investment cost reconciliation</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-num">06 / 14</div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SLIDE 7 — True Investment Cost
+    ═══════════════════════════════════════════════════════════ -->
+    <div class="slide" data-slide="7">
+      <div class="slide-inner">
+        <div class="label">True Investment Cost</div>
+        <h2>Three layers of cost.<br>Nobody reconciles them.</h2>
+        <div style="display:flex;flex-direction:column;gap:0.75rem;">
+          <div class="cost-layer">
+            <div class="cost-layer-icon">📋</div>
+            <div>
+              <div class="cost-layer-title">Planned Cost (Budget)</div>
+              <div class="cost-layer-sub">What you said you'd spend — lives in spreadsheets and planning tools</div>
+            </div>
+            <div style="margin-left:auto;font-size:0.78rem;color:var(--muted);font-style:italic;">Source: Budget / Plan</div>
+          </div>
+          <div class="cost-layer" style="border-left-color:#D97706;">
+            <div class="cost-layer-icon">💳</div>
+            <div>
+              <div class="cost-layer-title">Financial Cost (GL/ERP)</div>
+              <div class="cost-layer-sub">What you actually spent — dollars that left the building</div>
+            </div>
+            <div style="margin-left:auto;font-size:0.78rem;color:var(--muted);font-style:italic;">Source: ERP / GL / NetSuite</div>
+          </div>
+          <div class="cost-layer" style="border-left-color:#2563EB;">
+            <div class="cost-layer-icon">⏱️</div>
+            <div>
+              <div class="cost-layer-title">Effort Cost (JIRA)</div>
+              <div class="cost-layer-sub">What people actually worked on — hours × rate = true labor cost</div>
+            </div>
+            <div style="margin-left:auto;font-size:0.78rem;color:var(--muted);font-style:italic;">Source: JIRA / Azure DevOps</div>
+          </div>
+          <div class="cost-layer" style="border-left-color:#9333EA;">
+            <div class="cost-layer-icon">📈</div>
+            <div>
+              <div class="cost-layer-title">Revenue Outcomes (Salesforce)</div>
+              <div class="cost-layer-sub">Is it generating returns? Pipeline won, churn prevented, upsell driven</div>
+            </div>
+            <div style="margin-left:auto;font-size:0.78rem;color:var(--muted);font-style:italic;">Source: Salesforce / HubSpot</div>
+          </div>
+        </div>
+        <div class="quote">
+          "SentioCap is the only platform that shows you the gap between plan, spend, effort, and outcomes."
+        </div>
+      </div>
+      <div class="slide-num">07 / 14</div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SLIDE 8 — The Decision Engine
+    ═══════════════════════════════════════════════════════════ -->
+    <div class="slide" data-slide="8">
+      <div class="slide-inner">
+        <div class="label">The Decision Engine</div>
+        <h2>25 signals that tell you what to do,<br>not just what happened.</h2>
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:0.85rem;">
+          <div class="signal-tier">
+            <div class="signal-tier-header">🔴 <span>Immediate Action</span><span style="font-weight:400;color:var(--muted);font-size:0.75rem;"> — this quarter</span></div>
+            <div class="signal-tags">
+              <span class="tag red">Kill</span>
+              <span class="tag red">Pause</span>
+              <span class="tag red">Cost Overrun</span>
+              <span class="tag red">Accelerate</span>
+            </div>
+          </div>
+          <div class="signal-tier">
+            <div class="signal-tier-header">🟡 <span>Quarterly Review</span><span style="font-weight:400;color:var(--muted);font-size:0.75rem;"> — next planning cycle</span></div>
+            <div class="signal-tags">
+              <span class="tag yellow">Turnaround</span>
+              <span class="tag yellow">Reallocate</span>
+              <span class="tag yellow">Reclassify RTB↔CTB</span>
+              <span class="tag yellow">Merge</span>
+              <span class="tag yellow">Extend</span>
+            </div>
+          </div>
+          <div class="signal-tier">
+            <div class="signal-tier-header">🟢 <span>Strategic / Board Level</span><span style="font-weight:400;color:var(--muted);font-size:0.75rem;"> — annual planning</span></div>
+            <div class="signal-tags">
+              <span class="tag green">Portfolio Rebalance</span>
+              <span class="tag green">Benchmark Gap</span>
+              <span class="tag green">ROI Decay</span>
+              <span class="tag green">Concentration Risk</span>
+            </div>
+          </div>
+          <div class="signal-tier">
+            <div class="signal-tier-header">🔵 <span>Behavioral Patterns</span><span style="font-weight:400;color:var(--muted);font-size:0.75rem;"> — discovered from real data</span></div>
+            <div class="signal-tags">
+              <span class="tag blue">Zombie Investment</span>
+              <span class="tag blue">Hockey Stick</span>
+              <span class="tag blue">Ghost Investment</span>
+              <span class="tag blue">Scope Creep</span>
+            </div>
+          </div>
+        </div>
+        <div class="quote">
+          "Every signal comes with: what happened, why it matters, what to do, and who should decide."
+        </div>
+      </div>
+      <div class="slide-num">08 / 14</div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SLIDE 9 — The Network Effect
+    ═══════════════════════════════════════════════════════════ -->
+    <div class="slide" data-slide="9">
+      <div class="slide-inner">
+        <div class="label">The Network Effect</div>
+        <h2>Every company that joins makes every<br>other company's agents smarter.</h2>
+        <div class="flywheel" style="margin:0.5rem 0;">
+          <div class="fw-step">Companies join</div>
+          <div class="fw-arrow">→</div>
+          <div class="fw-step">Better benchmarks</div>
+          <div class="fw-arrow">→</div>
+          <div class="fw-step">Better data</div>
+          <div class="fw-arrow">→</div>
+          <div class="fw-step">Investor data product</div>
+          <div class="fw-arrow">→</div>
+          <div class="fw-step">Investors value data</div>
+          <div class="fw-arrow">→</div>
+          <div class="fw-step">Companies feel pressure to join</div>
+          <div class="fw-arrow">↺</div>
+        </div>
+        <div class="three-col">
+          <div class="card">
+            <div class="big-stat" style="font-size:2rem;">500</div>
+            <div style="font-size:0.8rem;font-weight:600;margin-top:0.3rem;">Companies</div>
+            <div class="stat-label">Our benchmarks become the <strong>industry standard</strong>. CFOs cite SentioCap data in board meetings.</div>
+          </div>
+          <div class="card">
+            <div class="big-stat" style="font-size:2rem;">5,000</div>
+            <div style="font-size:0.8rem;font-weight:600;margin-top:0.3rem;">Companies</div>
+            <div class="stat-label">We're the <strong>MSCI ESG of capital allocation</strong> — the reference dataset every investor needs.</div>
+          </div>
+          <div class="card">
+            <div class="big-stat" style="font-size:2rem;">$∞</div>
+            <div style="font-size:0.8rem;font-weight:600;margin-top:0.3rem;">Network Value</div>
+            <div class="stat-label">Investor data product generates <strong>independent revenue</strong> — the data is the defensible moat.</div>
+          </div>
+        </div>
+        <div class="quote">
+          "The more companies use SentioCap, the more accurate every company's benchmarks become. It's a winner-take-most market."
+        </div>
+      </div>
+      <div class="slide-num">09 / 14</div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SLIDE 10 — Competitive Landscape
+    ═══════════════════════════════════════════════════════════ -->
+    <div class="slide" data-slide="10">
+      <div class="slide-inner">
+        <div class="label">Competitive Landscape</div>
+        <h2>Built different. Not just better.</h2>
+        <div style="overflow-x:auto;">
+          <table class="comp-table">
+            <thead>
+              <tr>
+                <th>Capability</th>
+                <th>SentioCap</th>
+                <th>Anaplan</th>
+                <th>Apptio / IBM</th>
+                <th>Workday</th>
+                <th>McKinsey</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Decision signal categories</td>
+                <td><strong>25</strong></td>
+                <td>5</td>
+                <td>6</td>
+                <td>5</td>
+                <td>11 (manual)</td>
+              </tr>
+              <tr>
+                <td>Auto-classification</td>
+                <td class="check">✅ AI-powered</td>
+                <td class="cross">❌</td>
+                <td>Partial</td>
+                <td class="cross">❌</td>
+                <td class="cross">❌</td>
+              </tr>
+              <tr>
+                <td>Messy data handling</td>
+                <td class="check">✅ 6-layer fuzzy</td>
+                <td class="cross">❌ Clean required</td>
+                <td class="cross">❌ Clean required</td>
+                <td class="cross">❌ Clean required</td>
+                <td>Manual</td>
+              </tr>
+              <tr>
+                <td>Whole-company RTB/CTB</td>
+                <td class="check">✅</td>
+                <td class="cross">❌</td>
+                <td>IT only</td>
+                <td class="cross">❌</td>
+                <td>✅ (manual)</td>
+              </tr>
+              <tr>
+                <td>Investor data product</td>
+                <td class="check">✅</td>
+                <td class="cross">❌</td>
+                <td class="cross">❌</td>
+                <td class="cross">❌</td>
+                <td class="cross">❌</td>
+              </tr>
+              <tr>
+                <td>Time to value</td>
+                <td class="check"><strong>Days</strong></td>
+                <td>Months</td>
+                <td>9–18 months</td>
+                <td>Months</td>
+                <td>Weeks</td>
+              </tr>
+              <tr>
+                <td>Behavioral pattern detection</td>
+                <td class="check">✅</td>
+                <td class="cross">❌</td>
+                <td class="cross">❌</td>
+                <td class="cross">❌</td>
+                <td class="cross">❌</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="slide-num">10 / 14</div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SLIDE 11 — Pricing
+    ═══════════════════════════════════════════════════════════ -->
+    <div class="slide" data-slide="11">
+      <div class="slide-inner">
+        <div class="label">Pricing</div>
+        <h2>Three tiers, priced per agent team.</h2>
+        <div class="pricing-grid">
+          <div class="price-card">
+            <div class="price-tier">Starter</div>
+            <div>
+              <div class="price-amount">$3,000<span style="font-size:0.9rem;font-weight:400;">/mo</span></div>
+              <div class="price-per">$36K / year</div>
+            </div>
+            <ul class="price-features">
+              <li>3 agents: Scout + Sentinel + Sage</li>
+              <li>Up to $2B revenue companies</li>
+              <li>S&amp;P 500 benchmarks</li>
+              <li>CSV / document upload</li>
+              <li>Email support</li>
+            </ul>
+          </div>
+          <div class="price-card featured">
+            <div class="price-tier">Professional</div>
+            <div>
+              <div class="price-amount">$6,250<span style="font-size:0.9rem;font-weight:400;">/mo</span></div>
+              <div class="price-per">$75K / year</div>
+            </div>
+            <ul class="price-features">
+              <li>All 8 agents</li>
+              <li>Salesforce + JIRA connectors</li>
+              <li>Custom peer groups</li>
+              <li>Board deck generation</li>
+              <li>Scenario modeling</li>
+              <li>Dedicated CSM</li>
+            </ul>
+          </div>
+          <div class="price-card">
+            <div class="price-tier">Enterprise</div>
+            <div>
+              <div class="price-amount">$12.5–20K<span style="font-size:0.9rem;font-weight:400;">/mo</span></div>
+              <div class="price-per">$150–250K / year</div>
+            </div>
+            <ul class="price-features">
+              <li>All 8 agents + custom agents</li>
+              <li>Unlimited connectors (ERP, CRM, JIRA, ServiceNow)</li>
+              <li>API access + multi-entity</li>
+              <li>Custom L4 taxonomy</li>
+              <li>White-glove onboarding</li>
+              <li>Network data contribution discount</li>
+            </ul>
+          </div>
+        </div>
+        <div class="investor-box">
+          <strong>Investor Data Product (separate)</strong> — Index $50K/yr · Analytics $125K/yr · Premium $250K/yr (real-time alerts + forward plan data)<br>
+          <span style="margin-top:0.35rem;display:inline-block;">Companies that contribute data to the network receive a <strong>20% discount</strong> on SaaS pricing.</span>
+        </div>
+      </div>
+      <div class="slide-num">11 / 14</div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SLIDE 12 — The ROI Case
+    ═══════════════════════════════════════════════════════════ -->
+    <div class="slide" data-slide="12">
+      <div class="slide-inner">
+        <div class="label">The ROI Case</div>
+        <h2>If SentioCap helps you reallocate<br>just $5M more effectively…</h2>
+        <div class="two-col">
+          <div style="display:flex;flex-direction:column;gap:0.75rem;">
+            <div class="roi-row">
+              <div class="roi-icon">💰</div>
+              <div class="roi-text"><strong>$5M reallocated → 1.5x return over 3 years = $7.5M value created</strong></div>
+            </div>
+            <div class="roi-row">
+              <div class="roi-icon">📊</div>
+              <div class="roi-text">Platform cost: <strong>$75K/year</strong></div>
+            </div>
+            <div class="roi-row" style="border-color:var(--accent);background:#F4F8F5;">
+              <div class="roi-icon">🚀</div>
+              <div class="roi-text"><strong style="font-size:1.2rem;color:var(--accent);">ROI: 100x</strong></div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:0.75rem;">
+            <div class="roi-row">
+              <div class="roi-icon">⏱️</div>
+              <div class="roi-text"><strong>2 weeks saved per quarter</strong> on report building — Scribe writes it instead</div>
+            </div>
+            <div class="roi-row">
+              <div class="roi-icon">🧟</div>
+              <div class="roi-text">Catch <strong>zombie investments</strong> 6 months earlier — stop burning capital on dead projects</div>
+            </div>
+            <div class="roi-row">
+              <div class="roi-icon">🎯</div>
+              <div class="roi-text"><strong>Board confidence</strong> from data-backed recommendations, not gut feel</div>
+            </div>
+          </div>
+        </div>
+        <div class="quote" style="margin-top:0.25rem;">
+          "The question isn't whether you can afford SentioCap. It's how much you're losing every quarter without it."
+        </div>
+      </div>
+      <div class="slide-num">12 / 14</div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SLIDE 13 — Getting Started
+    ═══════════════════════════════════════════════════════════ -->
+    <div class="slide" data-slide="13">
+      <div class="slide-inner">
+        <div class="label">Getting Started</div>
+        <h2>Value on day one.</h2>
+        <div class="two-col">
+          <div class="timeline">
+            <div class="tl-item">
+              <div class="tl-left">
+                <div class="tl-period">Day 1</div>
+                <div class="tl-line"></div>
+              </div>
+              <div class="tl-content">Connect your data — or just upload a CSV. No configuration required.</div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-left">
+                <div class="tl-period">Day 1</div>
+                <div class="tl-line"></div>
+              </div>
+              <div class="tl-content"><strong>Scout</strong> classifies everything immediately using your company's language.</div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-left">
+                <div class="tl-period">Day 1</div>
+                <div class="tl-line"></div>
+              </div>
+              <div class="tl-content"><strong>Sentinel</strong> runs its first scan — decision signals fire on real data.</div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-left">
+                <div class="tl-period">Week 1</div>
+                <div class="tl-line"></div>
+              </div>
+              <div class="tl-content">Review and confirm fuzzy matches. Agents learn your specific terminology.</div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-left">
+                <div class="tl-period">Week 2</div>
+                <div class="tl-line"></div>
+              </div>
+              <div class="tl-content"><strong>Scribe</strong> generates your first board-ready deck from actual data.</div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-left">
+                <div class="tl-period">Month 1</div>
+                <div class="tl-line"></div>
+              </div>
+              <div class="tl-content">Full agent team operational. All 8 agents running on your data.</div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-left">
+                <div class="tl-period">Month 3</div>
+                <div class="tl-line"></div>
+              </div>
+              <div class="tl-content">Decision outcome tracking validates ROI — you can measure what changed.</div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:1rem;justify-content:center;">
+            <div class="card" style="text-align:center;padding:2rem;">
+              <div style="font-size:2.5rem;margin-bottom:0.75rem;">⚡</div>
+              <div style="font-weight:700;font-size:1.1rem;margin-bottom:0.5rem;">No 9-month implementation</div>
+              <div style="font-size:0.82rem;color:var(--muted);">Legacy tools require months of professional services before you see a single signal. SentioCap works on day one.</div>
+            </div>
+            <div class="card" style="text-align:center;padding:1.5rem;">
+              <div style="font-size:2rem;margin-bottom:0.5rem;">🗃️</div>
+              <div style="font-weight:700;font-size:1rem;margin-bottom:0.35rem;">No data cleanup prerequisite</div>
+              <div style="font-size:0.8rem;color:var(--muted);">Agents handle messy data at every level. You don't wait for perfection.</div>
+            </div>
+            <div class="card" style="text-align:center;padding:1.5rem;">
+              <div style="font-size:2rem;margin-bottom:0.5rem;">🚫</div>
+              <div style="font-weight:700;font-size:1rem;margin-bottom:0.35rem;">No consultants required</div>
+              <div style="font-size:0.8rem;color:var(--muted);">Your agent team does the work. You make the decisions.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-num">13 / 14</div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SLIDE 14 — CTA
+    ═══════════════════════════════════════════════════════════ -->
+    <div class="slide" data-slide="14">
+      <div class="slide-inner" style="align-items:center;text-align:center;max-width:750px;">
+        <div class="brand-badge">SentioCap</div>
+        <h2 style="font-size:clamp(2rem,4vw,3rem);margin-top:0.5rem;">Ready to multiply<br>your finance team?</h2>
+        <p class="tagline">Capital Allocation Intelligence — powered by 8 AI agents working 24/7.</p>
+        <div class="accent-line" style="margin:0 auto;"></div>
+        <div class="cta-links" style="width:100%;max-width:480px;text-align:left;">
+          <a class="cta-link" href="mailto:tyson@sentiocap.com">
+            <div class="cta-link-icon">✉️</div>
+            <div>
+              <div class="cta-link-label">Request a Demo</div>
+              <div class="cta-link-value">tyson@sentiocap.com</div>
+            </div>
+          </a>
+          <a class="cta-link" href="https://sentiocap.pairwater.com" target="_blank">
+            <div class="cta-link-icon">🖥️</div>
+            <div>
+              <div class="cta-link-label">See It Live</div>
+              <div class="cta-link-value">sentiocap.pairwater.com</div>
+            </div>
+          </a>
+          <a class="cta-link" href="https://sentiocap.pairwater.com/agents" target="_blank">
+            <div class="cta-link-icon">📖</div>
+            <div>
+              <div class="cta-link-label">Read the Research</div>
+              <div class="cta-link-value">Agent overview + decision framework</div>
+            </div>
+          </a>
+        </div>
+        <p style="font-size:0.72rem;color:var(--muted);margin-top:0.5rem;">
+          Value on day one · No implementation · No data cleanup required
+        </p>
+      </div>
+      <div class="slide-num">14 / 14</div>
+    </div>
+
+  </div><!-- /slides-wrapper -->
+</div><!-- /deck -->
+
+<!-- Nav dots -->
+<div id="nav-dots"></div>
+
+<!-- Arrow buttons -->
+<button class="nav-arrow" id="arrow-prev" aria-label="Previous slide">&#8592;</button>
+<button class="nav-arrow" id="arrow-next" aria-label="Next slide">&#8594;</button>
+
+<script>
+  (function () {
+    const TOTAL = 14;
+    let current = 0;
+    let animating = false;
+
+    const wrapper = document.getElementById('slides-wrapper');
+    const dotsEl = document.getElementById('nav-dots');
+    const prevBtn = document.getElementById('arrow-prev');
+    const nextBtn = document.getElementById('arrow-next');
+
+    // Build dots
+    for (let i = 0; i < TOTAL; i++) {
+      const dot = document.createElement('div');
+      dot.className = 'dot' + (i === 0 ? ' active' : '');
+      dot.addEventListener('click', () => goTo(i));
+      dotsEl.appendChild(dot);
+    }
+
+    function updateDots() {
+      dotsEl.querySelectorAll('.dot').forEach((d, i) => {
+        d.classList.toggle('active', i === current);
+      });
+    }
+
+    function goTo(idx) {
+      if (animating || idx === current) return;
+      if (idx < 0 || idx >= TOTAL) return;
+      animating = true;
+      current = idx;
+      wrapper.style.transform = `translateX(-${current * 100}vw)`;
+      updateDots();
+      setTimeout(() => { animating = false; }, 600);
+    }
+
+    prevBtn.addEventListener('click', () => goTo(current - 1));
+    nextBtn.addEventListener('click', () => goTo(current + 1));
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === 'PageDown') {
+        e.preventDefault(); goTo(current + 1);
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp' || e.key === 'PageUp') {
+        e.preventDefault(); goTo(current - 1);
+      } else if (e.key === 'Home') {
+        e.preventDefault(); goTo(0);
+      } else if (e.key === 'End') {
+        e.preventDefault(); goTo(TOTAL - 1);
+      }
+    });
+
+    // Touch/swipe support
+    let touchStartX = 0;
+    let touchStartY = 0;
+
+    document.addEventListener('touchstart', (e) => {
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+
+    document.addEventListener('touchend', (e) => {
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      const dy = e.changedTouches[0].clientY - touchStartY;
+      if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 40) {
+        if (dx < 0) goTo(current + 1);
+        else goTo(current - 1);
+      }
+    }, { passive: true });
+  })();
+</script>
+</body>
+</html>
