@@ -499,3 +499,91 @@ export interface DecisionScanResult {
   new_decisions: number
   decision_ids: string[]
 }
+
+// ---------------------------------------------------------------------------
+// Agent types
+// ---------------------------------------------------------------------------
+
+export interface AgentMetric {
+  label: string
+  value: string | number
+  type: 'ok' | 'info' | 'warning' | 'critical'
+}
+
+export interface AgentBriefing {
+  generated_at: string
+  org_name: string
+  headline: string
+  metrics_changed: AgentMetric[]
+  signals_fired: Decision[]
+  investments_update: Array<{ name: string; pct: number; issue: string }>
+  upcoming: Array<{ id: string; name: string; target_completion: string; status: string }>
+  recommended_actions: string[]
+  narrative: string
+}
+
+export interface AgentBoardDeck {
+  generated_at: string
+  org_name: string
+  period: string
+  format: string
+  content: string
+  sections: string[]
+}
+
+export interface AgentAnswer {
+  question: string
+  answer: string
+  confidence: 'high' | 'medium' | 'low'
+  supporting_data: string[]
+  follow_up_questions: string[]
+  generated_at: string
+}
+
+export interface ScenarioChange {
+  action: 'kill' | 'reallocate' | 'accelerate' | 'pause'
+  investment_id?: string
+  from_l2?: string
+  to_l2?: string
+  amount?: number
+  additional_budget?: number
+}
+
+export interface AgentScenario {
+  generated_at: string
+  changes_analyzed: number
+  current_state: { ctb_pct: number; rtb_pct: number; total_budget: number }
+  projected_ctb_split: { new_ctb_pct?: number; new_rtb_pct?: number }
+  projected_roi_impact: string
+  benchmark_shift: string
+  freed_resources: { budget_freed?: number; context?: string }
+  risks: string[]
+  narrative: string
+}
+
+export interface AgentReforecast {
+  generated_at: string
+  through_period: string
+  annual_plan: number
+  full_year_forecast: number
+  variance_vs_plan: { amount: number; pct: number; direction: string }
+  monthly_forecast: Array<{ period: string; projected_amount: number; basis: string }>
+  variance_explanation: string
+  risk_flags: string[]
+  confidence: 'high' | 'medium' | 'low'
+}
+
+export interface AgentStatus {
+  org_id: string
+  org_name: string
+  status: string
+  monitoring: {
+    active_plan?: string
+    fiscal_year?: number
+    investments_tracked: number
+    pending_signals: number
+    signal_detectors: number
+  }
+  capabilities: string[]
+  last_checked: string
+}

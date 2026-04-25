@@ -11,15 +11,19 @@ import {
   LogOut,
   Waves,
   Target,
+  Bot,
+  BookOpen,
 } from 'lucide-react'
 import { cn, clearAuthToken, getStoredUser } from '@/lib/utils'
 
 const NAV_ITEMS = [
-  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/agent', label: 'Agent', icon: Bot },
   { href: '/decisions', label: 'Decisions', icon: Target },
+  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/plans', label: 'Plans', icon: FileText },
   { href: '/investments', label: 'Investments', icon: TrendingUp },
   { href: '/benchmarks', label: 'Benchmarks', icon: BarChart3 },
+  { href: '/documents', label: 'Documents', icon: BookOpen },
   { href: '/settings', label: 'Settings', icon: Settings },
 ]
 

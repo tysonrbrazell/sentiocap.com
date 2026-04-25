@@ -26,6 +26,13 @@ import type {
   Decision,
   DecisionSummary,
   DecisionScanResult,
+  AgentBriefing,
+  AgentBoardDeck,
+  AgentAnswer,
+  AgentScenario,
+  AgentReforecast,
+  AgentStatus,
+  ScenarioChange,
 } from './types'
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
@@ -190,6 +197,18 @@ export const api = {
 
   jobs: {
     status: (jobId: string) => get<JobStatus>(`/api/jobs/${jobId}`),
+  },
+
+  agent: {
+    briefing: () => post<AgentBriefing>('/api/agent/briefing'),
+    boardDeck: (period: string, format = 'markdown') =>
+      post<AgentBoardDeck>('/api/agent/board-deck', { period, format }),
+    ask: (question: string) => post<AgentAnswer>('/api/agent/ask', { question }),
+    simulate: (changes: ScenarioChange[]) =>
+      post<AgentScenario>('/api/agent/simulate', { changes }),
+    reforecast: (through_period: string) =>
+      post<AgentReforecast>('/api/agent/reforecast', { through_period }),
+    status: () => get<AgentStatus>('/api/agent/status'),
   },
 
   decisions: {
